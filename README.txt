@@ -1,4 +1,3 @@
 Group 1
-Johannes Machleid
-Arasch Haschemi
-Karthik Sukumar
+Johannes Machleid aka Hannes
+Karthik Sukumar aka Kay
