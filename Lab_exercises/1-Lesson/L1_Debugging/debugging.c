@@ -59,7 +59,8 @@ PROCESS_THREAD(debug_process, ev, data){
     	 * The Contiki kernel will service other processes while this
     	 * process is waiting.
     	 */
-    	PROCESS_WAIT_EVENT();
+        printf("Hello World :)");
+        PROCESS_WAIT_EVENT();
     }
 
     PROCESS_END();
