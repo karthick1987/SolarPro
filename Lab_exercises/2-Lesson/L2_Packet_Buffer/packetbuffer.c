@@ -103,7 +103,7 @@ PROCESS_THREAD(packet_buffer_process, ev, data)
 	/*
 	 * set your group's channel
 	 */
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11); //Channel 11 (Group 1 + 10)
 
 	/*
 	 * Change the transmission power
@@ -127,7 +127,7 @@ PROCESS_THREAD(packet_buffer_process, ev, data)
 		/*
 		 * fill the packet buffer
 		 */
-		packetbuf_copyfrom("Hello",6);
+		packetbuf_copyfrom("Test",6);
 
 		/*
 		 * send the message
@@ -137,7 +137,7 @@ PROCESS_THREAD(packet_buffer_process, ev, data)
 		/*
 		 * for debugging
 		 */
-		printf("Broadcast message sent in channel %d with power: %d\r\n", 26, 3);
+		printf("Broadcast message sent in channel %d with power: %d\r\n", 11, 3);
 
 		print_packetbuffer();
 
@@ -157,14 +157,22 @@ PROCESS_THREAD(packet_buffer_process, ev, data)
 
 static void copy_and_print_packetbuffer(){
 	//copy the payload of the packetbuffer to a given memory location
-	/*** YOUR CODE HERE ***/
+	char payloadbuf[200];
+	uint16_t datalen = packetbuf_datalen();
+	packetbuf_copyto(&payloadbuf);
 	//print the content of the memory location
-	/*** YOUR CODE HERE ***/
+	printf("Data Length: %d\r\n", datalen);
+	printf("Data: %s\r\n", payloadbuf);
 }
 
 static void print_packetbuffer(){
 	//retrieve the pointer to the payload and the length of it
-	/*** YOUR CODE HERE ***/
+	char *payload = packetbuf_dataptr();
 	//use the retrieved information to print the content of the payload
-	/*** YOUR CODE HERE ***/
+	printf("Data: ");
+	for(int i = 0; i < packetbuf_datalen(); i++){
+		printf("%c", *(payload + i));
+	}
+	printf("\r\n");
+
 }

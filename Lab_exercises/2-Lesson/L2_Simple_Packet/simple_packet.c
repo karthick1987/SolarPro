@@ -88,7 +88,7 @@ PROCESS_THREAD(simple_packet_process, ev, data) {
 	/*
 	 * set your group's channel
 	 */
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11); //Group 1 + 10 = 11
 
 	/*
 	 * OPen broadcast connection
@@ -106,7 +106,7 @@ PROCESS_THREAD(simple_packet_process, ev, data) {
 		/*
 		 * fill the packet buffer
 		 */
-		packetbuf_copyfrom("Hello",6);
+		packetbuf_copyfrom("Hello You",10); //value 6 is the buffersize of the packet buffer which is filled with "Hello You"
 
 		/*
 		 * send the message
