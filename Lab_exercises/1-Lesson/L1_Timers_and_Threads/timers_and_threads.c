@@ -31,12 +31,21 @@
 
 // Contiki-specific includes:
 #include "contiki.h"
-#include "sys/etimer.h"
+#include "sys/ctimer.h"
 #include "dev/leds.h"			// Enables use of LEDs
 
 // Standard C includes:
 #include <stdio.h>		// For printf
 
+static struct ctimer ct;
+static void callback_function(void *data)
+{
+    leds_toggle(LEDS_RED);
+    leds_toggle(LEDS_GREEN);
+    /* Reset Timer */
+    ctimer_reset(&ct);
+    printf("Toggling\r\n");
+}
 
 PROCESS(timers_and_threads_process, "Lesson 1: Timers and Threads");
 AUTOSTART_PROCESSES(&timers_and_threads_process);
@@ -51,26 +60,16 @@ PROCESS_THREAD(timers_and_threads_process, ev, data) {
 
     PROCESS_BEGIN();
 
-    static struct etimer et;
 	// static struct timer freq_timer;
 	// timer_set(&freq_timer,CLOCK_SECOND);
-	etimer_set(&et,CLOCK_SECOND);
-
+    ctimer_set(&ct, CLOCK_SECOND, callback_function, NULL);
     leds_on(LEDS_RED);
     leds_off(LEDS_GREEN);
 
-    while (1){
+    // while (1){
 
-    // if(etimer_expired(&et)){
-        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
         /* If timer expired, toggle LED*/
-        leds_toggle(LEDS_RED);
-        leds_toggle(LEDS_GREEN);
-        /* Reset Timer */
-        etimer_reset(&et);
-        printf("Toggling\r\n");
-    	//}
-    }
+    //}
 
     PROCESS_END();
 }
