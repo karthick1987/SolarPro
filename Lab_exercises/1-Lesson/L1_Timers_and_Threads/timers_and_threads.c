@@ -31,6 +31,7 @@
 
 // Contiki-specific includes:
 #include "contiki.h"
+#include "sys/etimer.h"
 #include "dev/leds.h"			// Enables use of LEDs
 
 // Standard C includes:
@@ -50,17 +51,21 @@ PROCESS_THREAD(timers_and_threads_process, ev, data) {
 
     PROCESS_BEGIN();
 
-	static struct timer freq_timer;
-	timer_set(&freq_timer,CLOCK_SECOND);
+    static struct etimer et;
+	// static struct timer freq_timer;
+	// timer_set(&freq_timer,CLOCK_SECOND);
+	etimer_set(&et,CLOCK_SECOND);
 
     while (1){
 
-    	 if(timer_expired(&freq_timer)){
-    		 /* If timer expired, toggle LED*/
-			leds_toggle(LEDS_RED);
-			/* Reset Timer */
-			timer_reset(&freq_timer);
-    	 }
+    // if(etimer_expired(&et)){
+        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+        /* If timer expired, toggle LED*/
+        leds_toggle(LEDS_RED);
+        /* Reset Timer */
+        etimer_reset(&et);
+        printf("Toggling\r\n");
+    	//}
     }
 
     PROCESS_END();
