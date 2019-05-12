@@ -56,12 +56,16 @@ PROCESS_THREAD(timers_and_threads_process, ev, data) {
 	// timer_set(&freq_timer,CLOCK_SECOND);
 	etimer_set(&et,CLOCK_SECOND);
 
+    leds_on(LEDS_RED);
+    leds_off(LEDS_GREEN);
+
     while (1){
 
     // if(etimer_expired(&et)){
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
         /* If timer expired, toggle LED*/
         leds_toggle(LEDS_RED);
+        leds_toggle(LEDS_GREEN);
         /* Reset Timer */
         etimer_reset(&et);
         printf("Toggling\r\n");
