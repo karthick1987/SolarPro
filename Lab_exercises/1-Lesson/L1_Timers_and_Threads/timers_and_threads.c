@@ -41,7 +41,6 @@ static struct ctimer ct;
 static void callback_function(void *data)
 {
     leds_toggle(LEDS_RED);
-    leds_toggle(LEDS_GREEN);
     /* Reset Timer */
     ctimer_reset(&ct);
     printf("Toggling\r\n");
@@ -56,20 +55,12 @@ AUTOSTART_PROCESSES(&timers_and_threads_process);
 PROCESS_THREAD(timers_and_threads_process, ev, data) {
 
 
-	PROCESS_EXITHANDLER( printf("main_process terminated!\n"); )
+    PROCESS_EXITHANDLER( printf("main_process terminated!\n"); )
 
     PROCESS_BEGIN();
 
-	// static struct timer freq_timer;
-	// timer_set(&freq_timer,CLOCK_SECOND);
     ctimer_set(&ct, CLOCK_SECOND, callback_function, NULL);
     leds_on(LEDS_RED);
-    leds_off(LEDS_GREEN);
-
-    // while (1){
-
-        /* If timer expired, toggle LED*/
-    //}
 
     PROCESS_END();
 }
