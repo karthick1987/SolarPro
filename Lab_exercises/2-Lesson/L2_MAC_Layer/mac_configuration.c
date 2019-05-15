@@ -55,7 +55,7 @@ typedef struct{
 
 /* Global variables */
 rtimer_clock_t tx_time[TOTAL_TX_PACKETS], rx_time;		// Stores packet transmission time.
-float rtt[TOTAL_TX_PACKETS] = {0};				// Stores packet round-trip time
+float rtt[TOTAL_TX_PACKETS] = {0};				// Stores packet round-trip time RTT
 uint8_t packet_counter = 0;					// Counts transmitted packet.
 
 /* Packet to be transmitted.*/
@@ -103,7 +103,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from) {
 		rtt[id] = (rx_time - tx_time[id]);	// Calculate round trip time, in ticks.
 		rtt[id] = (float) rtt[id]/RTIMER_SECOND;						// Convert ticks to seconds.
 		char rtt_buffer[5];									// Buffer to store Round-trip time.
-		ftoa(rtt[id], rtt_buffer, 3);								// Covert Round-trip time from float to char.
+		ftoa(rtt[id], rtt_buffer, 3);								// Convert Round-trip time from float to char.
 		printf("Reply received - Packet id. %d RRT= %s seconds. \n", id, rtt_buffer);
 	}
 
