@@ -42,7 +42,7 @@
 
 #define BROADCAST_RIME_CHANNEL 129
 #define BROADCAST_INTERVAL 5
-#define CHANNEL 14
+#define CHANNEL 11
 #define POWER 3
 #define MY_ADDR 2
 #define MAX_PAYLOAD 80
@@ -56,6 +56,7 @@ typedef struct{
 
 //Global variables
 static contact tx_contacts;
+static contact rx_contacts;
 
 // Definition of Processes
 PROCESS(custom_payload_process, "Lesson 2: Custom Payload");
@@ -79,7 +80,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
 			packetbuf_attr(PACKETBUF_ATTR_RSSI));
 
 	//Copy the payload of the packetbuffer to a given memory location
-	/*** YOUR CODE HERE ***/
+	packetbuf_copyto(&rx_contacts.name);
 	//print the content of the memory location
 	/*** YOUR CODE HERE ***/
 
@@ -108,7 +109,7 @@ PROCESS_THREAD(custom_payload_process, ev, data)
 	/*
 	 * set your group's channel
 	 */
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11);
 
 	/*
 	 * Change the transmission power
@@ -124,8 +125,8 @@ PROCESS_THREAD(custom_payload_process, ev, data)
 	while(1) //MAIN LOOP
 	{
 		// Transmitted values
-		strcpy(tx_contacts.name,"Contiki");
-		strcpy(tx_contacts.surname,"WSN");
+		strcpy(tx_contacts.name,"Johannes");
+		strcpy(tx_contacts.surname,"Machleid");
 		for(i=0;i<10;i++){
 			tx_contacts.tel[i]=i;
 		}
@@ -134,7 +135,7 @@ PROCESS_THREAD(custom_payload_process, ev, data)
 
 		//Copy the content of tx_contacts to the buffer.
 		//Hint: use packetbuf_copyfrom()
-		/*** YOUR CODE HERE ***/
+		packetbuf_copyfrom(tx_contacts.name, 50);
 
 		broadcast_send(&broadcast);
 		leds_off(LEDS_RED);
