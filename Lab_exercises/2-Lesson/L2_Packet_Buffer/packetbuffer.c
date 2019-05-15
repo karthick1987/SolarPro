@@ -127,7 +127,7 @@ PROCESS_THREAD(packet_buffer_process, ev, data)
 		/*
 		 * fill the packet buffer
 		 */
-		packetbuf_copyfrom("Test",6);
+		packetbuf_copyfrom("Test",5);
 
 		/*
 		 * send the message
@@ -167,12 +167,14 @@ static void copy_and_print_packetbuffer(){
 
 static void print_packetbuffer(){
 	//retrieve the pointer to the payload and the length of it
+	int i = 0;
 	char *payload = packetbuf_dataptr();
 	//use the retrieved information to print the content of the payload
 	printf("Data: ");
-	for(int i = 0; i < packetbuf_datalen(); i++){
+	for(i;  i < packetbuf_datalen(); i++){
 		printf("%c", *(payload + i));
 	}
 	printf("\r\n");
+	printf("Data Length: %d\r\n", i);
 
 }

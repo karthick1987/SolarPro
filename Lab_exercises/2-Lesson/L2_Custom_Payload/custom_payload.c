@@ -82,7 +82,9 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
 	//Copy the payload of the packetbuffer to a given memory location
 	packetbuf_copyto(&rx_contacts.name);
 	//print the content of the memory location
-	/*** YOUR CODE HERE ***/
+	printf("Name: %s\r\n", rx_contacts.name);
+	printf("Surname: %s\r\n", rx_contacts.surname);
+	printf("Tel: %s\r\n", rx_contacts.tel);
 
 	leds_off(LEDS_GREEN);
 }
@@ -127,15 +129,13 @@ PROCESS_THREAD(custom_payload_process, ev, data)
 		// Transmitted values
 		strcpy(tx_contacts.name,"Johannes");
 		strcpy(tx_contacts.surname,"Machleid");
-		for(i=0;i<10;i++){
-			tx_contacts.tel[i]=i;
-		}
+		strcpy(tx_contacts.tel,"123456789");
 
 		leds_on(LEDS_RED);
 
 		//Copy the content of tx_contacts to the buffer.
 		//Hint: use packetbuf_copyfrom()
-		packetbuf_copyfrom(tx_contacts.name, 50);
+		packetbuf_copyfrom(tx_contacts.name, 100);
 
 		broadcast_send(&broadcast);
 		leds_off(LEDS_RED);
