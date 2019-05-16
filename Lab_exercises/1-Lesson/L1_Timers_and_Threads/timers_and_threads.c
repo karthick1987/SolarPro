@@ -32,12 +32,45 @@
 // Contiki-specific includes:
 #include "contiki.h"
 #include "sys/ctimer.h"
+#include "sys/etimer.h"
 #include "dev/leds.h"			// Enables use of LEDs
 
 // Standard C includes:
 #include <stdio.h>		// For printf
 
-static struct ctimer ct, ct_blue;
+#define PRINTF(...)   printf(__VA_ARGS__)
+
+/*
+ * \brief   Function to print the processes running currently
+ */
+
+void print_active_procs(void)
+{
+    uint8_t ps=process_nevents();
+    struct process *p;
+    PRINTF("there are %u events in the queue\n\n", ps);
+    PRINTF("Processes:\n");
+    for(p = PROCESS_LIST(); p != NULL; p = p->next)
+    {
+        char namebuf[30];
+        strncpy(namebuf, PROCESS_NAME_STRING(p), sizeof(namebuf));
+        PRINTF("--%s--\n", namebuf);
+    }
+    PRINTF("\n\n");
+}
+
+// The ct_kill_proc timer is to kill the process after 
+static struct ctimer ct, ct_kill_proc;
+static struct etimer et_blue;
+
+// Define the 2 processes first
+PROCESS(timers_and_threads_process, "Red_led");
+PROCESS(timers_and_threads_process_blue, "Blue_led");
+
+/*
+ * Function to toggle the Red LED
+ */
+
 static void callback_function(void *data)
 {
     leds_toggle(LEDS_RED);
@@ -46,43 +79,66 @@ static void callback_function(void *data)
     printf("Toggling Red\r\n");
 }
 
-static void callback_function_blue(void *data)
+static void kill_proc(void *data)
 {
-    leds_toggle(LEDS_BLUE);
-    /* Reset Timer */
-    ctimer_reset(&ct_blue);
-    printf("Toggling Blue\r\n");
+    printf("entered kill_proc()\n");
+
+    // Stop both the 5s timer as well as the RED LED toggle timer
+    ctimer_stop(&ct_kill_proc);
+    ctimer_stop(&ct);
+    leds_off(LEDS_RED);
+
+    // kill the process as well
+    process_exit(&timers_and_threads_process);
+    // PROCESS_EXIT();
 }
 
-PROCESS(timers_and_threads_process, "Lesson 1: Timers and Threads");
-PROCESS(timers_and_threads_process_blue, "Lesson 1: Timers and Threads Turn on Blue LED");
+// Add the list of processes to auto start here in this macro because
+// #define AUTOSTART_PROCESSES(...)
+// struct process * const autostart_processes[] = {__VA_ARGS__, NULL}
+
 AUTOSTART_PROCESSES(&timers_and_threads_process,&timers_and_threads_process_blue);
 
-//------------------------ PROCESS' THREAD ------------------------
+//------------------------ PROCESS' THREAD 1------------------------
 
-// Main process:
+// RED LED process:
 PROCESS_THREAD(timers_and_threads_process, ev, data) {
 
 
-    PROCESS_EXITHANDLER( printf("main_process terminated!\n"); )
+    PROCESS_EXITHANDLER( printf("Red_led terminated!\n"); )
 
     PROCESS_BEGIN();
-
+    // callback timer to toggle led every second
     ctimer_set(&ct, CLOCK_SECOND, callback_function, NULL);
+    // callback timer to kill proc
+    ctimer_set(&ct_kill_proc, 5*CLOCK_SECOND, kill_proc, NULL);
+
     leds_on(LEDS_RED);
 
     PROCESS_END();
 }
 
+//------------------------ PROCESS' THREAD 2------------------------
+
+// BLUE LED process:
 PROCESS_THREAD(timers_and_threads_process_blue, ev, data) {
 
 
-    PROCESS_EXITHANDLER( printf("main_process terminated!\n"); )
+    PROCESS_EXITHANDLER( printf("Blue_led terminated!\n"); )
 
     PROCESS_BEGIN();
-
-    ctimer_set(&ct_blue, CLOCK_SECOND, callback_function_blue, NULL);
     leds_on(LEDS_BLUE);
+
+    /* Delay 1 second */
+    etimer_set(&et_blue, CLOCK_SECOND);
+
+    while(1)
+    {
+        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et_blue));
+        leds_toggle(LEDS_BLUE);
+        etimer_reset(&et_blue);
+        printf("Toggling Blue\r\n");print_active_procs();
+    }
 
     PROCESS_END();
 }
