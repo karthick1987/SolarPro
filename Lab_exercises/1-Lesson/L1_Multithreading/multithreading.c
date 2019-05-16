@@ -35,46 +35,68 @@
 // Standard C includes:
 #include <stdio.h>    // For printf.
 
+static struct etimer timerRed, timerGreen, timerBlue;
 
 //--------------------- PROCESS CONTROL BLOCK ---------------------
-PROCESS(multithreading_proccess, "Lesson 1: Multithreading");
-AUTOSTART_PROCESSES(&multithreading_proccess);
+PROCESS(red, "Red");
+PROCESS(green, "Green");
+PROCESS(blue, "Blue");
+AUTOSTART_PROCESSES(&red, &green, &blue);
 
 //------------------------ PROCESS' THREAD ------------------------
-PROCESS_THREAD(multithreading_proccess, ev, data){
 
-	static struct etimer timerRed, timerGreen, timerBlue;
-
-	PROCESS_BEGIN();
-
-	printf("Timers set!\r\n ");
 	/*
 	 * Set timers
 	 */
-	etimer_set(&timerRed, CLOCK_SECOND);
-	etimer_set(&timerGreen, CLOCK_SECOND/2);
-	etimer_set(&timerBlue, CLOCK_SECOND/4);
 
-	while(1) {
-		PROCESS_WAIT_EVENT();
-		if(etimer_expired(&timerRed)) {
-			printf("Timer expired for RED...\r\n");
-			leds_toggle(LEDS_RED);
-			etimer_reset(&timerRed);
-		}
-		else if(etimer_expired(&timerGreen)) {
-			printf("Timer expired for GREEN...\r\n");
-			leds_toggle(LEDS_GREEN);
-			etimer_reset(&timerGreen);
-		}
-		else if(etimer_expired(&timerBlue)) {
-			printf("Timer expired for BLUE...\r\n");
-			leds_toggle(LEDS_BLUE);
-			etimer_reset(&timerBlue);
-		}
-	}
-	PROCESS_END();
-}
+    PROCESS_THREAD(red, ev, data) {
 
+        PROCESS_BEGIN();
+        etimer_set(&timerRed, CLOCK_SECOND);
+        printf("Timers set!\r\n ");
+
+        while(1) {
+            PROCESS_WAIT_EVENT();
+            if(etimer_expired(&timerRed)) {
+                printf("Timer expired for RED...\r\n");
+                leds_toggle(LEDS_RED);
+                etimer_reset(&timerRed);
+            }
+        }
+        PROCESS_END();
+    }
+
+    PROCESS_THREAD(green, ev, data) {
+
+        PROCESS_BEGIN();
+        etimer_set(&timerGreen, CLOCK_SECOND/2);
+
+        while(1) {
+            PROCESS_WAIT_EVENT();
+            if(etimer_expired(&timerGreen)) {
+                printf("Timer expired for Green...\r\n");
+                leds_toggle(LEDS_GREEN);
+                etimer_reset(&timerGreen);
+            }
+        }
+
+        PROCESS_END();
+    }
+
+    PROCESS_THREAD(blue, ev, data) {
+
+        PROCESS_BEGIN();
+        etimer_set(&timerBlue, CLOCK_SECOND/4);
+
+        while(1) {
+            PROCESS_WAIT_EVENT();
+            if(etimer_expired(&timerBlue)) {
+                printf("Timer expired for Blue...\r\n");
+                leds_toggle(LEDS_BLUE);
+                etimer_reset(&timerBlue);
+            }
+        }
+        PROCESS_END();
+    }
 
 
