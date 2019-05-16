@@ -37,17 +37,26 @@
 // Standard C includes:
 #include <stdio.h>		// For printf
 
-static struct ctimer ct;
+static struct ctimer ct, ct_blue;
 static void callback_function(void *data)
 {
     leds_toggle(LEDS_RED);
     /* Reset Timer */
     ctimer_reset(&ct);
-    printf("Toggling\r\n");
+    printf("Toggling Red\r\n");
+}
+
+static void callback_function_blue(void *data)
+{
+    leds_toggle(LEDS_BLUE);
+    /* Reset Timer */
+    ctimer_reset(&ct_blue);
+    printf("Toggling Blue\r\n");
 }
 
 PROCESS(timers_and_threads_process, "Lesson 1: Timers and Threads");
-AUTOSTART_PROCESSES(&timers_and_threads_process);
+PROCESS(timers_and_threads_process_blue, "Lesson 1: Timers and Threads Turn on Blue LED");
+AUTOSTART_PROCESSES(&timers_and_threads_process,&timers_and_threads_process_blue);
 
 //------------------------ PROCESS' THREAD ------------------------
 
@@ -61,6 +70,19 @@ PROCESS_THREAD(timers_and_threads_process, ev, data) {
 
     ctimer_set(&ct, CLOCK_SECOND, callback_function, NULL);
     leds_on(LEDS_RED);
+
+    PROCESS_END();
+}
+
+PROCESS_THREAD(timers_and_threads_process_blue, ev, data) {
+
+
+    PROCESS_EXITHANDLER( printf("main_process terminated!\n"); )
+
+    PROCESS_BEGIN();
+
+    ctimer_set(&ct_blue, CLOCK_SECOND, callback_function_blue, NULL);
+    leds_on(LEDS_BLUE);
 
     PROCESS_END();
 }
