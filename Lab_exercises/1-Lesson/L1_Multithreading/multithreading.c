@@ -35,7 +35,28 @@
 // Standard C includes:
 #include <stdio.h>    // For printf.
 
-static struct etimer timerRed, timerGreen, timerBlue;
+#define PRINTF(...)   printf(__VA_ARGS__)
+
+/*
+ * \brief   Function to print the processes running currently
+ */
+
+void print_active_procs(void)
+{
+    uint8_t ps=process_nevents();
+    struct process *p;
+    PRINTF("there are %u events in the queue\n\n", ps);
+    PRINTF("Processes:\n");
+    for(p = PROCESS_LIST(); p != NULL; p = p->next)
+    {
+        char namebuf[30];
+        strncpy(namebuf, PROCESS_NAME_STRING(p), sizeof(namebuf));
+        PRINTF("--%s--\n", namebuf);
+    }
+    PRINTF("\n\n");
+}
+
+static struct etimer timerRed, timerGreen, timerBlue, twoSecond;
 
 //--------------------- PROCESS CONTROL BLOCK ---------------------
 PROCESS(red, "Red");
@@ -53,6 +74,7 @@ AUTOSTART_PROCESSES(&red, &green, &blue);
 
         PROCESS_BEGIN();
         etimer_set(&timerRed, CLOCK_SECOND);
+        etimer_set(&twoSecond, 2*CLOCK_SECOND);
         printf("Timers set!\r\n ");
 
         while(1) {
@@ -62,6 +84,10 @@ AUTOSTART_PROCESSES(&red, &green, &blue);
                 leds_toggle(LEDS_RED);
                 etimer_reset(&timerRed);
             }
+            if(etimer_expired(&twoSecond)) {
+                printf("Killing Process Red\n");
+                PROCESS_EXIT();
+            }
         }
         PROCESS_END();
     }
@@ -70,11 +96,16 @@ AUTOSTART_PROCESSES(&red, &green, &blue);
 
         PROCESS_BEGIN();
         etimer_set(&timerGreen, CLOCK_SECOND/2);
-
+        static uint32_t i = 0;
         while(1) {
             PROCESS_WAIT_EVENT();
             if(etimer_expired(&timerGreen)) {
+                i++;
+                if(i%4 == 0) {
+                    print_active_procs();
+                }
                 printf("Timer expired for Green...\r\n");
+                printf("%d\n",i);
                 leds_toggle(LEDS_GREEN);
                 etimer_reset(&timerGreen);
             }
