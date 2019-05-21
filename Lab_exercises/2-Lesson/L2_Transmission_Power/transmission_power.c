@@ -39,8 +39,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
-
-
+int i = 0;
+int power_options[] = {255,237,213,197,182,176,161,145,136,114,98,88,66,0};
+int power_dBm[] = {7,5,3,1,0,-1,-3,-5,-7,-9,-11,-13,-15,-24};
 
 /*** CONNECTION DEFINITION***/
 
@@ -82,18 +83,25 @@ AUTOSTART_PROCESSES(&transmission_power_process);
 PROCESS_THREAD(transmission_power_process, ev, data) {
 
 	static struct etimer et;
+	static struct timer power_switch;
+
 
 	PROCESS_EXITHANDLER(broadcast_close(&broadcastConn));
 	PROCESS_BEGIN();
 
+	// Define Transmission Arrays
+
+
 	/*
 	 * set your group's channel
 	 */
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11);
 
 	/*
 	 * Change the transmission power here
 	 */
+
+	 //NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, power_dBm[i]); // 5,3,1,-1 ... int value from table
 
 	/*
 	 * open broadcast connection
@@ -101,10 +109,12 @@ PROCESS_THREAD(transmission_power_process, ev, data) {
 	broadcast_open(&broadcastConn,129,&broadcast_callbacks);
 
 	etimer_set(&et, CLOCK_SECOND + 0.1*random_rand()/RANDOM_RAND_MAX); //randomize the sending time a little
+	timer_set(&power_switch,CLOCK_SECOND*20);
 
 	while(1){
 
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+		NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, power_dBm[i]); // 5,3,1,-1 ... int value from table
 
 		leds_on(LEDS_RED);
 
@@ -121,12 +131,23 @@ PROCESS_THREAD(transmission_power_process, ev, data) {
 		/*
 		 * for debugging
 		 */
-		printf("Broadcast message sent with power: %d\r\n",3); // or the configured Power
+		printf("Broadcast message sent with power: %d dBm (Index: %d)\r\n", power_dBm[i], i); // or the configured Power
 
 		/*
 		 * reset the timer
 		 */
 		etimer_reset(&et);
+
+		if(timer_expired(&power_switch)){
+   		 /* If timer expired, toggle LED*/
+			i++;
+				if(i==14){
+					i = 0;
+				}
+			/* Reset Timer */
+			timer_reset(&power_switch);
+		}
+
 
 		leds_off(LEDS_RED);
 	}
