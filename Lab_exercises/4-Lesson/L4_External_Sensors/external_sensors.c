@@ -73,6 +73,25 @@ static const struct broadcast_callbacks broadcast_callbacks = {broadcast_recv};
 
 /*** CONNECTION DEFINITION END ***/
 
+/*** LIGHT SENSOR FUNCTION ***/
+//function for outputting the lux value read from sensor
+//@param m: calibration value m inscribed on the back of the sensor
+//@param b: calibration value b inscribed on the back of the sensor
+//@param adc_input: phidget input value. Use ZOUL_SENSORS_ADC1 or ZOUL_SENSORS_ADC3 depending on where the sensor is connected to.
+//@return int : lux value with a max of 1000.
+static int getLightSensorValue(float m, float b, uint8_t adc_input){
+	//Read voltage from the phidget interface
+	double sensorValue = adc_input/4.096;
+	//Convert the voltage in lux with the provided formula
+	double luxRaw = m * sensorValue + b;
+	//Return the value of the light with maximum value equal to 1000
+	uint8_t lux = luxRaw;
+	if (lux > 1000){
+		lux = 1000;
+	}
+	return lux;
+}
+
 //--------------------- PROCESS CONTROL BLOCK ---------------------
 PROCESS (ext_sensors_process, "External Sensors process");
 AUTOSTART_PROCESSES (&ext_sensors_process);
@@ -93,7 +112,7 @@ PROCESS_THREAD (ext_sensors_process, ev, data) {
 	/*
 	 * set your group's channel
 	 */
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
 
 	/*
 	 * open the connection
@@ -128,6 +147,9 @@ PROCESS_THREAD (ext_sensors_process, ev, data) {
 
 	    	printf("\r\nADC1 value [Raw] = %d", adc1_value);
 	        printf("\r\nADC3 value [Raw] = %d", adc3_value);
+
+	        int light_value = getLightSensorValue(1.4761,39.416,adc1_value);
+	        printf("\r\nLuminosity is %d LUX", light_value);
 
 
     		leds_off(LEDS_PURPLE);

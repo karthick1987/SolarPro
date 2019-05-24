@@ -106,7 +106,7 @@ PROCESS_THREAD(simple_packet_process, ev, data) {
 		/*
 		 * fill the packet buffer
 		 */
-		packetbuf_copyfrom("Hello You",10); //value 6 is the buffersize of the packet buffer which is filled with "Hello You"
+		packetbuf_copyfrom("Hello You",10); //value 10 is the buffersize of the packet buffer which is filled with "Hello You"
 
 		/*
 		 * send the message
