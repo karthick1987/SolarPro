@@ -39,6 +39,9 @@
 
 
 //------------------------ FUNCTIONS ------------------------
+
+void forward_msg(const char * message);
+
 // Defines the behavior of a connection upon receiving data.
 static void
 broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from) {
@@ -47,7 +50,11 @@ broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from) {
 			 from->u8[0], from->u8[1],
 			(char *)packetbuf_dataptr(),
 			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
-	leds_off(LEDS_GREEN);
+
+     char message[100];
+     packetbuf_copyto(message);
+     forward_msg(message);
+     leds_off(LEDS_GREEN);
 }
 
 // Creates an instance of a broadcast connection.
@@ -55,6 +62,20 @@ static struct broadcast_conn broadcast;
 
 // Defines the functions used as callbacks for a broadcast connection.
 static const struct broadcast_callbacks broadcast_call = {broadcast_recv};
+
+/**
+* @param message - message to be broadcasted
+*/
+void forward_msg(const char * message) {
+
+    //open the connection, if necessary
+	broadcast_open(&broadcast, 129, &broadcast_call);
+    //send the message
+    packetbuf_copyfrom(message,10);
+
+    broadcast_send(&broadcast);
+
+}
 
 static void check_for_invalid_addr(void) {
 	// Boolean flag to check invalid address.
