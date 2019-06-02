@@ -57,11 +57,20 @@ broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from) {
      leds_off(LEDS_GREEN);
 }
 
+static void
+broadcast_sent(struct broadcast_conn *c, const linkaddr_t *to) {
+	leds_on(LEDS_BLUE);
+	printf("Broadcast message sent from 0x%x%x: '%s'\n",
+			 to->u8[0], to->u8[1],
+			(char *)packetbuf_dataptr());
+    leds_off(LEDS_BLUE);
+}
+
 // Creates an instance of a broadcast connection.
 static struct broadcast_conn broadcast;
 
 // Defines the functions used as callbacks for a broadcast connection.
-static const struct broadcast_callbacks broadcast_call = {broadcast_recv};
+static const struct broadcast_callbacks broadcast_call = {broadcast_recv,broadcast_sent};
 
 /**
 * @param message - message to be broadcasted
@@ -147,7 +156,7 @@ PROCESS_THREAD(flooding_process, ev, data) {
 		leds_on(LEDS_RED);
 		packetbuf_copyfrom("Hello", 6);
 		broadcast_send(&broadcast);
-		printf("Broadcast message sent.\n");
+		//printf("Broadcast message sent.\n");
 		leds_off(LEDS_RED);
 	}
 	PROCESS_END();
