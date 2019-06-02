@@ -318,6 +318,7 @@ PROCESS_THREAD(destination_reaced_process, ev, data) {
 				// blink 8 times
 				if (count < 16) {
 					etimer_set(&blink_timer, CLOCK_SECOND / 16);
+                    printf("[In blink timer]: The data received is %d\n", *(uint8_t *)data);
 				}
 				else {
 					// reset active and count
