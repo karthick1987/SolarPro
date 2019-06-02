@@ -95,11 +95,41 @@ static l_table lut[TOTAL_NODES] = {
 		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 1,
 		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x01, .cost[1] = 2,
 		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 0,
-	}
-	,
+	},
+};
+
+static l_table lut_reverse[TOTAL_NODES] = {
+    	/*
+	 * First node lookup table in reverse
+	 * */
+	{
+		// First entry
+		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 0, // Node 0x01 sends to itself: next hop 0x01, cost 0 hops
+		// Second entry
+		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x03, .cost[1] = 2, // Node 0x01 sends to 0x02: next hop 0x03, cost 2 hop
+		// Third entry
+		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 1, // Node 0x01 sends to 0x03: next hop 0x03, cost 1 hops
+	},
+
 	/*
-	 * Add here more lookup table entries if using more than three nodes.
-	 */
+	 * Second node lookup table in reverse
+	 * */
+	{
+		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 1, // Node 0x02 sends to 0x01: next hop 0x01, cost 1 hops
+		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 0, // ...
+		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x01, .cost[2] = 2,
+	},
+
+
+	/*
+	 * Third node lookup table in reverse
+	 * */
+	{
+		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x02, .cost[0] = 2,
+		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 1,
+		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 0,
+	},
+
 };
 
 //--------------------- PROCESS CONTROL BLOCK ---------------------
@@ -114,16 +144,31 @@ AUTOSTART_PROCESSES(&routing_process, &send_process,
 
 static void send_packet(packet_t tx_packet){
 	uint8_t i;
-	// Define next hop and forward packet
-	for(i = 0; i < TOTAL_NODES; i++)
-	{
-		if(linkaddr_cmp(&tx_packet.dest, &lut[node_id - 1].dest[i]))
-		{
-			packetbuf_copyfrom(&tx_packet, sizeof(packet_t));
-			unicast_send(&unicast, &lut[node_id - 1].next_hop[i]);
-			break;
-		}
-	}
+    if(tx_packet.message == LEDS_RED)
+    {
+        for(i = 0; i < TOTAL_NODES ; i++)
+        {
+            if(linkaddr_cmp(&tx_packet.dest, &lut_reverse[(node_id) - 1].dest[i]))
+            {
+                packetbuf_copyfrom(&tx_packet, sizeof(packet_t));
+                unicast_send(&unicast, &lut_reverse[(node_id) - 1].next_hop[i]);
+                break;
+            }
+        }
+    }
+	// for other colors use normal direction
+	else{
+        // Define next hop and forward packet
+        for(i = 0; i < TOTAL_NODES; i++)
+        {
+            if(linkaddr_cmp(&tx_packet.dest, &lut[node_id - 1].dest[i]))
+            {
+                packetbuf_copyfrom(&tx_packet, sizeof(packet_t));
+                unicast_send(&unicast, &lut[node_id - 1].next_hop[i]);
+                break;
+            }
+        }
+    }
 	turn_off(tx_packet.message);
 }
 
