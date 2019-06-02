@@ -170,7 +170,11 @@ unicast_recv(struct unicast_conn *c, const linkaddr_t *from) {
 		process_post(&destination_reaced_process, PROCESS_EVENT_MSG,
 				&rx_packet.message);
 		// Your Code here
-		return;
+
+        int dest_id = calculate_destination(node_id, TOTAL_NODES);
+        tx_packet.dest.u8[0] = (dest_id >> 8) & 0xFF;
+        tx_packet.dest.u8[1] = dest_id & 0xFF;
+		tx_packet.message = rx_packet.message;
 	}
 	else
 	{
@@ -181,6 +185,7 @@ unicast_recv(struct unicast_conn *c, const linkaddr_t *from) {
 
 	turn_on(rx_packet.message);
 	enqueue_packet(tx_packet);
+    return;
 }
 
 
@@ -197,7 +202,7 @@ PROCESS_THREAD(routing_process, ev, data) {
 	packet_t tx_packet;
 
 	// Configure your team's channel (11 - 26).
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
 
 	/* Configure the user button */
 	button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
