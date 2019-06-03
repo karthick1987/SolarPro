@@ -64,7 +64,7 @@ broadcast_sent(struct broadcast_conn *c, const linkaddr_t *to) {
 			 to->u8[0], to->u8[1],
 			(char *)packetbuf_dataptr());
     leds_off(LEDS_BLUE);
-	forward_msg((char *)packetbuf_dataptr());
+	//forward_msg((char *)packetbuf_dataptr());
 }
 
 // Creates an instance of a broadcast connection.
