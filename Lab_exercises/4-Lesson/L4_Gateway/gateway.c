@@ -66,7 +66,7 @@ PROCESS_THREAD(gateway_main_process, ev, data) {
 	/*
 	* set your group's channel
 	*/
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11);
 
 	print_settings();
 

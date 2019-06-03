@@ -59,21 +59,29 @@ static Buffer buffer;               // the buffer to store packets until they
                                     // are transmitted
 
 static struct unicast_conn unicast; // Creates an instance of a unicast
-                                    //connection.
+                                    // connection.
 
 
 static l_table lut[TOTAL_NODES] = {
+
+	//.dest		// Destination id. Every node should be able to reach every other node plus itself.
+				// Thus total entries are equal to total number of nodes
+
+	//.next_hop	// Next hop in route to destination.
+
+	//.cost		// Number of total hops of the packet route. Maximum 10.
 
 	/*
 	 * First node lookup table
 	 * */
 	{
+
 		// First entry
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 0,
+		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 0, // Node 0x01 sends to itself: next hop 0x01, cost 0 hops
 		// Second entry
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 1,
+		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 1, // Node 0x01 sends to 0x02: next hop 0x02, cost 1 hop
 		// Third entry
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x02, .cost[2] = 2,
+		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x02, .cost[2] = 2, // Node 0x01 sends to 0x03: next hop 0x02, cost 2 hops
 		/*
 		 * Add here more entries if using more than three nodes.
 		 */
@@ -83,8 +91,8 @@ static l_table lut[TOTAL_NODES] = {
 	 * Second node lookup table
 	 * */
 	{
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x03, .cost[0] = 2,
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 0,
+		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x03, .cost[0] = 2, // Node 0x02 sends to 0x01: next hop 0x03, cost 2 hops
+		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 0, // ...
 		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 1,
 	},
 
@@ -99,7 +107,7 @@ static l_table lut[TOTAL_NODES] = {
 };
 
 static l_table lut_reverse[TOTAL_NODES] = {
-    	/*
+    /*
 	 * First node lookup table in reverse
 	 * */
 	{
@@ -135,15 +143,16 @@ static l_table lut_reverse[TOTAL_NODES] = {
 //--------------------- PROCESS CONTROL BLOCK ---------------------
 PROCESS(routing_process, "Lesson 3: Routing");
 PROCESS(send_process, "Process to send packets");
-PROCESS(destination_reaced_process, "Process indicate a packets has reached its"
+PROCESS(destination_reached_process, "Process indicate a packets has reached its"
 		" destination");
 AUTOSTART_PROCESSES(&routing_process, &send_process,
-		&destination_reaced_process);
+		&destination_reached_process);
 
 //------------------------ FUNCTIONS ------------------------
 
 static void send_packet(packet_t tx_packet){
 	uint8_t i;
+
     if(tx_packet.message == LEDS_RED)
     {
         for(i = 0; i < TOTAL_NODES ; i++)
@@ -169,6 +178,7 @@ static void send_packet(packet_t tx_packet){
             }
         }
     }
+
 	turn_off(tx_packet.message);
 }
 
@@ -203,23 +213,26 @@ unicast_recv(struct unicast_conn *c, const linkaddr_t *from) {
 	packetbuf_copyto(&rx_packet);
 
 	// For Debug purposes
-	// printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
-	//		 from->u8[0], from->u8[1],
-	//		(char *)packetbuf_dataptr(),
-	//		(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
+	 printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
+			 from->u8[0], from->u8[1],
+			(char *)packetbuf_dataptr(),
+			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
 
 	// Check if packet reached destination
 	if(linkaddr_cmp(&rx_packet.dest, &linkaddr_node_addr))
 	{
-		printf("Packet reached destination \n");
-		process_post(&destination_reaced_process, PROCESS_EVENT_MSG,
+	/*  printf("Packet reached destination \n");
+		process_post(&destination_reached_process, PROCESS_EVENT_MSG,
 				&rx_packet.message);
-		// Your Code here
+		*/
 
-        int dest_id = calculate_destination(node_id, TOTAL_NODES);
-        tx_packet.dest.u8[0] = (dest_id >> 8) & 0xFF;
-        tx_packet.dest.u8[1] = dest_id & 0xFF;
+		// Your Code here
+		// generate packet
+		int dest_id = calculate_destination(node_id, TOTAL_NODES);
+		tx_packet.dest.u8[0] = (dest_id >> 8) & 0xFF;
+		tx_packet.dest.u8[1] = dest_id & 0xFF;
 		tx_packet.message = rx_packet.message;
+
 	}
 	else
 	{
@@ -345,7 +358,7 @@ PROCESS_THREAD(send_process, ev, data) {
 }
 
 
-PROCESS_THREAD(destination_reaced_process, ev, data) {
+PROCESS_THREAD(destination_reached_process, ev, data) {
 	PROCESS_BEGIN();
 
 	static struct etimer blink_timer;
