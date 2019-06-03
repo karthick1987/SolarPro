@@ -79,9 +79,6 @@ static void callback_function(void *data)
     printf("Toggling Red\r\n");
 }
 
-/*
- * Callback function for the 5s time to stop the 
- */
 static void kill_proc(void *data)
 {
     printf("entered kill_proc()\n");
@@ -114,7 +111,7 @@ PROCESS_THREAD(timers_and_threads_process, ev, data) {
     // callback timer to toggle led every second
     ctimer_set(&ct, CLOCK_SECOND, callback_function, NULL);
     // callback timer to kill proc
-    // ctimer_set(&ct_kill_proc, 5*CLOCK_SECOND, kill_proc, NULL);
+    ctimer_set(&ct_kill_proc, 5*CLOCK_SECOND, kill_proc, NULL);
 
     leds_on(LEDS_RED);
 
