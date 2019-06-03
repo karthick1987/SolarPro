@@ -43,11 +43,12 @@
 static void
 broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from) {
 	leds_on(LEDS_GREEN);
-	 printf("Broadcast message received from 0x%x%x: '%s' [RSSI %d]\n",
+	 printf("Broadcast message received from 0x%x%x: '%s' [RSSI %d]\r\n",
 			 from->u8[0], from->u8[1],
 			(char *)packetbuf_dataptr(),
 			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
 	leds_off(LEDS_GREEN);
+	forward_msg((char *)packetbuf_dataptr());
 }
 
 // Creates an instance of a broadcast connection.
@@ -95,6 +96,25 @@ static void print_settings(void){
 	printf("---------------------------------------\n");
 }
 
+/**
+* @param message - message to be broadcasted
+*/
+void forward_msg(const char * message) {
+
+	leds_on(LEDS_BLUE);
+
+    //open the connection, if necessary
+	broadcast_open(&broadcast, 129, &broadcast_call);
+
+    //send the message
+	packetbuf_copyfrom(message, 10);
+	broadcast_send(&broadcast);
+	printf("Broadcast message forwarded.\r\n");
+
+	leds_off(LEDS_BLUE);
+
+}
+
 //--------------------- PROCESS CONTROL BLOCK ---------------------
 PROCESS(flooding_process, "Lesson 5: Flooding");
 AUTOSTART_PROCESSES(&flooding_process);
@@ -110,7 +130,7 @@ PROCESS_THREAD(flooding_process, ev, data) {
 	static struct etimer et;
 
 	// Configure your team's channel (11 - 26).
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
 
 	print_settings();
 	check_for_invalid_addr();
@@ -126,7 +146,7 @@ PROCESS_THREAD(flooding_process, ev, data) {
 		leds_on(LEDS_RED);
 		packetbuf_copyfrom("Hello", 6);
 		broadcast_send(&broadcast);
-		printf("Broadcast message sent.\n");
+		printf("Broadcast message sent.\r\n");
 		leds_off(LEDS_RED);
 	}
 	PROCESS_END();

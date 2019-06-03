@@ -185,5 +185,5 @@ void check_for_invalid_addr(void) {
 
 
 uint8_t calculate_destination(uint8_t id, uint8_t network_size) {
-	return (id + network_size - 2) % network_size + 1;
+	return ((id + network_size - 2) % network_size) + 1;
 }

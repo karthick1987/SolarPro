@@ -42,6 +42,15 @@
 // Reading frequency in seconds.
 #define TEMP_READ_INTERVAL CLOCK_SECOND*1
 
+// global variables
+int sentFlag = 0;
+char sendstr[100];
+
+typedef struct{
+	int vdd;
+	int temp;
+}on_board_sensors;
+
 
 /*** CONNECTION DEFINITION***/
 
@@ -82,7 +91,7 @@ PROCESS_THREAD (on_board_sensors_process, ev, data) {
 
 	/* variables to be used */
 	static struct etimer temp_reading_timer;
-
+	static on_board_sensors obs;
 
 	PROCESS_EXITHANDLER(broadcast_close(&broadcastConn););
 	PROCESS_BEGIN ();
@@ -93,7 +102,7 @@ PROCESS_THREAD (on_board_sensors_process, ev, data) {
 	/*
 	 * set your group's channel
 	 */
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,26);
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
 
 	/*
 	 * open the connection
@@ -106,11 +115,37 @@ PROCESS_THREAD (on_board_sensors_process, ev, data) {
 
 		PROCESS_WAIT_EVENT();  // let process continue
 
-		/* If timer expired, pront sensor readings */
+		obs.vdd = vdd3_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED); //get VDD sensor value in mV
+		obs.temp = cc2538_temp_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED); // get onboard temperature in mC
+		/* If timer expired, print sensor readings */
 	    if(ev == PROCESS_EVENT_TIMER) {
 
 	    	leds_on(LEDS_PURPLE);
-    		printf("\r\nMy Battery Voltage [VDD] = %d mV", vdd3_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED));
+
+
+    		/* Send and print the battery voltage converted in mV alternated*/
+    		/* Send and print the temperature of the onboard temperature sensor in °C *10^-3 (mC) alternated*/
+
+    		switch(sentFlag) // initial value is 0
+			{
+    		case 0:
+    			printf("\r\nMy Battery Voltage [VDD] = %d mV", obs.vdd);
+    			sprintf(sendstr, "Battery: %d mV", obs.vdd);
+    			packetbuf_copyfrom(sendstr, 100);
+    			broadcast_send(&broadcastConn);
+    			sentFlag = 1;
+    			break;
+
+    		case 1:
+    			printf("\r\nMy Temperature	  [TEMP] = %d mC", obs.temp);
+    			sprintf(sendstr, "Temperature: %d mC", obs.temp);
+    			packetbuf_copyfrom(sendstr, 100);
+    			broadcast_send(&broadcastConn);
+    			sentFlag = 0;
+    			break;
+    		}
+
+
     		leds_off(LEDS_PURPLE);
 
     		etimer_set(&temp_reading_timer, TEMP_READ_INTERVAL);
