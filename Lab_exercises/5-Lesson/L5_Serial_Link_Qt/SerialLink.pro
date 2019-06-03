@@ -24,7 +24,7 @@ FORMS    += mainwindow.ui
 # your project:
 
 HOMEDIR = $$(HOME)
-include($$HOMEDIR//Documents/Master_TUM/SS19/WSN/qextserialport-1.2beta2/src/qextserialport.pri)
+include($$HOMEDIR/Documents/Master_TUM/SS19/WSN/qextserialport-1.2beta2/src/qextserialport.pri)
 
 # Before running the project, run qmake first:
 # In Qt Creator, right-click on the project

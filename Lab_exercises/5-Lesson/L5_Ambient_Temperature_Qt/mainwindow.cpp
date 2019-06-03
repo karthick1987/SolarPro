@@ -143,6 +143,32 @@ void MainWindow::receive()
                     ui->progressBar_light->setValue((int)value);
                 }
 
+                if (str.contains("Battery:"))
+                {
+
+                    double value;
+                    QStringList list = str.split(QRegExp("\\s"));
+
+                    qDebug() << "Str value: " << str;
+                    if(!list.isEmpty()){
+                        qDebug() << "List size " << list.size();
+                        for (int i=0; i < list.size(); i++){
+                            qDebug() << "List value "<< i <<" "<< list.at(i);
+                            if (list.at(i) == "Battery:") {
+                                value = list.at(i+1).toDouble();
+                                //adjust to mV
+                                value = value / 1000;
+                                printf("%f\n",value);
+                                ui->progressBar_light_2->setMaximum(4);
+                            }
+                        }
+                    }
+
+                    qDebug() << "Var value " << QString::number(value);
+                    ui->lcdNumber_light_2->display(value);
+                    ui->progressBar_light_2->setValue((int)value);
+                }
+
                 this->repaint();    // Update content of window immediately
                 str.clear();
             }
