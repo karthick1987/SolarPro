@@ -3,394 +3,143 @@
 
    Technische Universität München
    Lehrstuhl für Kommunikationsnetze
-   http://www.lkn.ei.tum.de
+http://www.lkn.ei.tum.de
 
-   copyright (c) 2018 Chair of Communication Networks, TUM
+copyright (c) 2017 Chair of Communication Networks, TUM
 
-   contributors:
-   * Thomas Szyrkowiec
-   * Mikhail Vilgelm
-   * Octavio Rodríguez Cervantes
-   * Angel Corona
-   * Donjeta Elshani
-   * Onur Ayan
-   * Benedikt Hess
+contributors:
+ * Thomas Szyrkowiec
+ * Mikhail Vilgelm
+ * Octavio Rodríguez Cervantes
+ * Angel Corona
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, version 2.0 of the License.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, version 2.0 of the License.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-   LESSON 5: Routing
-*/
-
-/*----------------------------INCLUDES----------------------------------------*/
-// standard C includes:
-#include <stdio.h>
-#include <stdint.h>
+ LESSON 2: Simple packet
+ */
 
 // Contiki-specific includes:
 #include "contiki.h"
-#include "net/rime/rime.h"     // Establish connections.
-#include "net/netstack.h"      // Wireless-stack definitions
-#include "dev/button-sensor.h" // User Button
-#include "dev/leds.h"          // Use LEDs.
+#include "net/rime/rime.h"	// Establish connections.
+#include "net/netstack.h"
+#include "lib/random.h"
+#include "dev/leds.h"
 
-// Header
-#include "routing.h"
-#include "buffer.h"
-#include "helpers.h"
-
-/*---------------------------Variables----------------------------------------*/
-static uint8_t node_id;		        // Stores node id
-
-static uint8_t led_color;	        // Each id has unique led color. When this
-                                    // node generates a packet, it has this led
-                                    //color.
-
-static Buffer buffer;               // the buffer to store packets until they
-                                    // are transmitted
-
-static struct unicast_conn unicast; // Creates an instance of a unicast
-                                    // connection.
+// Standard C includes:
+#include <stdio.h>
+#include <stdint.h>
 
 
-static l_table lut[TOTAL_NODES] = {
+/*---------------------------------------------------------------------------*/
+/* Callback function for received packet processing. 						 */
+/*---------------------------------------------------------------------------*/
+static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from) {
 
-	//.dest		// Destination id. Every node should be able to reach every other node plus itself.
-				// Thus total entries are equal to total number of nodes
+    leds_on(LEDS_GREEN);
 
-	//.next_hop	// Next hop in route to destination.
+    /* Get packet length */
+    uint8_t len = strlen( (char *)packetbuf_dataptr() );
+    /* Get packet's RSSI */
+    int16_t rssi = packetbuf_attr(PACKETBUF_ATTR_RSSI);
+    /* Print address of sending node */
+    printf("Got RX packet (broadcast) from: 0x%x%x, len: %d, RSSI: %d\r\n",from->u8[0], from->u8[1],len,rssi);
 
-	//.cost		// Number of total hops of the packet route. Maximum 10.
+    leds_off(LEDS_GREEN);
+}
 
-	/*
-	 * First node lookup table
-	 * */
-	{
+/* Connection information
+*/
+static struct broadcast_conn broadcastConn;
 
-		// First entry
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 0, // Node 0x01 sends to itself: next hop 0x01, cost 0 hops
-		// Second entry
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 1, // Node 0x01 sends to 0x02: next hop 0x02, cost 1 hop
-		// Third entry
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x02, .cost[2] = 2, // Node 0x01 sends to 0x03: next hop 0x02, cost 2 hops
-		/*
-		 * Add here more entries if using more than three nodes.
-		 */
-	},
+/**
+ * Assign callback functions to the connection
+ */
+static const struct broadcast_callbacks broadcast_callbacks = {broadcast_recv};
 
-	/*
-	 * Second node lookup table
-	 * */
-	{
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x03, .cost[0] = 2, // Node 0x02 sends to 0x01: next hop 0x03, cost 2 hops
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 0, // ...
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 1,
-	},
+/*** CONNECTION DEFINITION END ***/
 
-	/*
-	 * Third node lookup table
-	 * */
-	{
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 1,
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x01, .cost[1] = 2,
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 0,
-	},
-};
 
-static l_table lut_reverse[TOTAL_NODES] = {
+/*---------------------------------------------------------------------------*/
+/*  MAIN PROCESS DEFINITION  												 */
+/*---------------------------------------------------------------------------*/
+PROCESS(gpioTesting, "GPIO Testing");
+PROCESS(broadcastingThread, "Broadcasting Thread");
+AUTOSTART_PROCESSES(&broadcastingThread, &gpioTesting);
+
+/*** MAIN THREAD ***/
+PROCESS_THREAD(broadcastingThread, ev, data) {
+
+    static struct etimer et;
+
+    PROCESS_EXITHANDLER(broadcast_close(&broadcastConn));
+    PROCESS_BEGIN();
+
     /*
-	 * First node lookup table in reverse
-	 * */
-	{
-		// First entry
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 0, // Node 0x01 sends to itself: next hop 0x01, cost 0 hops
-		// Second entry
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x03, .cost[1] = 2, // Node 0x01 sends to 0x02: next hop 0x03, cost 2 hop
-		// Third entry
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 1, // Node 0x01 sends to 0x03: next hop 0x03, cost 1 hops
-	},
+     * set your group's channel
+     */
+    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11); //Group 1 + 10 = 11
 
-	/*
-	 * Second node lookup table in reverse
-	 * */
-	{
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x01, .cost[0] = 1, // Node 0x02 sends to 0x01: next hop 0x01, cost 1 hops
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 0, // ...
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x01, .cost[2] = 2,
-	},
+    /*
+     * Open broadcast connection
+     */
+    broadcast_open(&broadcastConn,129,&broadcast_callbacks);
 
+    etimer_set(&et, CLOCK_SECOND + 0.1*random_rand()/RANDOM_RAND_MAX); //randomize the sending time a little
 
-	/*
-	 * Third node lookup table in reverse
-	 * */
-	{
-		.dest[0].u8[1] = 0x01, .next_hop[0].u8[1] = 0x02, .cost[0] = 2,
-		.dest[1].u8[1] = 0x02, .next_hop[1].u8[1] = 0x02, .cost[1] = 1,
-		.dest[2].u8[1] = 0x03, .next_hop[2].u8[1] = 0x03, .cost[2] = 0,
-	},
+    while(1){
 
-};
+        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-//--------------------- PROCESS CONTROL BLOCK ---------------------
-PROCESS(routing_process, "Lesson 3: Routing");
-PROCESS(send_process, "Process to send packets");
-PROCESS(destination_reached_process, "Process indicate a packets has reached its"
-		" destination");
-AUTOSTART_PROCESSES(&routing_process, &send_process,
-		&destination_reached_process);
+        leds_on(LEDS_RED);
 
-//------------------------ FUNCTIONS ------------------------
+        /*
+         * fill the packet buffer
+         */
+        packetbuf_copyfrom("Hello You",10); //value 10 is the buffersize of the packet buffer which is filled with "Hello You"
 
-static void send_packet(packet_t tx_packet){
-	uint8_t i;
+        /*
+         * send the message
+         */
+        broadcast_send(&broadcastConn);
 
-    if(tx_packet.message == LEDS_RED)
-    {
-        for(i = 0; i < TOTAL_NODES ; i++)
-        {
-            if(linkaddr_cmp(&tx_packet.dest, &lut_reverse[(node_id) - 1].dest[i]))
-            {
-                packetbuf_copyfrom(&tx_packet, sizeof(packet_t));
-                unicast_send(&unicast, &lut_reverse[(node_id) - 1].next_hop[i]);
-                break;
-            }
-        }
+        /*
+         * for debugging
+         */
+        printf("Broadcast message sent\r\n");
+
+        /*
+         * reset the timer
+         */
+        etimer_reset(&et);
+        leds_off(LEDS_RED);
     }
-	// for other colors use normal direction
-	else{
-        // Define next hop and forward packet
-        for(i = 0; i < TOTAL_NODES; i++)
-        {
-            if(linkaddr_cmp(&tx_packet.dest, &lut[node_id - 1].dest[i]))
-            {
-                packetbuf_copyfrom(&tx_packet, sizeof(packet_t));
-                unicast_send(&unicast, &lut[node_id - 1].next_hop[i]);
-                break;
-            }
-        }
+    PROCESS_END();
+}
+
+PROCESS_THREAD(gpioTesting, ev, data) {
+    static struct etimer et1;
+
+    PROCESS_BEGIN();
+    /*
+     * Open broadcast connection
+     */
+    etimer_set(&et1, CLOCK_SECOND); // one second timer
+    while(1){
+
+        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));
+        etimer_reset(&et1);
+        leds_toggle(LEDS_BLUE);
+        printf("Toggled Blue led\n");
     }
-
-	turn_off(tx_packet.message);
-}
-
-
-// sets a timer and puts this timer and the packet in the buffer
-static void enqueue_packet(packet_t tx_packet){
-	uint8_t return_code;
-	struct timer packet_timer;
-
-	timer_set(&packet_timer, CLOCK_SECOND * TIMER_INTERVAL);
-
-	// put packet and timer in the queue
-	return_code = BufferIn(&buffer, tx_packet, packet_timer);
-
-	// check if storing was successful
-	if (return_code == BUFFER_FAIL) {
-		printf("The buffer is full. Consider increasing the 'BUFFER_SIZE' value"
-				" in 'buffer.h'\n");
-	} else {
-		// inform the send process a new packet was enqueued
-		process_post(&send_process, PROCESS_EVENT_MSG, 0);
-	}
-}
-
-
-// Defines the behavior of a connection upon receiving data.
-static void
-unicast_recv(struct unicast_conn *c, const linkaddr_t *from) {
-	packet_t rx_packet;
-	packet_t tx_packet;
-
-	packetbuf_copyto(&rx_packet);
-
-	// For Debug purposes
-	 printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
-			 from->u8[0], from->u8[1],
-			(char *)packetbuf_dataptr(),
-			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
-
-	// Check if packet reached destination
-	if(linkaddr_cmp(&rx_packet.dest, &linkaddr_node_addr))
-	{
-	/*  printf("Packet reached destination \n");
-		process_post(&destination_reached_process, PROCESS_EVENT_MSG,
-				&rx_packet.message);
-		*/
-
-		// Your Code here
-		// generate packet
-		int dest_id = calculate_destination(node_id, TOTAL_NODES);
-		tx_packet.dest.u8[0] = (dest_id >> 8) & 0xFF;
-		tx_packet.dest.u8[1] = dest_id & 0xFF;
-		tx_packet.message = rx_packet.message;
-
-	}
-	else
-	{
-		tx_packet.dest.u8[0] = rx_packet.dest.u8[0];
-		tx_packet.dest.u8[1] = rx_packet.dest.u8[1];
-		tx_packet.message = rx_packet.message;
-	}
-
-	turn_on(rx_packet.message);
-	enqueue_packet(tx_packet);
-    return;
-}
-
-
-// Defines the functions used as callbacks for a unicast connection.
-static const struct unicast_callbacks unicast_call = {unicast_recv};
-
-
-//------------------------ PROCESS' THREAD ------------------------
-PROCESS_THREAD(routing_process, ev, data) {
-
-	PROCESS_EXITHANDLER(unicast_close(&unicast);)
-	PROCESS_BEGIN();
-
-	packet_t tx_packet;
-
-	// Configure your team's channel (11 - 26).
-	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
-
-	/* Configure the user button */
-	button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
-
-	print_settings();
-	check_for_invalid_addr();
-	node_id = (linkaddr_node_addr.u8[1] & 0xFF);
-	led_color = get_led_color(node_id);
-	print_lookup_table(lut[node_id - 1], TOTAL_NODES);
-
-	// Open unicast connection.
-	unicast_open(&unicast, 129, &unicast_call);
-
-	while(1) {
-		PROCESS_WAIT_EVENT();
-
-		// check if button was pressed
-		if(ev == sensors_event)
-		{
-			if(data == &button_sensor)
-			{
-				if( button_sensor.value(BUTTON_SENSOR_VALUE_TYPE_LEVEL) ==
-						BUTTON_SENSOR_PRESSED_LEVEL ) {
-
-					// generate packet
-					int dest_id = calculate_destination(node_id, TOTAL_NODES);
-					tx_packet.dest.u8[0] = (dest_id >> 8) & 0xFF;
-					tx_packet.dest.u8[1] = dest_id & 0xFF;
-					tx_packet.message = led_color;
-
-					turn_on(led_color);
-
-					enqueue_packet(tx_packet);
-				}
-			}
-		}
-	}
-
-	PROCESS_END();
-}
-
-
-PROCESS_THREAD(send_process, ev, data) {
-	PROCESS_BEGIN();
-	printf("send_process: started\n");
-
-	static struct etimer t;
-	static struct timer packet_timer;
-	static packet_t tx_packet;
-	static uint8_t return_code;
-	static uint8_t is_processing_packet = 0;
-	static clock_time_t remaining_time;
-
-	while(1) {
-		PROCESS_WAIT_EVENT();
-
-		// a new packet has been added to the buffer
-		if (ev == PROCESS_EVENT_MSG) {
-			// is a packet already processed?
-			if ( ! is_processing_packet ) {
-				is_processing_packet = 1;
-				// get a packet from the buffer
-				return_code = BufferOut(&buffer, &tx_packet, &packet_timer);
-				// there was nothing in the buffer
-				if (return_code == BUFFER_FAIL){
-					is_processing_packet = 0;
-				}
-				// there was something in the buffer
-				else {
-					remaining_time = timer_remaining(&packet_timer);
-					// check if the timer has already expired
-					if ( timer_expired(&packet_timer) ) {
-						send_packet(tx_packet);
-						is_processing_packet = 0;
-						process_post(&send_process, PROCESS_EVENT_MSG, 0);
-					}
-					else {
-						// wait for the remaining time
-						etimer_set(&t, remaining_time);
-					}
-				}
-			}
-		} else if (ev == PROCESS_EVENT_TIMER) {
-			// timer indicating time to send expired
-			if (etimer_expired(&t)) {
-				send_packet(tx_packet);
-				is_processing_packet = 0;
-				// tell the process to check if there is another packet in the
-				// buffer
-				process_post(&send_process, PROCESS_EVENT_MSG, 0);
-			}
-		}
-	}
-	PROCESS_END();
-}
-
-
-PROCESS_THREAD(destination_reached_process, ev, data) {
-	PROCESS_BEGIN();
-
-	static struct etimer blink_timer;
-	static uint8_t count = 0;         // led toggle counter
-	static uint8_t active = 0;        // to simplify only one packet can blink
-	static uint8_t color;
-
-	while(1) {
-		PROCESS_WAIT_EVENT();
-		// a packet has reached its destination
-		if ( ( ev == PROCESS_EVENT_MSG ) && ( ! active ) ) {
-			active = 1;
-			color = *(uint8_t *)data;  // cast void pointer and store in color
-			etimer_set(&blink_timer, CLOCK_SECOND / 16);
-		}
-		else if (ev == PROCESS_EVENT_TIMER) {
-			if (etimer_expired(&blink_timer)) {
-				leds_toggle(color);
-				count ++;
-				// blink 8 times
-				if (count < 16) {
-					etimer_set(&blink_timer, CLOCK_SECOND / 16);
-                    printf("[In blink timer]: The data received is %d\n", *(uint8_t *)data);
-				}
-				else {
-					// reset active and count
-					active = 0;
-					count = 0;
-				}
-			}
-		}
-	}
-
-	PROCESS_END();
+    PROCESS_END();
 }
