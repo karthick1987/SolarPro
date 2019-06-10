@@ -39,6 +39,7 @@
 // Contiki includes
 #include "contiki.h"
 #include "dev/leds.h"
+#include "dev/gpio.h"
 #include "net/netstack.h"
 
 //project headers
@@ -82,28 +83,6 @@ void turn_off(uint8_t color) {
 		leds_off(color);
 	}
 }
-
-
-void print_lookup_table(l_table table, uint8_t number_of_nodes) {
-	uint8_t i;
-
-	printf("Lookup table:\n");
-	printf("----------------------------------\n");
-	printf("ID| DESTINATION | NEXT_HOP | COST \n");
-
-	for (i = 0; i< number_of_nodes; i++)
-	{
-	printf  ("%d | 0x%x	        |  0x%x	   | %d   \n", \
-			i, \
-			table.dest[i].u8[1],
-			table.next_hop[i].u8[1],
-			table.cost[i]
-			);
-	}
-
-	printf("-----------------------------------\n");
-}
-
 
 // Define a led color to indicate packets send by this RE-Mote
 uint8_t get_led_color(uint8_t id) {
@@ -150,40 +129,17 @@ void print_settings(void){
 	printf("---------------------------------------\n");
 }
 
-
-// Checks if the loaded RIME address is all zeroes.
-void check_for_invalid_addr(void) {
-	// Boolean flag to check invalid address.
-	static int iAmError = 0;
-
-	// All-zeroes address.
-	static linkaddr_t errAddr;
-	errAddr.u8[0] = 0;
-	errAddr.u8[1] = 0;
-
-	// Check if this mote got an invalid address.
-	iAmError = linkaddr_cmp(&errAddr, &linkaddr_node_addr);
-
-	// Check if this node got an invalid address
-	// according to lesson specification
-	if( ((linkaddr_node_addr.u8[1]& 0xFF) > TOTAL_NODES))
-		iAmError = 0x01;
-
-	// Turn ON all LEDs if we loaded an invalid address.
-	if(iAmError){
-		printf("\nLoaded an invalid RIME address (0x%x%x)! "
-				"Reprogramm the device.\n\n",
-				linkaddr_node_addr.u8[0],
-				linkaddr_node_addr.u8[1]);
-
-		// Freezes the app here. Reset needed.
-		while (1){
-			leds_on(LEDS_RED);
-		}
-	}
-}
-
-
 uint8_t calculate_destination(uint8_t id, uint8_t network_size) {
 	return ((id + network_size - 2) % network_size) + 1;
+}
+
+void toggle_GPIO(uint32_t port, uint8_t pins)
+{
+    const uint8_t ALLPINS = 0xFF;
+    uint8_t readpins;
+    readpins = GPIO_READ_PIN(port, ALLPINS);
+    uint8_t clearBitmask = (readpins & (~pins));
+    uint8_t tog = ((~readpins) & pins);
+    tog |= clearBitmask;
+    GPIO_WRITE_PIN(port, pins, tog);
 }

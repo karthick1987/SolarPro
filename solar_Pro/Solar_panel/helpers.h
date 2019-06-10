@@ -36,15 +36,12 @@
 
 #include <stdint.h>
 
-#include "routing.h"
 
 // turns a LED color on or off and keeps track of the number of packets
 // with specific color, so LEDS will not be tured off if there are more
 // packets of this color present.
 void turn_on(uint8_t color);
 void turn_off(uint8_t color);
-
-void print_lookup_table(l_table table, uint8_t number_of_nodes);
 
 // defines the led color based on the node id
 uint8_t get_led_color(uint8_t id);
@@ -56,5 +53,8 @@ void check_for_invalid_addr(void);
 
 // calculates the destination to send a new generated packet
 uint8_t calculate_destination(uint8_t id, uint8_t network_size);
+
+// toggle the GPIO
+void toggle_GPIO(uint32_t port, uint8_t pins);
 
 #endif /* HELPERS_H_ */
