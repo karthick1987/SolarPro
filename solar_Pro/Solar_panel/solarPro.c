@@ -34,6 +34,7 @@ contributors:
 #include "net/netstack.h"
 #include "lib/random.h"
 #include "dev/leds.h"
+#include "dev/gpio.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -133,12 +134,26 @@ PROCESS_THREAD(gpioTesting, ev, data) {
     /*
      * Open broadcast connection
      */
-    etimer_set(&et1, CLOCK_SECOND); // one second timer
-    while(1){
+    uint8_t pin = 1<<6;
+    uint32_t port = GPIO_A_BASE;
 
+    gpio_init();
+    GPIO_SOFTWARE_CONTROL(port, pin);
+    GPIO_SET_OUTPUT(port, pin);
+
+    etimer_set(&et1, 3*CLOCK_SECOND); // one second timer
+    while(1){
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));
         etimer_reset(&et1);
         leds_toggle(LEDS_BLUE);
+
+        const uint8_t ALLPINS = 0xFF;
+        uint8_t readpins;
+        readpins = GPIO_READ_PIN(port, ALLPINS);
+        uint8_t clearBitmask = (readpins & (~pin));
+        uint8_t tog = ((~readpins) & pin);
+        tog |= clearBitmask;
+        GPIO_WRITE_PIN(port, pin, tog);
         printf("Toggled Blue led\n");
     }
     PROCESS_END();
