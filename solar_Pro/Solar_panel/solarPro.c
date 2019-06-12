@@ -34,6 +34,7 @@ contributors:
 #include "net/netstack.h"
 #include "lib/random.h"
 #include "dev/leds.h"
+#include "core/net/linkaddr.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -150,6 +151,7 @@ PROCESS_THREAD(gpioTesting, ev, data) {
         leds_toggle(LEDS_BLUE);
         toggle_GPIO(port,pins);
         printf("Toggled Blue led\n");
+	printf("Node ID 0x%x\n", linkaddr_node_addr.u16);
     }
     PROCESS_END();
 }
