@@ -8,9 +8,8 @@
 // Private includes
 #include "nodeID.h"
 
-#define NETWORKSIZE 7
 
-static nodeID_t nodes[NETWORKSIZE] = 
+static nodeID_t nodes[] = 
 {
     {0,2048,0xBFED},
     {1,2215,0xF2F3},
@@ -20,6 +19,8 @@ static nodeID_t nodes[NETWORKSIZE] =
     {5,2053,0xDDED},
     {6,2207,0xB0EE}
 };
+
+const uint32_t NETWORKSIZE = (sizeof(nodes))/(sizeof(nodeID_t));
 
 void print_node_IDs( void )
 {
