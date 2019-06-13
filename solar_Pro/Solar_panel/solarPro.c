@@ -42,6 +42,7 @@ contributors:
 
 //project headers
 #include "helpers.h"
+#include "nodeID.h"
 
 
 /*---------------------------------------------------------------------------*/
@@ -92,6 +93,8 @@ PROCESS_THREAD(broadcastingThread, ev, data) {
      * set your group's channel
      */
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11); //Group 1 + 10 = 11
+    print_node_IDs();
+    
 
     /*
      * Open broadcast connection
