@@ -1,7 +1,7 @@
 CONTIKI_PROJECT = solarPro
 all: $(CONTIKI_PROJECT)
 
-EXTERNALDIRS=../common
+EXTERNALDIRS += ../common
 
 PROJECT_SOURCEFILES += helpers.c
 PROJECT_SOURCEFILES += nodeID.c

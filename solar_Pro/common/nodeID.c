@@ -1,5 +1,11 @@
 
+// Std file includes
 #include <stdio.h>
+
+// Contiki Includes
+#include "core/net/linkaddr.h"
+
+// Private includes
 #include "nodeID.h"
 
 #define NETWORKSIZE 7
@@ -22,4 +28,17 @@ void print_node_IDs( void )
     {
         printf("Node ID: %d, Serial No: %d, Rime ID: %x\n",nodes[i].nodeID,nodes[i].serialNumber,nodes[i].rimeID);
     }
+}
+
+node_num_t getMyNodeID( linkaddr_t l )
+{
+    int i=0;
+    for (i=0;i<NETWORKSIZE;i++)
+    {
+        if ( l.u16 == nodes[i].rimeID )
+        {
+            return nodes[i].nodeID;
+        }
+    }
+    return -1;
 }

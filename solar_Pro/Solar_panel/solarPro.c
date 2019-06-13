@@ -94,7 +94,7 @@ PROCESS_THREAD(broadcastingThread, ev, data) {
      */
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, 11); //Group 1 + 10 = 11
     print_node_IDs();
-    
+    printf("My node ID is: %d\n",getMyNodeID( linkaddr_node_addr ));
 
     /*
      * Open broadcast connection
