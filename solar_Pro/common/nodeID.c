@@ -2,7 +2,7 @@
 // Std file includes
 #include <stdio.h>
 
-// Contiki Includes
+// Contiki includes
 #include "core/net/linkaddr.h"
 
 // Private includes
