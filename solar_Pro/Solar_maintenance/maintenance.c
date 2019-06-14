@@ -38,7 +38,7 @@ contributors:
 
 // Reading frequency in seconds.
 #define TEMP_READ_INTERVAL CLOCK_SECOND*1
-#define JOYSTICK_POLLING CLOCK_SECOND/100 //10ms
+#define JOYSTICK_POLLING CLOCK_SECOND/10 //100ms
 
 
 /*---------------------------------------------------------------------------*/
@@ -180,12 +180,14 @@ PROCESS_THREAD(joystickThread, ev, data)
 		if(ev == PROCESS_EVENT_TIMER)
 		{
 			/*
-			 * Read ADC values. Data is in the 12 MSBs
+			 * Read ADC values. Data is in the 12 MSBs and get direction of the Joystick
 			 */
 			adc1_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
 			adc3_value = adc_zoul.value(ZOUL_SENSORS_ADC3) >> 4;
 			direction = getJoystickPosition(adc1_value, adc3_value);
 		}
+
+		etimer_set(&joystick_reading_timer, JOYSTICK_POLLING);
 
 	}
 
