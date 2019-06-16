@@ -1,4 +1,3 @@
-
 /*
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
@@ -20,10 +19,14 @@ contributors:
 // Contiki-specific includes:
 #include "contiki.h"
 #include "net/rime/rime.h"	// Establish connections.
-#include "net/netstack.h"
+#include "net/netstack.h"	// Wireless-stack definitions
 #include "lib/random.h"
-#include "dev/leds.h"
+#include "dev/leds.h"		// Use LEDs.
 #include "core/net/linkaddr.h"
+#include "dev/button-sensor.h" // User Button
+#include "dev/adc-zoul.h"      // ADC
+#include "dev/zoul-sensors.h"  // Sensor functions
+#include "dev/sys-ctrl.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -33,6 +36,11 @@ contributors:
 #include "helpers.h"
 #include "nodeID.h"
 
+// Reading frequency in seconds.
+#define LIGHT_READ_INTERVAL CLOCK_SECOND*1
+
+
+/*** CONNECTION DEFINITION***/
 
 /*---------------------------------------------------------------------------*/
 /* Callback function for received packet processing. 						 */
@@ -63,14 +71,40 @@ static const struct broadcast_callbacks broadcast_callbacks = {broadcast_recv};
 /*** CONNECTION DEFINITION END ***/
 
 
+
+/*** LIGHT SENSOR FUNCTION ***/
+//function for outputting the lux value read from sensor
+//@param m: calibration value m inscribed on the back of the sensor
+//@param b: calibration value b inscribed on the back of the sensor
+//@param adc_input: phidget input value. Use ZOUL_SENSORS_ADC1 or ZOUL_SENSORS_ADC3 depending on where the sensor is connected to.
+//@return int : lux value with a max of 1000.
+static int getLightSensorValue(uint16_t adc_value){
+	//Read voltage from the phidget interface
+	double sensorValue = adc_value/4.096;
+
+	//Convert the voltage in lux with the provided formula
+	double luxRaw = 1.4761 * sensorValue + 39.416;
+
+	//Return the value of the light with maximum value equal to 1000
+	uint16_t lux = luxRaw;
+
+	if (lux > 1000){
+		lux = 1000;
+	}
+	return lux;
+}
+
+
+
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
 PROCESS(gpioTesting, "GPIO Testing");
 PROCESS(broadcastingThread, "Broadcasting Thread");
-AUTOSTART_PROCESSES(&broadcastingThread, &gpioTesting);
+PROCESS(extSensorsThread, "External Sensors Thread")
+AUTOSTART_PROCESSES(&broadcastingThread, &gpioTesting, &extSensorsThread);
 
-/*** MAIN THREAD ***/
+/*** Broadcasting THREAD ***/
 PROCESS_THREAD(broadcastingThread, ev, data) {
 
     static struct etimer et;
@@ -122,6 +156,8 @@ PROCESS_THREAD(broadcastingThread, ev, data) {
     PROCESS_END();
 }
 
+
+/*** GPIO Testing THREAD ***/
 PROCESS_THREAD(gpioTesting, ev, data) {
     static struct etimer et1;
 
@@ -147,3 +183,51 @@ PROCESS_THREAD(gpioTesting, ev, data) {
     }
     PROCESS_END();
 }
+
+/*** External Sensors THREAD ***/
+PROCESS_THREAD (extSensorsThread, ev, data)
+{
+
+	/* variables to be used */
+	static struct etimer light_reading_timer;
+	static uint16_t adc1_value, adc3_value;
+
+	PROCESS_BEGIN ();
+
+
+	/* Configure the ADC ports */
+	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
+
+
+	etimer_set(&light_reading_timer, LIGHT_READ_INTERVAL);
+
+	while (1)
+	{
+
+		PROCESS_WAIT_EVENT();  // let process continue
+		/* If timer expired, print sensor readings */
+	    if(ev == PROCESS_EVENT_TIMER)
+	    {
+
+	    	/*
+	    	 * Read ADC values. Data is in the 12 MSBs
+	    	 */
+	    	adc1_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
+	    	adc3_value = adc_zoul.value(ZOUL_SENSORS_ADC3) >> 4;
+
+	    	/*
+	    	 * Print Raw values
+	    	 */
+
+	        uint16_t light_value1 = getLightSensorValue(adc1_value);
+	        uint16_t light_value3 = getLightSensorValue(adc3_value);
+	        printf("\r\nLuminosity via ADC1 is %d LUX", light_value1);
+	        printf("\r\nLuminosity via ADC3 is %d LUX", light_value3);
+
+    		etimer_set(&light_reading_timer, LIGHT_READ_INTERVAL);
+	    }
+    }
+
+	PROCESS_END ();
+}
+
