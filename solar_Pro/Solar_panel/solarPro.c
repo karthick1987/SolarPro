@@ -35,9 +35,11 @@ contributors:
 //project headers
 #include "helpers.h"
 #include "nodeID.h"
+#include "sensors.h"
 
 // Reading frequency in seconds.
 #define LIGHT_READ_INTERVAL CLOCK_SECOND*1
+#define TEMP_READ_INTERVAL CLOCK_SECOND*1
 
 
 /*** CONNECTION DEFINITION***/
@@ -72,36 +74,13 @@ static const struct broadcast_callbacks broadcast_callbacks = {broadcast_recv};
 
 
 
-/*** LIGHT SENSOR FUNCTION ***/
-//function for outputting the lux value read from sensor
-//@param m: calibration value m inscribed on the back of the sensor
-//@param b: calibration value b inscribed on the back of the sensor
-//@param adc_input: phidget input value. Use ZOUL_SENSORS_ADC1 or ZOUL_SENSORS_ADC3 depending on where the sensor is connected to.
-//@return int : lux value with a max of 1000.
-static int getLightSensorValue(uint16_t adc_value){
-	//Read voltage from the phidget interface
-	double sensorValue = adc_value/4.096;
-
-	//Convert the voltage in lux with the provided formula
-	double luxRaw = 1.4761 * sensorValue + 39.416;
-
-	//Return the value of the light with maximum value equal to 1000
-	uint16_t lux = luxRaw;
-
-	if (lux > 1000){
-		lux = 1000;
-	}
-	return lux;
-}
-
-
 
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
 PROCESS(gpioTesting, "GPIO Testing");
 PROCESS(broadcastingThread, "Broadcasting Thread");
-PROCESS(extSensorsThread, "External Sensors Thread")
+PROCESS(extSensorsThread, "External Sensors Thread");
 AUTOSTART_PROCESSES(&broadcastingThread, &gpioTesting, &extSensorsThread);
 
 /*** Broadcasting THREAD ***/

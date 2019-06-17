@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+environment/project/0.315784434.373178436/PATH/delimiter=\:
+environment/project/0.315784434.373178436/PATH/operation=replace
+environment/project/0.315784434.373178436/PATH/value=/usr/bin\:/bin\:/usr/sbin\:/sbin\:${PATH}\:/Users/hannesmachleid/gcc-arm-none-eabi-8-2018-q4-major/bin
+environment/project/0.315784434.373178436/append=true
+environment/project/0.315784434.373178436/appendContributed=true
+environment/project/0.315784434/PATH/delimiter=\:
+environment/project/0.315784434/PATH/operation=replace
+environment/project/0.315784434/PATH/value=/usr/bin\:/bin\:/usr/sbin\:/sbin\:${PATH}\:/Users/hannesmachleid/gcc-arm-none-eabi-8-2018-q4-major/bin
+environment/project/0.315784434/append=true
+environment/project/0.315784434/appendContributed=true

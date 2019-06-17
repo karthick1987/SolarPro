@@ -34,6 +34,7 @@ contributors:
 // project headers
 #include "helpers.h"
 #include "nodeID.h"
+#include "sensors.h"
 
 
 // Reading frequency in seconds.
@@ -68,32 +69,6 @@ static struct broadcast_conn broadcastConn;
 static const struct broadcast_callbacks broadcast_callbacks = {broadcast_recv};
 
 /*** CONNECTION DEFINITION END ***/
-
-/*** JOYSTICK SENSOR FUNCTION ***/
-//function for outputting the direction value read from joystick sensor
-//@param x: ADC value for x-direction tilting
-//@param y: ADC value for y-direction tilting
-//@return string: actual direction of the joystick beeing pressed.
-const char * getJoystickPosition(uint16_t x, uint16_t y){
-
-	if (x<300){
-		return "UP";
-	}
-	else if(x>2000){
-		return "DOWN";
-	}
-	else if(y<300){
-		return "LEFT";
-	}
-	else if(y>1500){
-		return "RIGHT";
-	}
-	else{
-		return "IDLE";
-	}
-
-}
-
 
 
 
