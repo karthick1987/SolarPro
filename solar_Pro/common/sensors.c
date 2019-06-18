@@ -13,20 +13,36 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is designed for all nodes to read out several sensor values.
+ This c-file is designed for all nodes to read out several sensor values.
  */
+
+// Std file includes
+#include <stdio.h>
+
+// Contiki includes
+#include "dev/adc-zoul.h"      // ADC
+#include "dev/zoul-sensors.h"  // Sensor functions
+#include "dev/sys-ctrl.h"
+
+// Private includes
+#include "sensors.h"
 
 /*** LIGHT SENSOR FUNCTION ***/
 //function for outputting the lux value read from sensor
-//@param m: calibration value m inscribed on the back of the sensor
-//@param b: calibration value b inscribed on the back of the sensor
 //@param adc_input: phidget input value. Use ZOUL_SENSORS_ADC1 or ZOUL_SENSORS_ADC3 depending on where the sensor is connected to.
-//@return int : lux value with a max of 1000.
-static int getLightSensorValue(uint16_t adc_value){
+//@return uint16_t : lux value with a max of 1000.
+static int getLightSensorValue(void){
+	static uint16_t adc_value;
+	//Configure the ADC ports
+	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
+
+	//Read ADC1 value. Data is in the 12 MSBs
+	adc_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
+
 	//Read voltage from the phidget interface
 	double sensorValue = adc_value/4.096;
 
-	//Convert the voltage in lux with the provided formula
+	//Convert the voltage in lux with the provided formula and calibration parameters
 	double luxRaw = 1.4761 * sensorValue + 39.416;
 
 	//Return the value of the light with maximum value equal to 1000
@@ -43,8 +59,15 @@ static int getLightSensorValue(uint16_t adc_value){
 //function for outputting the direction value read from joystick sensor
 //@param x: ADC value for x-direction tilting
 //@param y: ADC value for y-direction tilting
-//@return string: actual direction of the joystick beeing pressed.
-const char * getJoystickPosition(uint16_t x, uint16_t y){
+//@return int: actual direction of the joystick beeing pressed.
+static int getJoystickPosition(void){
+	static uint16_t x, y;
+	/* Configure the ADC ports */
+	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
+
+	// Read ADC values. Data is in the 12 MSBs
+	x = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
+	y = adc_zoul.value(ZOUL_SENSORS_ADC3) >> 4;
 
 	if (x<300){
 		return UP;
@@ -63,3 +86,24 @@ const char * getJoystickPosition(uint16_t x, uint16_t y){
 	}
 
 }
+
+
+/*** TEMPERATURE SENSOR FUNCTION INTERNAL ***/
+//function for outputting the temperature value of the zolertia remote
+//@return int: onboard temperature in mC.
+static int getIternalTemperature(void){
+
+	return cc2538_temp_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED);
+}
+
+
+/*** BATTERY VOLTAGE FUNCTION INTERNAL ***/
+//function for outputting the temperature value of the zolertia remote
+//@return int: battery voltage in mV
+static int getBatteryVoltage(void){
+
+	return vdd3_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED);
+}
+
+
+

@@ -27,7 +27,9 @@ contributors:
 #define RIGHT 4
 #define IDLE 5
 
-static int getLightSensorValue(uint16_t adc_value);
-const char * getJoystickPosition(uint16_t x, uint16_t y);
+static int getLightSensorValue(void);
+static int getJoystickPosition(void);
+static int getIternalTemperature(void);
+static int getBatteryVoltage(void);
 
 #endif

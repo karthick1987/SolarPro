@@ -37,7 +37,7 @@ contributors:
 #include "nodeID.h"
 #include "sensors.h"
 
-// Reading frequency in seconds.
+// Sensor reading frequency in seconds.
 #define LIGHT_READ_INTERVAL CLOCK_SECOND*1
 #define TEMP_READ_INTERVAL CLOCK_SECOND*1
 
@@ -169,13 +169,8 @@ PROCESS_THREAD (extSensorsThread, ev, data)
 
 	/* variables to be used */
 	static struct etimer light_reading_timer;
-	static uint16_t adc1_value, adc3_value;
 
 	PROCESS_BEGIN ();
-
-
-	/* Configure the ADC ports */
-	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
 
 
 	etimer_set(&light_reading_timer, LIGHT_READ_INTERVAL);
@@ -187,21 +182,8 @@ PROCESS_THREAD (extSensorsThread, ev, data)
 		/* If timer expired, print sensor readings */
 	    if(ev == PROCESS_EVENT_TIMER)
 	    {
-
-	    	/*
-	    	 * Read ADC values. Data is in the 12 MSBs
-	    	 */
-	    	adc1_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
-	    	adc3_value = adc_zoul.value(ZOUL_SENSORS_ADC3) >> 4;
-
-	    	/*
-	    	 * Print Raw values
-	    	 */
-
-	        uint16_t light_value1 = getLightSensorValue(adc1_value);
-	        uint16_t light_value3 = getLightSensorValue(adc3_value);
-	        printf("\r\nLuminosity via ADC1 is %d LUX", light_value1);
-	        printf("\r\nLuminosity via ADC3 is %d LUX", light_value3);
+	        uint16_t light_value = getLightSensorValue();
+	        printf("\r\nLuminosity via ADC1 is %d LUX", light_value);
 
     		etimer_set(&light_reading_timer, LIGHT_READ_INTERVAL);
 	    }
