@@ -25,19 +25,18 @@ contributors:
 #include "dev/sys-ctrl.h"
 
 // Private includes
-#include "sensors.h"
+#include "projSensors.h"
 
 /*** LIGHT SENSOR FUNCTION ***/
 //function for outputting the lux value read from sensor
 //@param adc_input: phidget input value. Use ZOUL_SENSORS_ADC1 or ZOUL_SENSORS_ADC3 depending on where the sensor is connected to.
 //@return uint16_t : lux value with a max of 1000.
-static int getLightSensorValue(void){
-	static uint16_t adc_value;
+uint16_t getLightSensorValue(void){
 	//Configure the ADC ports
 	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
 
 	//Read ADC1 value. Data is in the 12 MSBs
-	adc_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
+	uint16_t adc_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
 
 	//Read voltage from the phidget interface
 	double sensorValue = adc_value/4.096;
@@ -48,6 +47,7 @@ static int getLightSensorValue(void){
 	//Return the value of the light with maximum value equal to 1000
 	uint16_t lux = luxRaw;
 
+    // Saturation value
 	if (lux > 1000){
 		lux = 1000;
 	}
@@ -60,7 +60,7 @@ static int getLightSensorValue(void){
 //@param x: ADC value for x-direction tilting
 //@param y: ADC value for y-direction tilting
 //@return int: actual direction of the joystick beeing pressed.
-static int getJoystickPosition(void){
+int getJoystickPosition(void){
 	static uint16_t x, y;
 	/* Configure the ADC ports */
 	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
@@ -91,7 +91,7 @@ static int getJoystickPosition(void){
 /*** TEMPERATURE SENSOR FUNCTION INTERNAL ***/
 //function for outputting the temperature value of the zolertia remote
 //@return int: onboard temperature in mC.
-static int getIternalTemperature(void){
+int getInternalTemperature(void){
 
 	return cc2538_temp_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED);
 }
@@ -100,7 +100,7 @@ static int getIternalTemperature(void){
 /*** BATTERY VOLTAGE FUNCTION INTERNAL ***/
 //function for outputting the temperature value of the zolertia remote
 //@return int: battery voltage in mV
-static int getBatteryVoltage(void){
+int getBatteryVoltage(void){
 
 	return vdd3_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED);
 }

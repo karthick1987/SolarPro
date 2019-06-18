@@ -16,8 +16,8 @@ contributors:
  This header file is designed for all nodes to read out several sensor values.
  */
 
-#ifndef SENSORS_H
-#define SENSORS_H
+#ifndef PROJSENSORS_H
+#define PROJSENSORS_H
 
 #include "contiki.h"
 
@@ -27,9 +27,10 @@ contributors:
 #define RIGHT 4
 #define IDLE 5
 
-static int getLightSensorValue(void);
-static int getJoystickPosition(void);
-static int getIternalTemperature(void);
-static int getBatteryVoltage(void);
+
+uint16_t getLightSensorValue(void);
+int getJoystickPosition(void);
+int getInternalTemperature(void);
+int getBatteryVoltage(void);
 
 #endif

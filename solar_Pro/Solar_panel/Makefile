@@ -3,9 +3,7 @@ all: $(CONTIKI_PROJECT)
 
 EXTERNALDIRS += ../common
 
-PROJECT_SOURCEFILES += helpers.c
-PROJECT_SOURCEFILES += nodeID.c
-
+PROJECT_SOURCEFILES += helpers.c nodeID.c projSensors.c
 CONTIKI_WITH_RIME = 1
 CONTIKI = $(HOME)/contiki
 

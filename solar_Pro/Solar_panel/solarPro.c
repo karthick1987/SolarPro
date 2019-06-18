@@ -35,7 +35,7 @@ contributors:
 //project headers
 #include "helpers.h"
 #include "nodeID.h"
-#include "sensors.h"
+#include "projSensors.h"
 
 // Sensor reading frequency in seconds.
 #define LIGHT_READ_INTERVAL CLOCK_SECOND*1
