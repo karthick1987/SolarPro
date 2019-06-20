@@ -15,3 +15,5 @@ contributors:
 
  This c-file is specifically designed for the base node.
  */
+
+#include anemometer.h
