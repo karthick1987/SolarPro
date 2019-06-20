@@ -217,11 +217,8 @@ static int configure(int type, int value)
     anemometer.ticks_avg = 0;
 
     anemometer_sensors.anemometer.int_en = 0;
-    anemometer_sensors.rain_gauge.int_en = 0;
     anemometer_sensors.anemometer.ticks = 0;
-    anemometer_sensors.rain_gauge.ticks = 0;
     anemometer_sensors.anemometer.value = 0;
-    anemometer_sensors.rain_gauge.value = 0;
 
     if(!value) {
       anemometer_int_callback = NULL;
