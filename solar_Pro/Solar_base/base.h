@@ -15,3 +15,13 @@ contributors:
 
  This header file is specifically designed for the base node.
  */
+
+#ifndef BASE_H
+#define BASE_H
+
+#include "contiki.h"
+#include "core/net/linkaddr.h"
+
+
+
+#endif

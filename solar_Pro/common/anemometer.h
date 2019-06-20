@@ -54,7 +54,7 @@ contributors:
  * \name Anemometer interrupt callback macro
  * @{
  */
-#define ANEMOMETER_INT(ptr) anemometer_int_callback = ptr;
+#define REGISTER_ANEMOMETER_INT(ptr) anemometer_int_callback = ptr;
 extern void (*anemometer_int_callback)(uint16_t value);
 /** @} */
 /* -------------------------------------------------------------------------- */
