@@ -27,7 +27,6 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
-#include "dev/servo.h"          // Servo functionality
 
 // Standard C includes:
 #include <stdio.h>
@@ -155,8 +154,7 @@ PROCESS_THREAD(gpioTesting, ev, data) {
     GPIO_SET_OUTPUT(port, pins);
 
     initServo();
-    static int pos;
-    pos = 0;
+    static int pos = 0;
     etimer_set(&et1, 3*CLOCK_SECOND); // one second timer
     while(1){
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));
@@ -167,7 +165,7 @@ PROCESS_THREAD(gpioTesting, ev, data) {
         printf("Node ID 0x%x\n", linkaddr_node_addr.u16);
 
         // Test Servo motor
-        servo_position(SERVO_CHANNEL_2, SERVOPORT, SERVOPIN, pos);
+        setServoPosition(pos);
 
         if (pos < 180)
             pos += 10;

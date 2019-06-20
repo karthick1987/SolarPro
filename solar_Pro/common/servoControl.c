@@ -23,7 +23,7 @@ contributors:
 // Private includes
 #include "servoControl.h"
 #include "dev/gpio.h"
-#include "dev/pwm.h"
+#include "dev/servo.h"          // Servo functionality
 
 int initServo(void)
 {
@@ -34,6 +34,7 @@ int initServo(void)
 
 int setServoPosition(int angle)
 {
+    /*
     if (pwm_enable(50,0,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
         printf("PWM sucessfully inited\n");
     else
@@ -45,17 +46,13 @@ int setServoPosition(int angle)
 
     //if (pwm_enable(50,10,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
     //pwm_start(PWM_TIMER_1, PWM_TIMER_A, GPIO_B_NUM, 0);
-
+*/
+    servo_position(SERVO_CHANNEL_2, SERVOPORT, SERVOPIN, angle);
     return PWM_SUCCESS;
 }
 
 int getServoPosition(void)
 {
     return PWM_SUCCESS;
-}
-
-static void calculatePWMFactor(int angle)
-{
-
 }
 
