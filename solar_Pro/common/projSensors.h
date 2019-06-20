@@ -29,9 +29,26 @@ contributors:
 
 #define LIGHTSENSOR_VREF 5
 
+/** \brief Gets the light sensor value in 12 bit format
+ *
+ * \return \c 12-bit Light sensor value as an unsigned integer
+ */
 uint16_t getLightSensorValue(void);
+
+//Todo
+
 int getJoystickPosition(void);
+
+/** \brief Gets the internal Temperatute from the Board
+ *
+ * \return \c Returns the temperature from the board in mC
+ */
 int getInternalTemperature(void);
-int getBatteryVoltage(void);
+
+/** \brief Gets the Battery voltage in mV
+ *
+ * \return \c Returns the battery voltage in mV
+ */
+uint16_t getBatteryVoltage(void);
 
 #endif

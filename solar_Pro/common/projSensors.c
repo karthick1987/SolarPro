@@ -100,7 +100,7 @@ int getInternalTemperature(void){
 /*** BATTERY VOLTAGE FUNCTION INTERNAL ***/
 //function for outputting the temperature value of the zolertia remote
 //@return int: battery voltage in mV
-int getBatteryVoltage(void){
+uint16_t getBatteryVoltage(void){
 
 	return vdd3_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED);
 }

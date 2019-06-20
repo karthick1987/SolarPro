@@ -25,11 +25,32 @@ contributors:
 typedef uint16_t node_num_t;
 typedef struct nodeID{
 
-    node_num_t nodeID;
-    uint16_t serialNumber;
-    uint16_t rimeID;
+    node_num_t nodeID;      // This is the nodeID in the network that we define
+    uint16_t serialNumber;  // This is the serial number printed on the label on the mote
+    uint16_t rimeID;        // This is the unique MAC address on the mote
 }nodeID_t;
 
+/**
+ * \brief       prints a table of Node ID
+ *
+ *              This function will print the table of NodeIDs present in the
+ *              each of the motes
+ *
+ *
+ * \hideinitializer
+ */
 void print_node_IDs( void );
+
+/**
+ * \brief       Gets the current Node's Network node ID
+ * \param l     The RIME ID of the mote
+ *
+ * \return      The Node's Network ID
+ *              This function prints the Nodes network ID by taking the
+ *              RIME ID as the input. Its basically a translation table
+ *
+ *
+ * \hideinitializer
+ */
 node_num_t getMyNodeID( linkaddr_t l );
 #endif
