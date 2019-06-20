@@ -161,3 +161,65 @@ anemometer_interrupt_handler(uint8_t port, uint8_t pin)
 }
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+static int
+value(int type)
+{
+  uint64_t aux;
+
+  if((type != WEATHER_METER_ANEMOMETER) &&
+     (type != WEATHER_METER_RAIN_GAUGE) &&
+     (type != WEATHER_METER_WIND_VANE) &&
+     (type != WEATHER_METER_WIND_VANE_AVG_X) &&
+     (type != WEATHER_METER_ANEMOMETER_AVG) &&
+     (type != WEATHER_METER_ANEMOMETER_AVG_X) &&
+     (type != WEATHER_METER_ANEMOMETER_MAX)) {
+    PRINTF("Weather: requested an invalid sensor value\n");
+    return WEATHER_METER_ERROR;
+  }
+
+  if(!enabled) {
+    PRINTF("Weather: module is not configured\n");
+    return WEATHER_METER_ERROR;
+  }
+
+  switch(type) {
+  case WEATHER_METER_WIND_VANE:
+    return weather_meter_get_wind_dir();
+
+  case WEATHER_METER_WIND_VANE_AVG_X:
+    return wind_vane.value_avg_xm;
+
+  case WEATHER_METER_ANEMOMETER:
+    return weather_sensors.anemometer.value;
+
+  case WEATHER_METER_ANEMOMETER_AVG:
+    if(anemometer.value_avg <= 0) {
+      return (uint16_t)anemometer.value_avg;
+    }
+    aux = anemometer.value_avg / anemometer.ticks_avg;
+    return (uint16_t)aux;
+
+  case WEATHER_METER_ANEMOMETER_AVG_X:
+    return anemometer.value_avg_xm;
+
+  case WEATHER_METER_ANEMOMETER_MAX:
+    return anemometer.value_max;
+
+  /* as the default return type is int, we have a lower resolution if returning
+   * the calculated value as it is truncated, an alternative is returning the
+   * ticks and calculating on your own with WEATHER_METER_AUX_RAIN_MM
+   */
+  case WEATHER_METER_RAIN_GAUGE:
+#if WEATHER_METER_RAIN_RETURN_TICKS
+    return weather_sensors.rain_gauge.ticks;
+#else
+    return weather_sensors.rain_gauge.value;
+#endif
+
+  default:
+    return WEATHER_METER_ERROR;
+  }
+}
+/*---------------------------------------------------------------------------*/
+
