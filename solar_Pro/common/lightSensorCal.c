@@ -13,7 +13,7 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is designed for all nodes to set specific Node IDs depending on the RIME ID.
+ This c-file is designed for all nodes to set specific light sensor calibration values.
  */
 
 // Std file includes
