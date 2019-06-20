@@ -27,7 +27,7 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
-#include "dev/pwm.h"
+#include "dev/servo.h"          // Servo functionality
 
 // Standard C includes:
 #include <stdio.h>
@@ -37,6 +37,7 @@ contributors:
 #include "helpers.h"
 #include "nodeID.h"
 #include "projSensors.h"
+#include "servoControl.h"
 
 // Sensor reading frequency in seconds.
 #define LIGHT_READ_INTERVAL CLOCK_SECOND*1
@@ -79,6 +80,7 @@ static const struct broadcast_callbacks broadcast_callbacks = {broadcast_recv};
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
+
 PROCESS(gpioTesting, "GPIO Testing");
 PROCESS(broadcastingThread, "Broadcasting Thread");
 PROCESS(extSensorsThread, "External Sensors Thread");
@@ -152,21 +154,9 @@ PROCESS_THREAD(gpioTesting, ev, data) {
     GPIO_SOFTWARE_CONTROL(port, pins);
     GPIO_SET_OUTPUT(port, pins);
 
-    GPIO_SOFTWARE_CONTROL(GPIO_A_BASE,1<<2);
-    GPIO_SET_OUTPUT(GPIO_A_BASE,1<<2);
-
-    if (pwm_enable(50,5,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
-        printf("PWM sucessfully inited\n");
-    else
-        printf("PWM init FAILED\n");
-
-    pwm_start(PWM_TIMER_1, PWM_TIMER_A, GPIO_A_NUM, 2);
-
-    clock_delay(350000);
-
-    if (pwm_enable(50,10,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
-    pwm_start(PWM_TIMER_1, PWM_TIMER_A, GPIO_B_NUM, 0);
-
+    initServo();
+    static int pos;
+    pos = 0;
     etimer_set(&et1, 3*CLOCK_SECOND); // one second timer
     while(1){
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));
@@ -175,6 +165,14 @@ PROCESS_THREAD(gpioTesting, ev, data) {
         toggle_GPIO(port,pins);
         printf("Toggled Blue led\n");
         printf("Node ID 0x%x\n", linkaddr_node_addr.u16);
+
+        // Test Servo motor
+        servo_position(SERVO_CHANNEL_2, SERVOPORT, SERVOPIN, pos);
+
+        if (pos < 180)
+            pos += 10;
+        else
+            pos = 0;
     }
     PROCESS_END();
 }
@@ -199,7 +197,7 @@ PROCESS_THREAD (extSensorsThread, ev, data)
 	    if(ev == PROCESS_EVENT_TIMER)
 	    {
 	        uint16_t light_value = getLightSensorValue();
-	        printf("\r\nLuminosity via ADC1 is %d LUX", light_value);
+	        printf("Luminosity via ADC1 is %d LUX\n", light_value);
 
     		etimer_set(&light_reading_timer, LIGHT_READ_INTERVAL);
 	    }

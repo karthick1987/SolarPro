@@ -20,10 +20,11 @@ contributors:
 #ifndef SERVOCONTROL_H
 #define SERVOCONTROL_H
 
-static int servoPos;
+#define SERVOPORT   GPIO_A_NUM
+#define SERVOPIN    2
 
-int initServo();
-int setServoPosition();
-int getServoPosition();
+int initServo(void);
+int setServoPosition(int angle);
+int getServoPosition(void);
 
 #endif

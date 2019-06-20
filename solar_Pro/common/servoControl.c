@@ -22,8 +22,40 @@ contributors:
 
 // Private includes
 #include "servoControl.h"
+#include "dev/gpio.h"
+#include "dev/pwm.h"
 
 int initServo(void)
 {
+    GPIO_SOFTWARE_CONTROL(SERVOPORT,SERVOPIN);
+    GPIO_SET_OUTPUT(SERVOPORT,SERVOPIN);
+    return PWM_SUCCESS;
+}
+
+int setServoPosition(int angle)
+{
+    if (pwm_enable(50,0,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
+        printf("PWM sucessfully inited\n");
+    else
+        printf("PWM init FAILED\n");
+
+    pwm_start(PWM_TIMER_1, PWM_TIMER_A, SERVOPORT, SERVOPIN);
+
+    //clock_delay(350000);
+
+    //if (pwm_enable(50,10,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
+    //pwm_start(PWM_TIMER_1, PWM_TIMER_A, GPIO_B_NUM, 0);
+
+    return PWM_SUCCESS;
+}
+
+int getServoPosition(void)
+{
+    return PWM_SUCCESS;
+}
+
+static void calculatePWMFactor(int angle)
+{
 
 }
+
