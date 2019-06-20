@@ -33,13 +33,13 @@ contributors:
 //@return uint16_t : lux value with a max of 1000.
 uint16_t getLightSensorValue(void){
 	//Configure the ADC ports
-	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 | ZOUL_SENSORS_ADC3);
+	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 );
 
 	//Read ADC1 value. Data is in the 12 MSBs
 	uint16_t adc_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
 
 	//Read voltage from the phidget interface
-	double sensorValue = adc_value/4.096;
+	double sensorValue = adc_value*3.3/4.096;
 
 	//Convert the voltage in lux with the provided formula and calibration parameters
 	double luxRaw = 1.4761 * sensorValue + 39.416;

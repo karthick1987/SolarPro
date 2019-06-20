@@ -27,7 +27,7 @@ contributors:
 #include "nodeID.h"
 
 
-static nodeID_t nodes[] = 
+static const nodeID_t nodes[] = 
 {
     {0,2048,0xBFED},
     {1,2215,0xF2F3},

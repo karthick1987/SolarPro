@@ -27,6 +27,7 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
+#include "dev/pwm.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -151,6 +152,21 @@ PROCESS_THREAD(gpioTesting, ev, data) {
     GPIO_SOFTWARE_CONTROL(port, pins);
     GPIO_SET_OUTPUT(port, pins);
 
+    GPIO_SOFTWARE_CONTROL(GPIO_A_BASE,1<<2);
+    GPIO_SET_OUTPUT(GPIO_A_BASE,1<<2);
+
+    if (pwm_enable(50,5,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
+        printf("PWM sucessfully inited\n");
+    else
+        printf("PWM init FAILED\n");
+
+    pwm_start(PWM_TIMER_1, PWM_TIMER_A, GPIO_A_NUM, 2);
+
+    clock_delay(350000);
+
+    if (pwm_enable(50,10,20,PWM_TIMER_1,PWM_TIMER_A) == PWM_SUCCESS)
+    pwm_start(PWM_TIMER_1, PWM_TIMER_A, GPIO_B_NUM, 0);
+
     etimer_set(&et1, 3*CLOCK_SECOND); // one second timer
     while(1){
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));
@@ -158,7 +174,7 @@ PROCESS_THREAD(gpioTesting, ev, data) {
         leds_toggle(LEDS_BLUE);
         toggle_GPIO(port,pins);
         printf("Toggled Blue led\n");
-	printf("Node ID 0x%x\n", linkaddr_node_addr.u16);
+        printf("Node ID 0x%x\n", linkaddr_node_addr.u16);
     }
     PROCESS_END();
 }

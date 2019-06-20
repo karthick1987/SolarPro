@@ -16,22 +16,11 @@ contributors:
  This header file is designed for all nodes to read out several sensor values.
  */
 
-#ifndef PROJSENSORS_H
-#define PROJSENSORS_H
+#ifndef LIGHTSENSORCAL_H
+#define LIGHTSENSORCAL_H
 
-#include "contiki.h"
-
-#define UP 1
-#define DOWN 2
-#define LEFT 3
-#define RIGHT 4
-#define IDLE 5
-
-#define LIGHTSENSOR_VREF 5
-
-uint16_t getLightSensorValue(void);
-int getJoystickPosition(void);
-int getInternalTemperature(void);
-int getBatteryVoltage(void);
+typedef struct lightSensorCal{
+    float mVal,bVal;
+}lightSensorCal_t;
 
 #endif

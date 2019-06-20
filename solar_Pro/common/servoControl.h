@@ -1,3 +1,4 @@
+
 /*
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
@@ -16,22 +17,13 @@ contributors:
  This header file is designed for all nodes to read out several sensor values.
  */
 
-#ifndef PROJSENSORS_H
-#define PROJSENSORS_H
+#ifndef SERVOCONTROL_H
+#define SERVOCONTROL_H
 
-#include "contiki.h"
+static int servoPos;
 
-#define UP 1
-#define DOWN 2
-#define LEFT 3
-#define RIGHT 4
-#define IDLE 5
-
-#define LIGHTSENSOR_VREF 5
-
-uint16_t getLightSensorValue(void);
-int getJoystickPosition(void);
-int getInternalTemperature(void);
-int getBatteryVoltage(void);
+int initServo();
+int setServoPosition();
+int getServoPosition();
 
 #endif
