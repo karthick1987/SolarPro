@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = solarPro
+CONTIKI_PROJECT = base
 all: $(CONTIKI_PROJECT)
 
 EXTERNALDIRS += ../common

@@ -29,6 +29,12 @@ contributors:
 #include "sys/timer.h"
 #include "sys/ctimer.h"
 /*---------------------------------------------------------------------------*/
+#define DEBUG 0
+#if DEBUG
+#define PRINTF(...) printf(__VA_ARGS__)
+#else
+#define PRINTF(...)
+#endif
 /*---------------------------------------------------------------------------*/
 #define DEBOUNCE_DURATION  (CLOCK_SECOND >> 6)
 /*---------------------------------------------------------------------------*/
@@ -65,8 +71,8 @@ typedef struct {
   anemometer_sensors_t anemometer;
 } anemometer_sensors;
 
-static anemometer_sensors anemometer_sensors;
-static anemometer_ext_t anemometer;
+static anemometer_sensors anemo_sensor;
+static anemometer_ext_t anemo;
 
 /*---------------------------------------------------------------------------*/
 static void ct_callback(void *ptr)
@@ -76,36 +82,36 @@ static void ct_callback(void *ptr)
 	/* Disable to make the calculations in an interrupt-safe context */
 	  GPIO_DISABLE_INTERRUPT(ANEMOMETER_SENSOR_PORT_BASE,
 	                         ANEMOMETER_SENSOR_PIN_MASK);
-	  wind_speed = anemometer_sensors.anemometer.ticks;
+	  wind_speed = anemo_sensor.anemometer.ticks;
 	  wind_speed *= ANEMOMETER_SPEED_1S;
-	  anemometer_sensors.anemometer.value = (uint16_t)wind_speed;
-	  anemometer.ticks_avg++;
-	  anemometer.value_avg += anemometer_sensors.anemometer.value;
-	  anemometer.value_buf_xm += anemometer_sensors.anemometer.value;
+	  anemo_sensor.anemometer.value = (uint16_t)wind_speed;
+	  anemo.ticks_avg++;
+	  anemo.value_avg += anemo_sensor.anemometer.value;
+	  anemo.value_buf_xm += anemo_sensor.anemometer.value;
 
 	  /* Take maximum value */
-	  if(anemometer_sensors.anemometer.value > anemometer.value_max) {
-	    anemometer.value_max = anemometer_sensors.anemometer.value;
+	  if(anemo_sensor.anemometer.value > anemo.value_max) {
+	    anemo.value_max = anemo_sensor.anemometer.value;
 	  }
 
 	  /* Calculate the 2 minute average */
-	  if(!(anemometer.ticks_avg % ANEMOMETER_AVG_PERIOD)) {
+	  if(!(anemo.ticks_avg % ANEMOMETER_AVG_PERIOD)) {
 	    PRINTF("\nWindspeed: calculate the %u averages ***\n", ANEMOMETER_AVG_PERIOD);
 
-	    if(anemometer.value_buf_xm) {
-	      anemometer.value_avg_xm = anemometer.value_buf_xm / ANEMOMETER_AVG_PERIOD;
-	      anemometer.value_buf_xm = 0;
+	    if(anemo.value_buf_xm) {
+	      anemo.value_avg_xm = anemo.value_buf_xm / ANEMOMETER_AVG_PERIOD;
+	      anemo.value_buf_xm = 0;
 	    } else {
-	      anemometer.value_avg_xm = 0;
+	      anemo.value_avg_xm = 0;
 	    }
 	  }
 
 	  /* Check for roll-over */
-	  if(!anemometer.ticks_avg) {
-	    anemometer.value_avg = 0;
+	  if(!anemo.ticks_avg) {
+	    anemo.value_avg = 0;
 	  }
 
-	  anemometer_sensors.anemometer.ticks = 0;
+	  anemo_sensor.anemometer.ticks = 0;
 
 	  /* Enable the interrupt again */
 	  GPIO_ENABLE_INTERRUPT(ANEMOMETER_SENSOR_PORT_BASE,
@@ -127,10 +133,10 @@ PROCESS_THREAD(anemometer_int_process, ev, data)
   while(1) {
     PROCESS_YIELD();
 
-    if((ev == anemometer_int_event) && (anemometer_sensors.anemometer.int_en)) {
-      if(anemometer_sensors.anemometer.ticks >=
-         anemometer_sensors.anemometer.int_thres) {
-        anemometer_int_callback(anemometer_sensors.anemometer.ticks);
+    if((ev == anemometer_int_event) && (anemo_sensor.anemometer.int_en)) {
+      if(anemo_sensor.anemometer.ticks >=
+         anemo_sensor.anemometer.int_thres) {
+        anemometer_int_callback(anemo_sensor.anemometer.ticks);
       }
     }
   }
@@ -141,7 +147,6 @@ PROCESS_THREAD(anemometer_int_process, ev, data)
 static void
 anemometer_interrupt_handler(uint8_t port, uint8_t pin)
 {
-  uint32_t aux;
 
   /* Prevent bounce events */
   if(!timer_expired(&debouncetimer)) {
@@ -155,7 +160,7 @@ anemometer_interrupt_handler(uint8_t port, uint8_t pin)
    */
 
   if((port == ANEMOMETER_SENSOR_PORT) && (pin == ANEMOMETER_SENSOR_PIN)) {
-    anemometer_sensors.anemometer.ticks++;
+    anemo_sensor.anemometer.ticks++;
     process_post(&anemometer_int_process, anemometer_int_event, NULL);
   }
 }
@@ -182,20 +187,20 @@ static int value(int type)
   switch(type) {
 
   case ANEMOMETER:
-    return anemometer_sensors.anemometer.value;
+    return anemo_sensor.anemometer.value;
 
   case ANEMOMETER_AVG:
-    if(anemometer.value_avg <= 0) {
-      return (uint16_t)anemometer.value_avg;
+    if(anemo.value_avg <= 0) {
+      return (uint16_t)anemo.value_avg;
     }
-    aux = anemometer.value_avg / anemometer.ticks_avg;
+    aux = anemo.value_avg / anemo.ticks_avg;
     return (uint16_t)aux;
 
   case ANEMOMETER_AVG_X:
-    return anemometer.value_avg_xm;
+    return anemo.value_avg_xm;
 
   case ANEMOMETER_MAX:
-    return anemometer.value_max;
+    return anemo.value_max;
 
   default:
     return ANEMOMETER_ERROR;
@@ -206,19 +211,19 @@ static int configure(int type, int value)
 {
   if((type != ANEMOMETER_ACTIVE) &&
      (type != ANEMOMETER_INT_OVER) &&
-     (type != NEMOMETER_INT_DIS) &&
+     (type != ANEMOMETER_INT_DIS)) {
     PRINTF("Anemometer: invalid configuration option\n");
     return ANEMOMETER_ERROR;
   }
 
   if(type == ANEMOMETER_ACTIVE) {
 
-    anemometer.value_avg = 0;
-    anemometer.ticks_avg = 0;
+    anemo.value_avg = 0;
+    anemo.ticks_avg = 0;
 
-    anemometer_sensors.anemometer.int_en = 0;
-    anemometer_sensors.anemometer.ticks = 0;
-    anemometer_sensors.anemometer.value = 0;
+    anemo_sensor.anemometer.int_en = 0;
+    anemo_sensor.anemometer.ticks = 0;
+    anemo_sensor.anemometer.value = 0;
 
     if(!value) {
       anemometer_int_callback = NULL;
@@ -254,13 +259,13 @@ static int configure(int type, int value)
 
   switch(type) {
   case ANEMOMETER_INT_OVER:
-    anemometer_sensors.anemometer.int_en = 1;
-    anemometer_sensors.anemometer.int_thres = value;
+    anemo_sensor.anemometer.int_en = 1;
+    anemo_sensor.anemometer.int_thres = value;
     PRINTF("Anemometer: anemometer threshold %u\n", value);
     break;
   case ANEMOMETER_INT_DIS:
     PRINTF("Anemometer: anemometer int disabled\n");
-    anemometer_sensors.anemometer.int_en = 0;
+    anemo_sensor.anemometer.int_en = 0;
     break;
   default:
     return ANEMOMETER_ERROR;

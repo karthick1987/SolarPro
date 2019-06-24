@@ -66,7 +66,7 @@ extern void (*anemometer_int_callback)(uint16_t value);
 #ifdef CONF_ANEMOMETER_PIN
 #define ANEMOMETER_SENSOR_PIN   CONF_ANEMOMETER_PIN
 #else
-#define ANEMOMETER_SENSOR_PIN   1
+#define ANEMOMETER_SENSOR_PIN   0
 #endif
 #ifdef CONF_ANEMOMETER_PORT
 #define ANEMOMETER_SENSOR_PORT  CONF_ANEMOMETER_PORT
@@ -87,7 +87,7 @@ extern const struct sensors_sensor anemometer;
 /* -------------------------------------------------------------------------- */
 
 
-#endif #endif /* ifndef ANEMOMETER_H_ */
+#endif /* ifndef ANEMOMETER_H_ */
 /**
  * @}
  */
