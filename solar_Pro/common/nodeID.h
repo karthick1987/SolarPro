@@ -31,26 +31,26 @@ typedef struct nodeID{
 }nodeID_t;
 
 /**
- * \brief       prints a table of Node ID
+ * @brief       prints a table of Node ID
  *
  *              This function will print the table of NodeIDs present in the
  *              each of the motes
  *
  *
- * \hideinitializer
+ * @hideinitializer
  */
 void print_node_IDs( void );
 
 /**
- * \brief       Gets the current Node's Network node ID
- * \param l     The RIME ID of the mote
+ * @brief       Gets the current Node's Network node ID
+ * @param l     The RIME ID of the mote
  *
- * \return      The Node's Network ID
+ * @return      The Node's Network ID
  *              This function prints the Nodes network ID by taking the
  *              RIME ID as the input. Its basically a translation table
  *
  *
- * \hideinitializer
+ * @hideinitializer
  */
 node_num_t getMyNodeID( linkaddr_t l );
 #endif
