@@ -17,18 +17,18 @@ contributors:
  This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef PACKET_H
-#define PACKET_H
+#ifndef PAYLOAD_H
+#define PAYLOAD_H
 
 #include "nodeid.h"
 #include "contiki.h"
 
-typedef struct packet {
+typedef struct payload {
 
     node_num_t nodeNum;
     uint16_t temp_mv;
     uint16_t battVolt_mV;
     uint16_t lightSensor;
-}packet_t
+}payload_t;
 
 #endif
