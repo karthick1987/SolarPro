@@ -1,5 +1,4 @@
-obj_zoul/rimestats.o: \
- /Users/hannesmachleid/contiki/core/net/rime/rimestats.c \
- /Users/hannesmachleid/contiki/core/./net/rime/rimestats.h
- /Users/hannesmachleid/contiki/core/net/rime/rimestats.c :
- /Users/hannesmachleid/contiki/core/./net/rime/rimestats.h :
+obj_zoul/rimestats.o: /home/ge73vig/contiki/core/net/rime/rimestats.c \
+ /home/ge73vig/contiki/core/./net/rime/rimestats.h
+/home/ge73vig/contiki/core/net/rime/rimestats.c :
+ /home/ge73vig/contiki/core/./net/rime/rimestats.h :

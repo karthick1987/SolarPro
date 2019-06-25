@@ -1,2 +1,2 @@
-obj_zoul/gcr.o: /Users/hannesmachleid/contiki/core/lib/gcr.c
-/Users/hannesmachleid/contiki/core/lib/gcr.c :
+obj_zoul/gcr.o: /home/ge73vig/contiki/core/lib/gcr.c
+/home/ge73vig/contiki/core/lib/gcr.c :

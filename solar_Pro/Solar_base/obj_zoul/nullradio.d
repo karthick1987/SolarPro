@@ -1,6 +1,6 @@
-obj_zoul/nullradio.o: /Users/hannesmachleid/contiki/core/dev/nullradio.c \
- /Users/hannesmachleid/contiki/core/./dev/nullradio.h \
- /Users/hannesmachleid/contiki/core/./dev/radio.h
-/Users/hannesmachleid/contiki/core/dev/nullradio.c :
- /Users/hannesmachleid/contiki/core/./dev/nullradio.h :
- /Users/hannesmachleid/contiki/core/./dev/radio.h :
+obj_zoul/nullradio.o: /home/ge73vig/contiki/core/dev/nullradio.c \
+ /home/ge73vig/contiki/core/./dev/nullradio.h \
+ /home/ge73vig/contiki/core/./dev/radio.h
+/home/ge73vig/contiki/core/dev/nullradio.c :
+ /home/ge73vig/contiki/core/./dev/nullradio.h :
+ /home/ge73vig/contiki/core/./dev/radio.h :

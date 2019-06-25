@@ -1,4 +1,4 @@
-obj_zoul/list.o: /Users/hannesmachleid/contiki/core/lib/list.c \
- /Users/hannesmachleid/contiki/core/./lib/list.h
-/Users/hannesmachleid/contiki/core/lib/list.c :
- /Users/hannesmachleid/contiki/core/./lib/list.h :
+obj_zoul/list.o: /home/ge73vig/contiki/core/lib/list.c \
+ /home/ge73vig/contiki/core/./lib/list.h
+/home/ge73vig/contiki/core/lib/list.c :
+ /home/ge73vig/contiki/core/./lib/list.h :
