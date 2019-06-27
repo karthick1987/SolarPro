@@ -25,16 +25,32 @@ contributors:
 
 #define BROADCASTMSGSIZE_BYTES  100
 
-typedef struct payload {
+typedef enum {
+    DISCOVERY,
+    EMERGENCY,
+    ACK
+}pkttype_t;
 
-    node_num_t nodeNum;
-    uint16_t temp_mv;
+typedef struct unicastMsg {
+    uint16_t temp_mC;
     uint16_t battVolt_mV;
     uint16_t lightSensor;
-}payload_t;
+    uint16_t servoPos_Degs;
+}unicastMsg_t;
 
 typedef struct broadcastMsg {
     char msg[BROADCASTMSGSIZE_BYTES];
 }broadcastMsg_t;
+
+union commType{
+    pkttype_t bpkt;
+    unicastMsg_t u;
+    broadcastMsg_t b;
+};
+
+typedef struct payload {
+    node_num_t nodeNum;
+    union commType cType;
+}payload_t
 
 #endif
