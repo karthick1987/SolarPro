@@ -20,8 +20,10 @@ contributors:
 #ifndef PAYLOAD_H
 #define PAYLOAD_H
 
-#include "nodeid.h"
+#include "nodeID.h"
 #include "contiki.h"
+
+#define BROADCASTMSGSIZE_BYTES  100
 
 typedef struct payload {
 
@@ -30,5 +32,9 @@ typedef struct payload {
     uint16_t battVolt_mV;
     uint16_t lightSensor;
 }payload_t;
+
+typedef struct broadcastMsg {
+    char msg[BROADCASTMSGSIZE_BYTES];
+}broadcastMsg_t;
 
 #endif

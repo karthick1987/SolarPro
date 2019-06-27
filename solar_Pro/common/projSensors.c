@@ -40,8 +40,6 @@ uint16_t getLightSensorValue(void){
 
 	//Read voltage from the phidget interface
 	double sensorValue = adc_value*3.3/4.096;
-
-	//Convert the voltage in lux with the provided formula and calibration parameters
 	double luxRaw = 1.4761 * sensorValue + 39.416;
 
 	//Return the value of the light with maximum value equal to 1000
@@ -57,8 +55,6 @@ uint16_t getLightSensorValue(void){
 
 /*** JOYSTICK SENSOR FUNCTION ***/
 //function for outputting the direction value read from joystick sensor
-//@param x: ADC value for x-direction tilting
-//@param y: ADC value for y-direction tilting
 //@return int: actual direction of the joystick beeing pressed.
 int getJoystickPosition(void){
 	static uint16_t x, y;

@@ -29,24 +29,29 @@ contributors:
 
 static const nodeID_t nodes[] = 
 {
-    {0,2048,0xBFED},
-    {1,2215,0xF2F3},
-    {2,2162,0x60EF},
-    {3,2031,0xE7F3},
-    {4,1982,0xDCF3},
-    {5,2053,0xDDED},
-    {6,2207,0xB0EE}
+    {1,2048,0xBFED},
+    {2,2215,0xF2F3},
+    {3,2162,0x60EF},
+    {4,2031,0xE7F3},
+    {5,1982,0xDCF3},
+    {6,2053,0xDDED},
+    {7,2207,0xB0EE}
 };
 
 const uint32_t NETWORKSIZE = (sizeof(nodes))/(sizeof(nodeID_t));
 
+/*** This prints the Network IDs of the nodes ***/
+//function for printing the node IDs on the console
+//@return int: actual direction of the joystick beeing pressed.
 void print_node_IDs( void )
 {
     int i=0;
+    printf("=========================================\n");
     for (i=0;i<NETWORKSIZE;i++)
     {
         printf("Node ID: %d, Serial No: %d, Rime ID: %x\n",nodes[i].nodeID,nodes[i].serialNumber,nodes[i].rimeID);
     }
+    printf("=========================================\n");
 }
 
 node_num_t getMyNodeID( linkaddr_t l )

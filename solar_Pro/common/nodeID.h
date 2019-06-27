@@ -22,7 +22,7 @@ contributors:
 #include "contiki.h"
 #include "core/net/linkaddr.h"
 
-typedef uint16_t node_num_t;
+typedef int16_t node_num_t;
 typedef struct nodeID{
 
     node_num_t nodeID;      // This is the nodeID in the network that we define
