@@ -74,8 +74,6 @@
 \usepackage{caption}
 
 \RequirePackage[utf8]{inputenc}
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 % Add the compsoc option for Computer Society conferences.
 %
 % If IEEEtran.cls has not been installed into the LaTeX system files,
@@ -370,11 +368,19 @@
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Karthik Sukumar, Johannes Machleid}
-\IEEEauthorblockA{School of Electrical and\\Computer Engineering\\
+\author{\IEEEauthorblockN{Karthik Sukumar}
+\IEEEauthorblockA{Electrical and Computer Engineering\\
 Technical University of Munich\\
 Munich, Germany\\
-Email: \{karthik.sukumar,johannes.machleid\}@tum.de }
+karthik.sukumar@tum.de}
+\and
+\IEEEauthorblockN{Johannes Machleid}
+\IEEEauthorblockA{Electrical and Computer Engineering\\
+Technical University of Munich\\
+Munich, Germany\\
+johannes.machleid@tum.de
+}
+
 
 % \thanks{*This paper is a reinterpretation of the paper \emph{J. Caesar. ``Digital sundials and broadband technology,'' in Proc.
 % IOOC-ECOC, 19XX, pp. 557-998}. It was presented on December 24, 2006 (Paper submission deadline) as a part of MSCE Seminar (MSCE course TUM), under the supervision of M. Sc. (or Dipl. Ing.) 
@@ -490,7 +496,7 @@ Subsection text here.
 
 
 \subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
+Subsubsection text here ~\cite{bachir2010mac}.
 
 
 % An example of a floating figure using the graphicx package.
@@ -578,7 +584,7 @@ Subsubsection text here.
 
 
 \section{Conclusion}
-The conclusion goes here.
+The conclusion goes here ~\cite{dunkels2011contikimac}.
 
 
 
@@ -587,10 +593,10 @@ The conclusion goes here.
 
 
 % use section* for acknowledgement
-\section*{Acknowledgment}
+%\section*{Acknowledgment}
 
 
-The authors would like to thank...
+%The authors would like to thank...
 
 
 
@@ -618,13 +624,9 @@ The authors would like to thank...
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
+\bibliography{IEEEabrv, sources}
+\bibliographystyle{IEEEtran}
 
 
 
