@@ -57,9 +57,10 @@ typedef struct {
 static r_table_t rTable;
 
 void initNetworkDisc(void);
-int broadcast_recv(void);
-int broadcast_send(void);
-int unicast_recv(void);
-int unicast_send(void);
+void forward_msg(const char * message)
+void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
+void broadcast_send(struct broadcast_conn *c, const linkaddr_t *to)
+void unicast_recv(struct unicast_conn *c, const linkaddr_t *from)
+void unicast_send(packet_t tx_packet)
 
 #endif /* ROUTING_H */

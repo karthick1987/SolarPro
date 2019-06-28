@@ -35,7 +35,7 @@ typedef struct unicastMsg {
     uint16_t temp_mC;
     uint16_t battVolt_mV;
     uint16_t lightSensor;
-    uint16_t servoPos_Degs;
+    uint16_t servoPos_degs;
 }unicastMsg_t;
 
 typedef struct broadcastMsg {
