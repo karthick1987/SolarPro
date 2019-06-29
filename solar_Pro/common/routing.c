@@ -28,6 +28,7 @@ extern const nodeID_t nodes[];
 
 void initNetworkDisc(void)
 {
+    printf("Network Discovery Initiated");
     // reset routing table
     int i=0;
     for(i=0;i<TOTAL_NODES;i++)
@@ -49,15 +50,21 @@ void initNetworkDisc(void)
  */
 void forward_msg(const char * message)
 {
+    if (broadcastCount < MAXBROADCASTRETRANSMIT)
+    {
+      //open the connection, if necessary
+      broadcast_open(&broadcast, 129, &broadcast_call);
 
-    //open the connection, if necessary
-    broadcast_open(&broadcast, 129, &broadcast_call);
+      //send the message
+      packetbuf_copyfrom(message,sizeof(message) );
 
-    //send the message
-    packetbuf_copyfrom(message,sizeof(message) );
+      broadcast_send(&broadcast);
 
-  broadcast_send(&broadcast);
-
+      broadcastCount ++;
+    }
+    else {
+      printf("Maximum amount of %d broadcasts reached", MAXBROADCASTRETRANSMIT)
+    }
 }
 
 void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)

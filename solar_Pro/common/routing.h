@@ -33,11 +33,6 @@
 // Standard C includes:
 #include <stdint.h>
 
-// the number of nodes present in the network
-#ifndef TOTAL_NODES
-#define TOTAL_NODES NETWORK_SIZE
-#endif
-
 #define UNINIT      0xFFFF
 #define UNINITCOST  0xFF
 
