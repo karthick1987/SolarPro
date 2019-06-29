@@ -26,12 +26,7 @@ contributors:
 // Private includes
 #include "nodeID.h"
 
-<<<<<<< HEAD
-
 static const nodeID_t nodes[] =
-=======
-static const nodeID_t nodes[] = 
->>>>>>> d4d1ad283d2f9990bb34cce50b1058f6cf1579f2
 {
     {1,2048,0xBFED},
     {2,2215,0xF2F3},
@@ -84,4 +79,3 @@ node_num_t returnIDIndex( const linkaddr_t l)
     }
     return -1;
 }
-
