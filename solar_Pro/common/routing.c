@@ -4,6 +4,7 @@
 #include "net/rime/rime.h"     // Establish connections.
 #include "net/netstack.h"      // Wireless-stack definitions
 #include "dev/leds.h"          // Use LEDs.
+#include "payload.h"
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
@@ -46,7 +47,7 @@ void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
 			(char *)packetbuf_dataptr(),
 			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
 
-  char message[100];
+  char message[BROADCASTMSGSIZE_BYTES];
   packetbuf_copyto(message);
   forward_msg(message);
   leds_off(LEDS_GREEN);
