@@ -43,6 +43,19 @@ void print_node_IDs( void );
 
 /**
  * @brief       Gets the current Node's Network node ID
+ *
+ * @return      The Node's Network ID
+ *              This function prints the Nodes network ID. 
+ *              Its basically a translation table
+ *
+ *
+ * @hideinitializer
+ */
+node_num_t getMyNodeID( void );
+
+
+/**
+ * @brief       Compares the RIME ID and returns the received Node's Nerwork Node ID
  * @param l     The RIME ID of the mote
  *
  * @return      The Node's Network ID
@@ -52,5 +65,5 @@ void print_node_IDs( void );
  *
  * @hideinitializer
  */
-node_num_t getMyNodeID( linkaddr_t l );
+node_num_t returnIDIndex( linkaddr_t l );
 #endif
