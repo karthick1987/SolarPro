@@ -22,6 +22,10 @@ contributors:
 #include "contiki.h"
 #include "core/net/linkaddr.h"
 
+#define TOTAL_NODES 8
+
+//extern const uint32_t TOTAL_NODES; // To make calculated Network size available to all files
+
 typedef int16_t node_num_t;
 typedef struct nodeID{
 
@@ -29,6 +33,8 @@ typedef struct nodeID{
     uint16_t serialNumber;  // This is the serial number printed on the label on the mote
     uint16_t rimeID;        // This is the unique MAC address on the mote
 }nodeID_t;
+
+extern const nodeID_t nodes[];
 
 /**
  * @brief       prints a table of Node ID
@@ -53,6 +59,17 @@ void print_node_IDs( void );
  */
 node_num_t getMyNodeID( void );
 
+/**
+ * @brief       Gets the current Node's RIME ID
+ *
+ * @return      The Node's Network ID
+ *              This function prints the Nodes network ID. 
+ *              Its basically a translation table
+ *
+ *
+ * @hideinitializer
+ */
+linkaddr_t * getMyRIMEID( void );
 
 /**
  * @brief       Compares the RIME ID and returns the received Node's Nerwork Node ID
@@ -65,5 +82,5 @@ node_num_t getMyNodeID( void );
  *
  * @hideinitializer
  */
-node_num_t returnIDIndex( linkaddr_t l );
+node_num_t returnIDIndex( const linkaddr_t *l );
 #endif

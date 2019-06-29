@@ -108,9 +108,11 @@ PROCESS_THREAD (windSpeedThread, ev, data)
 		wind_speed_avg_2m = anemometer.value(ANEMOMETER_AVG_X);
 		wind_speed_max = anemometer.value(ANEMOMETER_MAX);
 
+/*
 		printf("Wind speed: %u.%u km/h ", wind_speed/1000, (wind_speed % 1000)/100);
 		printf("(%u.%u km/h avg, %u.%u km/h 2m avg, %u.%u km/h max)\n\n", wind_speed_avg/1000, (wind_speed_avg % 1000)/100,
 				wind_speed_avg_2m/1000, (wind_speed_avg_2m % 1000)/100, wind_speed_max/1000, (wind_speed_max % 1000)/100);
+*/
 		etimer_reset(&et);
 
     }
@@ -144,7 +146,7 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
 				}
 			}
 		}//end if(ev == sensors_event)
-	} //end while(1)
+	}//end while(1)
 
 	PROCESS_END();
 

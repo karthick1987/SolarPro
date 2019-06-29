@@ -26,7 +26,7 @@ contributors:
 // Private includes
 #include "nodeID.h"
 
-static const nodeID_t nodes[] =
+const nodeID_t nodes[] =
 {
     {1,2048,0xBFED},
     {2,2215,0xF2F3},
@@ -38,7 +38,7 @@ static const nodeID_t nodes[] =
     {8,2071,0xB964}
 };
 
-static const uint32_t TOTAL_NODES = (sizeof(nodes))/(sizeof(nodeID_t));
+// static uint32_t TOTAL_NODES = (sizeof(nodes))/(sizeof(nodeID_t));
 
 /*** This prints the Network IDs of the nodes ***/
 //function for printing the node IDs on the console
@@ -54,6 +54,11 @@ void print_node_IDs( void )
     printf("=========================================\n");
 }
 
+linkaddr_t * getMyRIMEID( void )
+{
+	return &linkaddr_node_addr;
+}
+
 node_num_t getMyNodeID( void )
 {
     int i=0;
@@ -67,14 +72,14 @@ node_num_t getMyNodeID( void )
     return -1;
 }
 
-node_num_t returnIDIndex( const linkaddr_t l)
+node_num_t returnIDIndex( const linkaddr_t *l)
 {
     int i=0;
     for (i=0;i<TOTAL_NODES;i++)
     {
-        if ( l.u16 == nodes[i].rimeID )
+        if ( l->u16 == nodes[i].rimeID )
         {
-            return nodes[i].nodeID;
+            return (nodes[i].nodeID-1);
         }
     }
     return -1;

@@ -51,6 +51,6 @@ union commType {
 typedef struct payload {
     node_num_t destNode, originNode;
     union commType cType;
-}payload_t
+}payload_t;
 
 #endif

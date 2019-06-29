@@ -28,6 +28,9 @@
 #define ROUTING_H
 
 #include "core/net/linkaddr.h"
+
+// Private includes
+#include "nodeID.h"
 #include "payload.h"
 
 // Standard C includes:
@@ -37,7 +40,7 @@
 #define UNINITCOST  0xFF
 
 // custom structures
-typedef struct r_table
+typedef struct
 {
 	linkaddr_t dest[TOTAL_NODES];			// Destination id. Every node should be able to reach every other node plus itself. Thus total entries are equal to total number of nodes.
 	linkaddr_t next_hop[TOTAL_NODES];		// Next hop in route to destination.
@@ -49,13 +52,10 @@ typedef struct {
 	broadcastMsg_t message;         // Broadcast Packet with destination
 }broadcastPacket_t;
 
-static r_table_t rTable;
-
 void initNetworkDisc(void);
-void forward_msg(const char * message)
-void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
-void broadcast_send(struct broadcast_conn *c, const linkaddr_t *to)
-void unicast_recv(struct unicast_conn *c, const linkaddr_t *from)
-void unicast_send(packet_t tx_packet)
+void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
+void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);
+void unict_recv(struct unicast_conn *c, const linkaddr_t *from);
+void unict_send(payload_t tx_packet);
 
 #endif /* ROUTING_H */
