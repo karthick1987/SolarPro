@@ -38,6 +38,7 @@ contributors:
 #include "helpers.h"
 #include "nodeID.h"
 #include "anemometer.h"
+#include "routing.h"
 
 /*---------------------------------------------------------------------------*/
 #define READ_SENSOR_PERIOD          CLOCK_SECOND
@@ -51,7 +52,8 @@ static struct etimer et;
 /*---------------------------------------------------------------------------*/
 
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
-AUTOSTART_PROCESSES(&windSpeedThread);
+PROCESS(networkdiscoveryThread, "Network Discovery Thread");
+AUTOSTART_PROCESSES(&windSpeedThread, &networkdiscoveryThread);
 
 
 /*---------------------------------------------------------------------------*/
@@ -114,4 +116,38 @@ PROCESS_THREAD (windSpeedThread, ev, data)
     }
 
 	PROCESS_END ();
+}
+
+PROCESS_THREAD (networkdiscoveryThread, ev, data)
+{
+  PROCESS_BEGIN();
+
+	// Configure your team's channel (11 - 26).
+	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
+
+	/* Configure the user button */
+	button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
+
+	while(1) {
+		PROCESS_WAIT_EVENT();
+
+		// check if button was pressed
+		if(ev == sensors_event)
+		{
+			if(data == &button_sensor)
+			{
+				if( button_sensor.value(BUTTON_SENSOR_VALUE_TYPE_LEVEL) ==
+						BUTTON_SENSOR_PRESSED_LEVEL )
+        {
+          initNetworkDisc();
+
+				}
+			}
+		}//end if(ev == sensors_event)
+	} //end while(1)
+
+	PROCESS_END();
+
+
+
 }

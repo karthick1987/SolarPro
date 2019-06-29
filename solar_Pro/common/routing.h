@@ -35,7 +35,7 @@
 
 // the number of nodes present in the network
 #ifndef TOTAL_NODES
-#define TOTAL_NODES 7
+#define TOTAL_NODES 8
 #endif
 
 #define UNINIT      0xFFFF

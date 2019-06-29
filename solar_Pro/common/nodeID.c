@@ -27,7 +27,7 @@ contributors:
 #include "nodeID.h"
 
 
-static const nodeID_t nodes[] = 
+static const nodeID_t nodes[] =
 {
     {1,2048,0xBFED},
     {2,2215,0xF2F3},
@@ -35,7 +35,8 @@ static const nodeID_t nodes[] =
     {4,2031,0xE7F3},
     {5,1982,0xDCF3},
     {6,2053,0xDDED},
-    {7,2207,0xB0EE}
+    {7,2207,0xB0EE},
+    {8,2071,0xB964}
 };
 
 const uint32_t NETWORKSIZE = (sizeof(nodes))/(sizeof(nodeID_t));

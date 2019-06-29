@@ -5,21 +5,29 @@
 #include "net/netstack.h"      // Wireless-stack definitions
 #include "dev/leds.h"          // Use LEDs.
 #include "payload.h"
+#include "nodeID.h"
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
 // Creates an instance of a broadcast connection.
 static struct broadcast_conn broadcast;
 
+
+
+
 void initNetworkDisc(void)
 {
+    // reset routing table
     int i=0;
     for(i=0;i<TOTAL_NODES;i++)
     {
-        rTable.dest[i] = UNINIT;
+        rTable.dest[i] = nodes[i].rimeID;
         rTable.next_hop[i] = UNINIT;
         rTable.cost[i] = UNINITCOST;
     }
+
+    // initiate controlled flooding
+    broadcast_send();
 
     return;
 }
@@ -30,12 +38,12 @@ void initNetworkDisc(void)
 void forward_msg(const char * message)
 {
 
-    //open the connection, if necessary
+  //open the connection, if necessary
 	broadcast_open(&broadcast, 129, &broadcast_call);
-    //send the message
-    packetbuf_copyfrom(message,10);
+  //send the message
+  packetbuf_copyfrom(message,10);
 
-    broadcast_send(&broadcast);
+  broadcast_send(&broadcast);
 
 }
 
@@ -46,6 +54,21 @@ void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
 			 from->u8[0], from->u8[1],
 			(char *)packetbuf_dataptr(),
 			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
+
+  // return the index of the corresponding rime ID in rTable
+  node_num_t rcvdNode = returnIDIndex(from->u16);
+
+  rTable.next_hop[rcvdNode] = from->u16;
+  rTable.cost[rcvdNode] = 1;
+
+  printf("Distance Vector of Node %d\n", getMyNodeID( linkaddr_node_addr ))
+  int j=0;
+  printf("=========================================\n");
+  for (j=0;j<NETWORKSIZE;j++)
+  {
+      printf("Destination: %x, Next Hop: %x, Cost: %d\n",rTable[j].dest,rTable[j].next_hop,rTable[j].cost);
+  }
+  printf("=========================================\n");
 
   char message[BROADCASTMSGSIZE_BYTES];
   packetbuf_copyto(message);
@@ -81,5 +104,5 @@ void unicast_recv(struct unicast_conn *c, const linkaddr_t *from)
 void unicast_send(packet_t tx_packet)
 {
   packetbuf_copyfrom(&tx_packet, sizeof(packet_t));
-  unicast_send(&unicast, &next_hop);
+  unicast_send(&unicast, &rTable.next_hop);
 }
