@@ -42,14 +42,14 @@ typedef struct broadcastMsg {
     char msg[BROADCASTMSGSIZE_BYTES];
 }broadcastMsg_t;
 
-union commType{
+union commType {
     pkttype_t bpkt;
     unicastMsg_t u;
     broadcastMsg_t b;
 };
 
 typedef struct payload {
-    node_num_t nodeNum;
+    node_num_t destNode, originNode;
     union commType cType;
 }payload_t
 
