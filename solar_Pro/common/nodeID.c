@@ -47,7 +47,7 @@ void print_node_IDs( void )
 {
     int i=0;
     printf("=========================================\n");
-    for (i=0;i<NETWORKSIZE;i++)
+    for (i=0;i<TOTAL_NODES;i++)
     {
         printf("Node ID: %d, Serial No: %d, Rime ID: %x\n",nodes[i].nodeID,nodes[i].serialNumber,nodes[i].rimeID);
     }
@@ -57,7 +57,7 @@ void print_node_IDs( void )
 node_num_t getMyNodeID( void )
 {
     int i=0;
-    for (i=0;i<NETWORKSIZE;i++)
+    for (i=0;i<TOTAL_NODES;i++)
     {
         if ( linkaddr_node_addr.u16 == nodes[i].rimeID )
         {
@@ -70,7 +70,7 @@ node_num_t getMyNodeID( void )
 node_num_t returnIDIndex( const linkaddr_t l)
 {
     int i=0;
-    for (i=0;i<NETWORKSIZE;i++)
+    for (i=0;i<TOTAL_NODES;i++)
     {
         if ( l.u16 == nodes[i].rimeID )
         {
