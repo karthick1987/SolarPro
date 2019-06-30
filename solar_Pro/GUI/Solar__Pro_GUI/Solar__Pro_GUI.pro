@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-06-29T22:51:12
+# Project created by QtCreator 2019-06-30T21:38:02
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Solar_GUI
+TARGET = Solar__Pro_GUI
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
