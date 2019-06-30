@@ -127,6 +127,8 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
 	// Configure your team's channel (11 - 26).
 	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
 
+    openBroadcast();
+
 	/* Configure the user button */
 	button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
 

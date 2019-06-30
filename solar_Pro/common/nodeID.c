@@ -35,7 +35,7 @@ const nodeID_t nodes[] =
     {5,1982,0xDCF3},
     {6,2053,0xDDED},
     {7,2207,0xB0EE},
-    {8,2071,0xB964}
+    {8,2071,0x0CF4}
 };
 
 // static uint32_t TOTAL_NODES = (sizeof(nodes))/(sizeof(nodeID_t));
@@ -59,14 +59,33 @@ linkaddr_t * getMyRIMEID( void )
 	return &linkaddr_node_addr;
 }
 
+uint16_t getRIMEID(node_num_t index)
+{
+    return nodes[index].rimeID;
+}
+
 node_num_t getMyNodeID( void )
+{
+    int i=0;
+    for (i=0;i<TOTAL_NODES;i++)
+    {
+        // printf("Mine is %x   Node ID is %x\n", linkaddr_node_addr.u16, nodes[i].rimeID);
+        if ( linkaddr_node_addr.u16 == nodes[i].rimeID )
+        {
+            return nodes[i].nodeID;
+        }
+    }
+    return -1;
+}
+
+node_num_t getMyNodeIDIndex( void )
 {
     int i=0;
     for (i=0;i<TOTAL_NODES;i++)
     {
         if ( linkaddr_node_addr.u16 == nodes[i].rimeID )
         {
-            return nodes[i].nodeID;
+            return (nodes[i].nodeID-1);
         }
     }
     return -1;

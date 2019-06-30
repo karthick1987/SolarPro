@@ -11,8 +11,10 @@
 // Standard C includes:
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdbool.h>
 
-#define MAXBROADCASTRETRANSMIT  5
+#define MAXBROADCASTRETRANSMIT 2
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
@@ -30,7 +32,13 @@ static const struct unicast_callbacks unicast_call = {unict_recv, unict_send};
 static int broadcastCount;
 
 // Global Routing Table
-static r_table_t rTable;
+static r_table_t myrTable;
+
+static void printRTable2(r_table_t r, const char *text);
+static void printRTable(const char *);
+static void printFromRTable(payload_t , const char *);
+
+extern const nodeID_t nodes[];
 
 void initNetworkDisc(void)
 {
@@ -39,25 +47,32 @@ void initNetworkDisc(void)
     int i=0;
     for(i=0;i<TOTAL_NODES;i++)
     {
-        rTable.dest[i].u16 = nodes[i].rimeID;
-        if(rTable.dest[i].u16 == getMyRIMEID()->u16 )
+        myrTable.dest[i].u16 = nodes[i].rimeID;
+        if(myrTable.dest[i].u16 == getMyRIMEID()->u16 )
         {
-            rTable.next_hop[i].u16 = nodes[i].rimeID;
-            rTable.cost[i] = 0;
+            myrTable.next_hop[i].u16 = nodes[i].rimeID;
+            myrTable.cost[i] = 0;
         }
         else
         {
-            rTable.next_hop[i].u16 = UNINIT;
-            rTable.cost[i] = UNINITCOST;
+            myrTable.next_hop[i].u16 = UNINIT;
+            myrTable.cost[i] = UNINITCOST;
         }
     }
     broadcastCount = 0;
 
-	linkaddr_t *t = getMyRIMEID();
+    linkaddr_t *t = getMyRIMEID();
+
     // initiate controlled flooding
-	bdct_send(&broadcast, t);
+    bdct_send(&broadcast, t);
 
     return;
+}
+
+void openBroadcast(void)
+{
+    //open the connection, if necessary
+    broadcast_open(&broadcast, 129, &broadcast_call);
 }
 
 /**
@@ -67,46 +82,86 @@ static void forward_msg(const char * message)
 {
     if (broadcastCount < MAXBROADCASTRETRANSMIT)
     {
-      //open the connection, if necessary
-      broadcast_open(&broadcast, 129, &broadcast_call);
-
-      //send the messag
-      packetbuf_copyfrom(message,sizeof(message) );
-      broadcast_send(&broadcast);
-      broadcastCount++;
+        //send the message
+        printf("Size of payload is %d\n",sizeof(payload_t));
+        packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
+        broadcast_send(&broadcast);
+        broadcastCount++;
     }
     else {
-      printf("Maximum amount of %d broadcasts reached", MAXBROADCASTRETRANSMIT);
+        printf("Maximum amount of %d broadcasts reached\n", MAXBROADCASTRETRANSMIT);
     }
+}
+
+static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
+{
+    bool result = false;
+    r_table_t *fromrTable = &(p.b.myRTable);
+    int j = 0;
+
+    for (j=0;j<TOTAL_NODES;j++)
+    {
+        // First check if the sender of the Broadcast has an entry in our rTable
+        if( (fromrTable->cost)[j] < myrTable.cost[j] )
+        {
+            printf("In Here Network NodeID is %d\n",j+1);
+            myrTable.next_hop[j] = *from;
+            myrTable.cost[j] = (fromrTable->cost)[j] + 1;
+            result = true;
+        }
+    }
+    return result;
 }
 
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 {
-  leds_on(LEDS_GREEN);
-  printf("Broadcast message received from 0x%x%x: '%s' [RSSI %d]\r\n",
-			 from->u8[0], from->u8[1],
-			(char *)packetbuf_dataptr(),
-			(int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
+    bool tableUpdateRequired = false;
+    leds_on(LEDS_GREEN);
+    printf("Broadcast message received from 0x%x%x: '%s' [RSSI %d]\r\n",
+            from->u8[0], from->u8[1],
+            (char *)packetbuf_dataptr(),
+            (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
 
-  // return the index of the corresponding rime ID in rTable
-  node_num_t rcvdNode = returnIDIndex(from);
+    // return the index of the corresponding rime ID in myrTable
+    node_num_t rcvdNode = returnIDIndex(from);
 
-  rTable.next_hop[rcvdNode].u16 = from->u16;
-  rTable.cost[rcvdNode] = 1;
+    myrTable.next_hop[rcvdNode].u16 = from->u16;
+    myrTable.cost[rcvdNode] = 1;
 
-  printf("Distance Vector of Node %d\n", getMyNodeID());
-  int j;
-  printf("=========================================\n");
-  for (j=0;j<TOTAL_NODES;j++)
-  {
-      printf("Destination: %x, Next Hop: %x, Cost: %d\n",rTable.dest[j].u16,rTable.next_hop[j].u16,rTable.cost[j]);
-  }
-  printf("=========================================\n");
+    payload_t payload;
+    packetbuf_copyto(&(payload.b.msg[0]));
 
-  char message[BROADCASTMSGSIZE_BYTES];
-  packetbuf_copyto(message);
-  forward_msg(message);
-  leds_off(LEDS_GREEN);
+    strncpy(payload.b.msg, "Hello You",BROADCASTMSGSIZE_BYTES);
+    //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.myRTable), payload.b.msg[0]);
+
+    printRTable2(payload.b.myRTable,"======= Received Payload after receiving =======");
+
+    printRTable("=======My Payload before the Update=======");
+
+    // Compare payload with rTable
+    tableUpdateRequired = compareAndUpdateTable(payload, from);
+
+    // printRTable("=======After the Update=======");
+
+    // if it hasnt changed 
+    if ( tableUpdateRequired )
+    {
+
+        // Set up discovery mode
+        payload.b.bpkt = DISCOVERY;
+
+        // Copy new table into the packet
+        payload.b.myRTable = myrTable;
+
+        // Copy new table into the packet
+        strncpy(payload.b.msg, "Hello You",BROADCASTMSGSIZE_BYTES);
+
+        //rebroadcast it
+        //forward_msg((const char *)&payload);
+    }
+
+    // Else do nothing and dont Broadcast again
+    leds_off(LEDS_GREEN);
 }
 
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to)
@@ -131,11 +186,47 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
             from->u8[0], from->u8[1],
             (char *)packetbuf_dataptr(),
             (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
-
 }
 
 void unict_send(payload_t tx_packet)
 {
-  packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
-  // unicast_send(&unicast, &rTable.next_hop);
+    packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
+    // unicast_send(&unicast, &myrTable.next_hop);
+}
+
+static void printRTable(const char *text)
+{
+    int j;
+    printf("%s\nMy Node ID: %d\n", text, getMyNodeID());
+    printf("=========================================\n");
+    for (j=0;j<TOTAL_NODES;j++)
+    {
+        printf("Destination: %x, Next Hop: %x, Cost: %d\n",myrTable.dest[j].u16,myrTable.next_hop[j].u16,myrTable.cost[j]);
+    }
+    printf("=========================================\n");
+}
+
+static void printFromRTable(payload_t p, const char *text)
+{
+    r_table_t table = p.b.myRTable;
+    int j;
+    printf("%s\nMy Node ID: %d\n", text, getMyNodeID());
+    printf("=========================================\n");
+    for (j=0;j<TOTAL_NODES;j++)
+    {
+        printf("Destination: %x, Next Hop: %x, Cost: %d\n",table.dest[j].u16,table.next_hop[j].u16,table.cost[j]);
+    }
+    printf("=========================================\n");
+}
+
+static void printRTable2(r_table_t r, const char *text)
+{
+    int j;
+    printf("%s\nMy Node ID: %d\n", text, getMyNodeID());
+    printf("=========================================\n");
+    for (j=0;j<TOTAL_NODES;j++)
+    {
+        printf("Destination: %x, Next Hop: %x, Cost: %d\n",r.dest[j].u16,r.next_hop[j].u16, r.cost[j]);
+    }
+    printf("=========================================\n");
 }

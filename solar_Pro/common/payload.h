@@ -20,37 +20,44 @@ contributors:
 #ifndef PAYLOAD_H
 #define PAYLOAD_H
 
-#include "nodeID.h"
 #include "contiki.h"
 
-#define BROADCASTMSGSIZE_BYTES  100
+#include "routing.h"
+#include "nodeID.h"
+// #include "routing.h"
+
+#define BROADCASTMSGSIZE_BYTES  10
 
 typedef enum {
-    DISCOVERY,
-    EMERGENCY,
-    ACK
+    DISCOVERY = 1,
+    EMERGENCY = 2,
+    ACK = 3,
 }pkttype_t;
 
-typedef struct unicastMsg {
+typedef struct {
+    node_num_t destNode, originNode;
     uint16_t temp_mC;
     uint16_t battVolt_mV;
     uint16_t lightSensor;
     uint16_t servoPos_degs;
 }unicastMsg_t;
 
-typedef struct broadcastMsg {
+// custom structures
+typedef struct {
+	linkaddr_t dest[TOTAL_NODES];			// Destination id. Every node should be able to reach every other node plus itself. Thus total entries are equal to total number of nodes.
+	linkaddr_t next_hop[TOTAL_NODES];		// Next hop in route to destination.
+    uint8_t cost[TOTAL_NODES]; 			    // Number of total hops of the packet route. Maximum 10.
+}r_table_t;
+
+typedef struct {
     char msg[BROADCASTMSGSIZE_BYTES];
+    r_table_t myRTable;
+    pkttype_t bpkt;
 }broadcastMsg_t;
 
-union commType {
-    pkttype_t bpkt;
-    unicastMsg_t u;
+typedef struct {
     broadcastMsg_t b;
-};
-
-typedef struct payload {
-    node_num_t destNode, originNode;
-    union commType cType;
+    unicastMsg_t u;
 }payload_t;
 
 #endif

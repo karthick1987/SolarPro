@@ -33,25 +33,10 @@
 #include "nodeID.h"
 #include "payload.h"
 
-// Standard C includes:
-#include <stdint.h>
-
 #define UNINIT      0xFFFF
 #define UNINITCOST  0xFF
 
-// custom structures
-typedef struct
-{
-	linkaddr_t dest[TOTAL_NODES];			// Destination id. Every node should be able to reach every other node plus itself. Thus total entries are equal to total number of nodes.
-	linkaddr_t next_hop[TOTAL_NODES];		// Next hop in route to destination.
-    uint8_t cost[TOTAL_NODES]; 			    // Number of total hops of the packet route. Maximum 10.
-}r_table_t;
-
-typedef struct {
-	linkaddr_t dest;
-	broadcastMsg_t message;         // Broadcast Packet with destination
-}broadcastPacket_t;
-
+void openBroadcast(void);
 void initNetworkDisc(void);
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);

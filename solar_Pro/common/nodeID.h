@@ -26,7 +26,7 @@ contributors:
 
 //extern const uint32_t TOTAL_NODES; // To make calculated Network size available to all files
 
-typedef int16_t node_num_t;
+typedef uint16_t node_num_t;
 typedef struct nodeID{
 
     node_num_t nodeID;      // This is the nodeID in the network that we define
@@ -34,7 +34,7 @@ typedef struct nodeID{
     uint16_t rimeID;        // This is the unique MAC address on the mote
 }nodeID_t;
 
-extern const nodeID_t nodes[];
+//extern const nodeID_t nodes[];
 
 /**
  * @brief       prints a table of Node ID
@@ -70,6 +70,18 @@ node_num_t getMyNodeID( void );
  * @hideinitializer
  */
 linkaddr_t * getMyRIMEID( void );
+uint16_t getRIMEID(node_num_t index);
+
+/**
+ * @brief       Compares the RIME ID and returns the received Node's Index in the Routing table
+ *
+ * @return      The Node's Index in the routing table
+ *              This function returns the Nodes Index by taking the
+ *              after comparing it in the routing table
+ *
+ * @hideinitializer
+ */
+node_num_t getMyNodeIDIndex( void );
 
 /**
  * @brief       Compares the RIME ID and returns the received Node's Nerwork Node ID
