@@ -40,8 +40,16 @@ void initNetworkDisc(void)
     for(i=0;i<TOTAL_NODES;i++)
     {
         rTable.dest[i].u16 = nodes[i].rimeID;
-        rTable.next_hop[i].u16 = UNINIT;
-        rTable.cost[i] = UNINITCOST;
+        if(rTable.dest[i].u16 == getMyRIMEID()->u16 )
+        {
+            rTable.next_hop[i].u16 = nodes[i].rimeID;
+            rTable.cost[i] = 0;
+        }
+        else
+        {
+            rTable.next_hop[i].u16 = UNINIT;
+            rTable.cost[i] = UNINITCOST;
+        }
     }
     broadcastCount = 0;
 
@@ -62,7 +70,7 @@ static void forward_msg(const char * message)
       //open the connection, if necessary
       broadcast_open(&broadcast, 129, &broadcast_call);
 
-      //send the message
+      //send the messag
       packetbuf_copyfrom(message,sizeof(message) );
       broadcast_send(&broadcast);
       broadcastCount++;
