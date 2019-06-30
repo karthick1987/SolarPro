@@ -40,9 +40,9 @@ const nodeID_t nodes[] =
 
 // static uint32_t TOTAL_NODES = (sizeof(nodes))/(sizeof(nodeID_t));
 
-/*** This prints the Network IDs of the nodes ***/
-//function for printing the node IDs on the console
-//@return int: actual direction of the joystick beeing pressed.
+/** This prints the Network IDs of the nodes
+* @brief function for printing the node IDs on the console
+*/
 void print_node_IDs( void )
 {
     int i=0;

@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,7 +13,21 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is designed for all nodes to read out wind speed sensor sensor values.
+ *****************************************************************************/
+
+ /**
+ * @file anemometer.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Functions to read out the windspeed sensor (anemometer) via GPIO.
+ *
+ * The anemometer function is based on the zolertia zoul example "test-weathermeter-example.c"
+ * which comes with the contiki installation in contiki/examples/zolertia/zoul and the
+ * "weather-meter.c" file which can be found in contiki/platform/zoul/dev.
+ * The anemometer can be considered as a electrical switch opening and closing
+ * at a frequency depending on the rotation speed of the anemometer. It sets the connected
+ * GPIO Port to HIGH twice a rotation which is recognized by an interrupt handler.
+ * These interrupts are counted over a certain amount of time to calculate the actual
+ * windspeed in km/h.
  */
 
 /*---------------------------------------------------------------------------*/
@@ -52,19 +66,27 @@ process_event_t anemometer_int_event;
 static struct ctimer ct;
 static struct timer debouncetimer;
 
+/**
+* @brief struct anemometer_sensors_t includes the values needed for the actual wind speed calculations
+*
+*/
 typedef struct {
-  uint16_t ticks;
-  uint16_t value;
-  uint8_t int_en;
-  uint16_t int_thres;
+  uint16_t ticks; /**< basically a counter to count the GPIO HIGH interrupts */
+  uint16_t value; /**< contains the actual wind speed value*/
+  uint8_t int_en; /**< logical value if the anemometer is enabled (=1) or not (=0) */
+  uint16_t int_thres; /**< threshold wind speed where an error message is sent*/
 } anemometer_sensors_t;
 
+/**
+* @brief struct anemometer_ext_t includes the values needed to store the maximum wind speed and
+* calculate the average wind speed over lifetime and a certain amount of time (default is 120s).
+*/
 typedef struct {
-  uint16_t value_max;
-  uint64_t ticks_avg;
-  uint64_t value_avg;
-  uint32_t value_buf_xm;
-  uint16_t value_avg_xm;
+  uint16_t value_max; /**< the maximum wind speed is saved here. */
+  uint64_t ticks_avg; /**< average ticks to calculate average wind speed over lifetime. */
+  uint64_t value_avg; /**< contains the average wind speed value over lifetime. */
+  uint32_t value_buf_xm; /**< value buffer to calculate the average wind speed over x minutes (2min default). */
+  uint16_t value_avg_xm; /**< average wind speed value over x minutes (2min default). */
 } anemometer_ext_t;
 
 typedef struct {
@@ -75,6 +97,12 @@ static anemometer_sensors anemo_sensor;
 static anemometer_ext_t anemo;
 
 /*---------------------------------------------------------------------------*/
+/**
+* @brief Callback function that counts the ticks of the anemometer based on an interrupt
+* produced by a HIGH input of the respective GPIO (can be set in anemometer.h)
+*
+*
+*/
 static void ct_callback(void *ptr)
 {
 	uint32_t wind_speed;
@@ -144,6 +172,10 @@ PROCESS_THREAD(anemometer_int_process, ev, data)
 }
 /*---------------------------------------------------------------------------*/
 
+/**
+* @brief Anemometer interrupt handler with debounce timer to prevent bounce events
+*
+*/
 static void
 anemometer_interrupt_handler(uint8_t port, uint8_t pin)
 {
@@ -167,6 +199,20 @@ anemometer_interrupt_handler(uint8_t port, uint8_t pin)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
+/**
+* @brief return function to deliver the requested anemometer values.
+*
+* @param type Returns the requested wind speed value, as shown in the table.
+* ---------------------+----------------------------------
+ *      type                   return value
+ *   ANEMOMETER           wind speed *
+ *   ANEMOMETER_AVG       average wind speed *
+ *   ANEMOMETER_AVG_X     average wind speed (2min) *
+ *   ANEMOMETER_MAX       maximum wind speed *
+ * --------------------+----------------------------------
+*
+* @return int: if type is not known: ANEMOMETER_ERROR (-1) or if type is known the requested value.
+*/
 static int value(int type)
 {
   uint64_t aux;
@@ -207,6 +253,17 @@ static int value(int type)
   }
 }
 /*---------------------------------------------------------------------------*/
+/**
+* @brief configure function to enable or disable the anemometer and setup a threshold
+* for an error message
+*
+* @param type Parameter to configure ANEMOMETER_ACTIVE (enable or disable anemometer),
+* ANEMOMETER_INT_OVER (to set a threshold), ANEMOMETER_INT_DIS (to disable interrupt).
+*
+* @param value Parameter to configure the respective type.
+*
+* @return int: ANEMOMETER_ERROR (-1) or ANEMOMETER_SUCCESS (0)
+*/
 static int configure(int type, int value)
 {
   if((type != ANEMOMETER_ACTIVE) &&
@@ -277,5 +334,3 @@ static int configure(int type, int value)
 SENSORS_SENSOR(anemometer, ANEMOMETER_SENSOR, value, configure, NULL);
 /*---------------------------------------------------------------------------*/
 /** @} */
-
-

@@ -26,7 +26,7 @@ contributors:
  * \name anemometer sensor return and operation values
  * @{
  */
-#define ANEMOMETER			0x01
+#define ANEMOMETER			  0x01
 #define ANEMOMETER_AVG		0x02
 #define ANEMOMETER_AVG_X	0x03
 #define ANEMOMETER_MAX		0x04
