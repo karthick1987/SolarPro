@@ -35,12 +35,15 @@ contributors:
 #include "helpers.h"
 #include "nodeID.h"
 #include "sensors.h"
+#include "maintenance.h"
 
 
 // Reading frequency in seconds.
 #define TEMP_READ_INTERVAL CLOCK_SECOND*1
 #define JOYSTICK_POLLING CLOCK_SECOND/10 //100ms
 
+// Create an instance of neighbor Table
+static neighbor_table_t nTable;
 
 /*---------------------------------------------------------------------------*/
 /* Callback function for received packet processing. 						 */
@@ -100,35 +103,30 @@ PROCESS_THREAD(broadcastingThread, ev, data)
      */
     broadcast_open(&broadcastConn,129,&broadcast_callbacks);
 
+    /* Configure the user button */
+  	button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
+
     etimer_set(&et, CLOCK_SECOND + 0.1*random_rand()/RANDOM_RAND_MAX); //randomize the sending time a little
 
     while(1){
 
-        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+      PROCESS_WAIT_EVENT();
 
-        leds_on(LEDS_RED);
+      // check if button was pressed
+      if(ev == sensors_event)
+      {
+        if(data == &button_sensor)
+        {
+          if( button_sensor.value(BUTTON_SENSOR_VALUE_TYPE_LEVEL) ==
+              BUTTON_SENSOR_PRESSED_LEVEL )
+          {
+            initNetworkDisc();
 
-        /*
-         * fill the packet buffer
-         */
-        packetbuf_copyfrom("Hello You",10); //value 10 is the buffersize of the packet buffer which is filled with "Hello You"
+          }
+        }
+      }//end if(ev == sensors_event)
+    }//end while(1)
 
-        /*
-         * send the message
-         */
-        broadcast_send(&broadcastConn);
-
-        /*
-         * for debugging
-         */
-        printf("Broadcast message sent\r\n");
-
-        /*
-         * reset the timer
-         */
-        etimer_reset(&et);
-        leds_off(LEDS_RED);
-    }
     PROCESS_END();
 }
 
@@ -165,12 +163,6 @@ PROCESS_THREAD(joystickThread, ev, data)
 		etimer_set(&joystick_reading_timer, JOYSTICK_POLLING);
 
 	}
-
-
-
-
-
-
 
 	PROCESS_END();
 }

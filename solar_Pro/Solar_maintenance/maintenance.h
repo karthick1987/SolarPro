@@ -17,4 +17,21 @@ contributors:
  */
 
 
-//test
+#ifndef MAINTENANCE_H
+#define MAINTENANCE_H
+
+#include "core/net/linkaddr.h"
+#include "nodeID.h"
+
+/**
+* @brief struct to maintain a list of neighbor nodes for maintenance worker to control
+* the node with the smallest RSSI manually via unicast.
+*
+*/
+typedef struct neighbor_table{
+  linkaddr_t dest[TOTAL_NODES];
+  int16_t rssi;
+}neighbor_table_t;
+
+
+#endif /* MAINTENANCE_H */
