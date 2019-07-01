@@ -26,7 +26,7 @@ contributors:
 #include "nodeID.h"
 // #include "routing.h"
 
-#define BROADCASTMSGSIZE_BYTES  10
+#define BROADCASTMSGSIZE_BYTES  16
 
 typedef enum {
     DISCOVERY = 1,
@@ -40,24 +40,24 @@ typedef struct {
     uint16_t battVolt_mV;
     uint16_t lightSensor;
     uint16_t servoPos_degs;
-}unicastMsg_t;
+}__attribute__ ((packed)) unicastMsg_t;
 
 // custom structures
 typedef struct {
 	linkaddr_t dest[TOTAL_NODES];			// Destination id. Every node should be able to reach every other node plus itself. Thus total entries are equal to total number of nodes.
 	linkaddr_t next_hop[TOTAL_NODES];		// Next hop in route to destination.
     uint8_t cost[TOTAL_NODES]; 			    // Number of total hops of the packet route. Maximum 10.
-}r_table_t;
+}__attribute__ ((packed)) r_table_t;
 
 typedef struct {
     char msg[BROADCASTMSGSIZE_BYTES];
-    r_table_t myRTable;
+    r_table_t rTable;
     pkttype_t bpkt;
-}broadcastMsg_t;
+}__attribute__((packed)) broadcastMsg_t;
 
-typedef struct {
+typedef union {
     broadcastMsg_t b;
     unicastMsg_t u;
-}payload_t;
+}__attribute__((packed)) payload_t;
 
 #endif

@@ -34,17 +34,18 @@ static int broadcastCount;
 // Global Routing Table
 static r_table_t myrTable;
 
+// Global payload to transmit
+static payload_t payload;
+
 static void printRTable2(r_table_t r, const char *text);
 static void printRTable(const char *);
 static void printFromRTable(payload_t , const char *);
 
 extern const nodeID_t nodes[];
 
-void initNetworkDisc(void)
+void setUpRtable(void)
 {
-    printf("Network Discovery Initiated\n");
-    // reset routing table
-    int i=0;
+    int i;
     for(i=0;i<TOTAL_NODES;i++)
     {
         myrTable.dest[i].u16 = nodes[i].rimeID;
@@ -59,8 +60,22 @@ void initNetworkDisc(void)
             myrTable.cost[i] = UNINITCOST;
         }
     }
+    return;
+}
+
+void initNetworkDisc(void)
+{
+    printf("Network Discovery Initiated\n");
+    // reset routing table
+    int i=0;
     broadcastCount = 0;
 
+    // Copy information to payload
+    strncpy(payload.b.msg,"HelloWorld",BROADCASTMSGSIZE_BYTES);
+    payload.b.rTable = myrTable;
+    payload.b.bpkt = DISCOVERY;
+
+    // Whats my RIME ID
     linkaddr_t *t = getMyRIMEID();
 
     // initiate controlled flooding
@@ -96,7 +111,7 @@ static void forward_msg(const char * message)
 static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
 {
     bool result = false;
-    r_table_t *fromrTable = &(p.b.myRTable);
+    r_table_t *fromrTable = &(p.b.rTable);
     int j = 0;
 
     for (j=0;j<TOTAL_NODES;j++)
@@ -128,20 +143,19 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     myrTable.next_hop[rcvdNode].u16 = from->u16;
     myrTable.cost[rcvdNode] = 1;
 
-    payload_t payload;
-    packetbuf_copyto(&(payload.b.msg[0]));
+    packetbuf_copyto(&(payload.b.msg));
 
     strncpy(payload.b.msg, "Hello You",BROADCASTMSGSIZE_BYTES);
-    //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.myRTable), payload.b.msg[0]);
+    //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);
 
-    printRTable2(payload.b.myRTable,"======= Received Payload after receiving =======");
+    printRTable2(payload.b.rTable,"======= Received Payload after receiving =======");
 
     printRTable("=======My Payload before the Update=======");
 
     // Compare payload with rTable
     tableUpdateRequired = compareAndUpdateTable(payload, from);
 
-    // printRTable("=======After the Update=======");
+    printRTable("=======After the Update=======");
 
     // if it hasnt changed 
     if ( tableUpdateRequired )
@@ -151,7 +165,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
         payload.b.bpkt = DISCOVERY;
 
         // Copy new table into the packet
-        payload.b.myRTable = myrTable;
+        payload.b.rTable = myrTable;
 
         // Copy new table into the packet
         strncpy(payload.b.msg, "Hello You",BROADCASTMSGSIZE_BYTES);
@@ -164,14 +178,17 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     leds_off(LEDS_GREEN);
 }
 
-void bdct_send(struct broadcast_conn *c, const linkaddr_t *to)
+void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 {
     leds_on(LEDS_BLUE);
+    packetbuf_clear();
+    int copiedBytes = packetbuf_copyfrom(&(payload),sizeof(payload));
+    printf("Copied bytes: %d\n",copiedBytes);
     printf("Broadcast message sent from 0x%x%x: '%s'\n",
-            to->u8[0], to->u8[1],
+            from->u8[0], from->u8[1],
             (char *)packetbuf_dataptr());
-    leds_off(LEDS_BLUE);
     forward_msg((char *)packetbuf_dataptr());
+    leds_off(LEDS_BLUE);
 }
 
 // Defines the behavior of a connection upon receiving data.
@@ -208,7 +225,7 @@ static void printRTable(const char *text)
 
 static void printFromRTable(payload_t p, const char *text)
 {
-    r_table_t table = p.b.myRTable;
+    r_table_t table = p.b.rTable;
     int j;
     printf("%s\nMy Node ID: %d\n", text, getMyNodeID());
     printf("=========================================\n");

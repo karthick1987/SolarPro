@@ -36,8 +36,9 @@
 #define UNINIT      0xFFFF
 #define UNINITCOST  0xFF
 
-void openBroadcast(void);
+void setUpRtable(void);
 void initNetworkDisc(void);
+void openBroadcast(void);
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from);
