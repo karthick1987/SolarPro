@@ -40,6 +40,11 @@ contributors:
 #include "anemometer.h"
 #include "routing.h"
 
+#define TX_POWER 7
+
+// int power_options[] =    {255,237,213,197,182,176,161,145,136,114,98 ,88 ,66 ,0};
+// int power_dBm[] =        {7  ,5  ,3  ,1  ,0  ,-1 ,-3 ,-5 ,-7 ,-9 ,-11,-13,-15,-24};
+
 /*---------------------------------------------------------------------------*/
 #define READ_SENSOR_PERIOD          CLOCK_SECOND
 #define ANEMOMETER_THRESHOLD_TICK   13  /**< (value*1.2) = 16 Km/h */
@@ -126,6 +131,7 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
 
 	// Configure your team's channel (11 - 26).
 	NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
+    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
     openBroadcast();
     setUpRtable();
 
@@ -134,7 +140,6 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
 
 	while(1) {
 		PROCESS_WAIT_EVENT();
-
 		// check if button was pressed
 		if(ev == sensors_event)
 		{
@@ -142,16 +147,12 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
 			{
 				if( button_sensor.value(BUTTON_SENSOR_VALUE_TYPE_LEVEL) ==
 						BUTTON_SENSOR_PRESSED_LEVEL )
-        {
-          initNetworkDisc();
-
-				}
-			}
+                {
+                    initNetworkDisc();
+                }
+            }
 		}//end if(ev == sensors_event)
 	}//end while(1)
 
 	PROCESS_END();
-
-
-
 }

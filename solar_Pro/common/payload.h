@@ -26,7 +26,7 @@ contributors:
 #include "nodeID.h"
 // #include "routing.h"
 
-#define BROADCASTMSGSIZE_BYTES  16
+#define BROADCASTMSGSIZE_BYTES  10
 
 typedef enum {
     DISCOVERY = 1,
