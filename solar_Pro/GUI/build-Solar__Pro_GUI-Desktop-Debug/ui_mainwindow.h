@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QGraphicsView>
@@ -25,6 +26,7 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -48,7 +50,7 @@ public:
     QLabel *label_EmergencyThreshold;
     QPushButton *pushButton_SetWindSpeedThreshold;
     QLCDNumber *lcdWindSpeed_Threshold;
-    QDoubleSpinBox *doubleSpinBox;
+    QDoubleSpinBox *doubleSpinBox_WindSpeedThreshold;
     QGroupBox *groupBox_2;
     QLabel *label_NodeID;
     QLabel *label_Temperature;
@@ -63,8 +65,13 @@ public:
     QLCDNumber *lcdNumber_Voltage;
     QLCDNumber *lcdNumber_Luminosity;
     QLCDNumber *lcdNumber_Angle;
-    QGraphicsView *graphicsView;
+    QGraphicsView *graphicsView_NetGraph;
     QWidget *tab_2;
+    QTextEdit *textEdit_Status;
+    QComboBox *comboBox_Interface;
+    QLabel *label_Port;
+    QPushButton *pushButton_open;
+    QPushButton *pushButton_close;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -118,9 +125,9 @@ public:
         lcdWindSpeed_Threshold = new QLCDNumber(groupBox);
         lcdWindSpeed_Threshold->setObjectName(QStringLiteral("lcdWindSpeed_Threshold"));
         lcdWindSpeed_Threshold->setGeometry(QRect(160, 160, 64, 23));
-        doubleSpinBox = new QDoubleSpinBox(groupBox);
-        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
-        doubleSpinBox->setGeometry(QRect(20, 190, 62, 31));
+        doubleSpinBox_WindSpeedThreshold = new QDoubleSpinBox(groupBox);
+        doubleSpinBox_WindSpeedThreshold->setObjectName(QStringLiteral("doubleSpinBox_WindSpeedThreshold"));
+        doubleSpinBox_WindSpeedThreshold->setGeometry(QRect(20, 190, 62, 31));
         groupBox_2 = new QGroupBox(tab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         groupBox_2->setGeometry(QRect(430, 260, 231, 241));
@@ -167,12 +174,28 @@ public:
         lcdNumber_Angle = new QLCDNumber(groupBox_2);
         lcdNumber_Angle->setObjectName(QStringLiteral("lcdNumber_Angle"));
         lcdNumber_Angle->setGeometry(QRect(160, 150, 64, 23));
-        graphicsView = new QGraphicsView(tab);
-        graphicsView->setObjectName(QStringLiteral("graphicsView"));
-        graphicsView->setGeometry(QRect(20, 30, 391, 431));
+        graphicsView_NetGraph = new QGraphicsView(tab);
+        graphicsView_NetGraph->setObjectName(QStringLiteral("graphicsView_NetGraph"));
+        graphicsView_NetGraph->setGeometry(QRect(20, 30, 391, 431));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
+        textEdit_Status = new QTextEdit(tab_2);
+        textEdit_Status->setObjectName(QStringLiteral("textEdit_Status"));
+        textEdit_Status->setGeometry(QRect(10, 110, 661, 401));
+        comboBox_Interface = new QComboBox(tab_2);
+        comboBox_Interface->setObjectName(QStringLiteral("comboBox_Interface"));
+        comboBox_Interface->setGeometry(QRect(60, 20, 151, 27));
+        label_Port = new QLabel(tab_2);
+        label_Port->setObjectName(QStringLiteral("label_Port"));
+        label_Port->setGeometry(QRect(10, 20, 46, 27));
+        pushButton_open = new QPushButton(tab_2);
+        pushButton_open->setObjectName(QStringLiteral("pushButton_open"));
+        pushButton_open->setGeometry(QRect(60, 60, 75, 27));
+        pushButton_close = new QPushButton(tab_2);
+        pushButton_close->setObjectName(QStringLiteral("pushButton_close"));
+        pushButton_close->setEnabled(false);
+        pushButton_close->setGeometry(QRect(140, 60, 75, 27));
         tabWidget->addTab(tab_2, QString());
         MainWindow->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(MainWindow);
@@ -181,7 +204,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -208,6 +231,9 @@ public:
         radioButton_AngleAuto->setText(QApplication::translate("MainWindow", "Automatic", Q_NULLPTR));
         radioButton_AngleManual->setText(QApplication::translate("MainWindow", "&Manual", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "General", Q_NULLPTR));
+        label_Port->setText(QApplication::translate("MainWindow", "Port:", Q_NULLPTR));
+        pushButton_open->setText(QApplication::translate("MainWindow", "Open", Q_NULLPTR));
+        pushButton_close->setText(QApplication::translate("MainWindow", "Close", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Connections", Q_NULLPTR));
     } // retranslateUi
 
