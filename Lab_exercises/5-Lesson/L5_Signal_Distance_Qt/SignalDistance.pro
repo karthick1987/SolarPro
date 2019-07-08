@@ -26,7 +26,9 @@ FORMS    += mainwindow.ui
 # your project:
 
 HOMEDIR = $$(HOME)
-include($$HOMEDIR/Documents/Master_TUM/SS19/WSN/qextserialport-1.2beta2/src/qextserialport.pri)
+include($$HOMEDIR/group1/solar_Pro/GUI/qextserialport/src/qextserialport.pri)
+
+CONFIG += extserialport
 
 # Before running the project, run qmake first:
 # In Qt Creator, right-click on the project

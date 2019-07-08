@@ -36,6 +36,13 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
+#-------------------------------------------------
+# This section will include QextSerialPort in
+# your project:
+
+HOMEDIR = $$(HOME)
+include($$HOMEDIR/group1/solar_Pro/GUI/qextserialport/src/qextserialport.pri)
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

@@ -1,0 +1,5 @@
+QMAKE_PRL_BUILD_DIR = /Users/hannesmachleid/group1/solar_Pro/GUI/qextserialport
+QMAKE_PRO_INPUT = qextserialport.pro
+QMAKE_PRL_TARGET = QtExtSerialPort_debug
+QMAKE_PRL_CONFIG = lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin asset_catalogs rez file_copies qmake_use qt warn_on link_prl app_bundle incremental global_init_link_order lib_version_first sdk clang_pch_style shared qt_framework macos osx macx mac darwin unix posix gcc clang llvm debug DebugBuild Debug build_pass qesp_mac_framework create_prl shared lib_bundle debug_and_release build_all debug DebugBuild Debug build_pass have_target dll no_plist exclusive_builds debug_info c++11 objective_c no_autoqmake thread moc resources
+QMAKE_PRL_VERSION = 1.2.0
