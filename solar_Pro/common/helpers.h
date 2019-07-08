@@ -57,4 +57,5 @@ uint8_t calculate_destination(uint8_t id, uint8_t network_size);
 // toggle the GPIO
 void toggle_GPIO(uint32_t port, uint8_t pins);
 
+void print_active_procs(void);
 #endif /* HELPERS_H_ */

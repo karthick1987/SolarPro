@@ -45,6 +45,8 @@
 //project headers
 #include "helpers.h"
 
+#define PRINTF(...)   printf(__VA_ARGS__)
+
 static uint8_t count_on[3] = { 0 }; // counts how many packets with the LED
                                     // colors red green and blue are currently
                                     // present
@@ -142,4 +144,23 @@ void toggle_GPIO(uint32_t port, uint8_t pins)
     uint8_t tog = ((~readpins) & pins);
     tog |= clearBitmask;
     GPIO_WRITE_PIN(port, pins, tog);
+}
+
+/*
+ * \brief   Function to print the processes running currently
+ */
+
+void print_active_procs(void)
+{
+    uint8_t ps=process_nevents();
+    struct process *p;
+    PRINTF("there are %u events in the queue\n\n", ps);
+    PRINTF("Processes:\n");
+    for(p = PROCESS_LIST(); p != NULL; p = p->next)
+    {
+        char namebuf[30];
+        strncpy(namebuf, PROCESS_NAME_STRING(p), sizeof(namebuf));
+        PRINTF("--%s--\n", namebuf);
+    }
+    PRINTF("\n\n");
 }
