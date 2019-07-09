@@ -19,12 +19,4 @@ contributors:
 #ifndef BASE_H
 #define BASE_H
 
-#define STARTUNICAST    1
-#define STARTBROADCAST  2
-#define STOPUNICAST     3
-#define STOPBROADCAST   4
-#define ACKMODE         5
-#define STARTEMERGENCY  6
-#define STOPEMERGENCY   7
-
 #endif

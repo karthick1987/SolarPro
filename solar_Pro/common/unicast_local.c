@@ -24,3 +24,8 @@ int doAckMode(node_num_t n)
 {
     return (n == TOTAL_NODES?0:-1);
 }
+
+int doUniCastMode(node_num_t n)
+{
+    return (n == TOTAL_NODES?0:-1);
+}

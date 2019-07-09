@@ -22,6 +22,17 @@ contributors:
 
 #include "nodeID.h"
 
+enum unicast_state {
+UNICASTMODE    = 1,
+STARTBROADCAST ,
+STOPUNICAST    ,
+STOPBROADCAST  ,
+ACKMODE        ,
+STARTEMERGENCY ,
+STOPEMERGENCY  ,
+};
+
 int doAckMode(node_num_t n);
+int doUniCastMode(node_num_t n);
 
 #endif

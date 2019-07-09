@@ -19,6 +19,7 @@
 
 #define MAXBROADCASTRETRANSMIT  5
 #define RCVTHRESHOLD    -60
+
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
 
