@@ -24,23 +24,15 @@ contributors:
 
 #include "routing.h"
 #include "nodeID.h"
-// #include "routing.h"
 
-#define BROADCASTMSGSIZE_BYTES  10
+#define BROADCASTMSGSIZE_BYTES  5
 
 typedef enum {
     DISCOVERY = 1,
     EMERGENCY = 2,
     ACK = 3,
+    UNICAST = 4,
 }pkttype_t;
-
-typedef struct {
-    node_num_t destNode, originNode;
-    uint16_t temp_mC;
-    uint16_t battVolt_mV;
-    uint16_t lightSensor;
-    uint16_t servoPos_degs;
-}__attribute__ ((packed)) unicastMsg_t;
 
 // custom structures
 typedef struct {
@@ -50,14 +42,29 @@ typedef struct {
 }__attribute__ ((packed)) r_table_t;
 
 typedef struct {
+    pkttype_t upkt;
+    node_num_t destNode, originNode;
+    uint16_t temp_mC;
+    uint16_t battVolt_mV;
+    uint16_t lightSensor;
+    uint16_t servoPos_degs;
+}__attribute__ ((packed)) unicastMsg_t;
+
+typedef struct {
+    pkttype_t bpkt;
     char msg[BROADCASTMSGSIZE_BYTES];
     r_table_t rTable;
-    pkttype_t bpkt;
 }__attribute__((packed)) broadcastMsg_t;
 
+typedef struct {
+    pkttype_t apkt;
+    linkaddr_t hopHist[TOTAL_NODES];
+}__attribute__((packed)) ackModeMsg_t;
+
 typedef union {
-    broadcastMsg_t b;
     unicastMsg_t u;
+    broadcastMsg_t b;
+    ackModeMsg_t a;
 }__attribute__((packed)) payload_t;
 
 #endif

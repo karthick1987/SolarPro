@@ -222,11 +222,12 @@ PROCESS_THREAD (uniCastThread, ev, data)
         {
             state = (enum unicast_state) (data);
             printf("STATE is %d\n",state);
+            payload_t p;
             switch((int) data)
             {
                 case ACKMODE:
                     // Send unicast and expect payload as hop history
-                    status = doAckMode(node);
+                    status = doAckMode(node,&p);
 
                     printf("Here in ACKMODE to node %d, Status is %d\n",node,status);
 

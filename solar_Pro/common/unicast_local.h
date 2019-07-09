@@ -21,6 +21,7 @@ contributors:
 #define UNICASTLOCAL_H
 
 #include "nodeID.h"
+#include "routing.h"
 
 enum unicast_state {
 UNICASTMODE    = 1,
@@ -32,7 +33,7 @@ STARTEMERGENCY ,
 STOPEMERGENCY  ,
 };
 
-int doAckMode(node_num_t n);
+int doAckMode(node_num_t n, payload_t *);
 int doUniCastMode(node_num_t n);
 
 #endif
