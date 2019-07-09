@@ -29,6 +29,10 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
+#include "cpu/cc2538/dev/uart.h"
+//#include "cpu/cc2538/usb/usb-serial.h"	// For UART-like I/O over USB.
+#include "dev/serial-line.h"			// For UART-like I/O over USB.
+
 
 // Standard C includes:
 #include <stdio.h>
@@ -43,6 +47,9 @@ contributors:
 #include "nodeID.h"
 #include "routing.h"
 #include "anemometer.h"
+#include "base.h"
+
+/*---------------------------------------------------------------------------*/
 
 #define TX_POWER 7
 #define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
@@ -65,8 +72,9 @@ static struct etimer et;
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(broadCastThread, "BroadCast Thread");
 PROCESS(uniCastThread, "Unicast Thread");
-AUTOSTART_PROCESSES(&windSpeedThread, &broadCastThread, &uniCastThread);
-
+PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
+AUTOSTART_PROCESSES(&broadCastThread, &uniCastThread, &rxUSB_process);
+//&windSpeedThread
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -86,11 +94,12 @@ PROCESS_THREAD (windSpeedThread, ev, data)
 {
 
     PROCESS_BEGIN ();
-
     static uint16_t wind_speed;
-    static uint16_t wind_speed_aDECTvg;
+    static uint16_t wind_speed_avg;
     static uint16_t wind_speed_avg_2m;
     static uint16_t wind_speed_max;
+    static int uartTxBuffer[MAX_USB_PAYLOAD_SIZE];
+    static int i;
 
     printf("Anemometer test, integration period %u\n",
             ANEMOMETER_AVG_PERIOD);
@@ -116,17 +125,23 @@ PROCESS_THREAD (windSpeedThread, ev, data)
         /* If timer expired, print sensor readings */
 
         wind_speed = anemometer.value(ANEMOMETER);
-        // wind_speed_avg = anemometer.value(ANEMOMETER_AVG);
+        wind_speed_avg = anemometer.value(ANEMOMETER_AVG);
         wind_speed_avg_2m = anemometer.value(ANEMOMETER_AVG_X);
         wind_speed_max = anemometer.value(ANEMOMETER_MAX);
 
-        /*
-           printf("Wind speed: %u.%u km/h ", wind_speed/1000, (wind_speed % 1000)/100);
-           printf("(%u.%u km/h avg, %u.%u km/h 2m avg, %u.%u km/h max)\n\n", wind_speed_avg/1000, (wind_speed_avg % 1000)/100,
-           wind_speed_avg_2m/1000, (wind_speed_avg_2m % 1000)/100, wind_speed_max/1000, (wind_speed_max % 1000)/100);
-           */
-        etimer_reset(&et);
+        uartTxBuffer[0] = SERIAL_PACKET_TYPE_ANEMOMETER;
+        uartTxBuffer[1] = wind_speed/1000;
+        uartTxBuffer[2] = wind_speed_avg/1000;
+        uartTxBuffer[3] = wind_speed_max/1000;
 
+        uart_write_byte(0,START_CHAR);
+        for (i = 0; i < 5; i++)
+        {
+            uart_write_byte(0,uartTxBuffer[i]);
+        }
+        uart_write_byte(0,END_CHAR);
+
+        etimer_reset(&et);
     }
 
     PROCESS_END ();
@@ -179,7 +194,6 @@ PROCESS_THREAD (broadCastThread, ev, data)
 
     PROCESS_END();
 }
-
 
 
 PROCESS_THREAD (uniCastThread, ev, data)
@@ -287,3 +301,56 @@ PROCESS_THREAD (uniCastThread, ev, data)
     PROCESS_END();
 }
 
+// Listens for data coming from the USB connection (UART0)
+// and prints it.
+PROCESS_THREAD(rxUSB_process, ev, data) {
+    PROCESS_BEGIN();
+
+    uint8_t *uartRxBuffer;
+
+
+    /* In this example, whenever data is received from UART0, the
+     * default handler (i.e. serial_line_input_byte) is called.
+     * But how does it work?
+     *
+     * The handler runs in a process that puts all incoming data
+     * in a buffer until it gets a newline or END character
+     * ('\n' and 0x0A are equivalent). Also good to know is that
+     * there is an IGNORE character: 0x0D.
+     *
+     * Once a newline or END is detected, a termination char ('\0')
+     * is appended to the buffer and the process broadcasts a
+     * "serial_line_event_message" along with the buffer contents.
+     *
+     * For more details, check contiki/core/dev/serial-line.c
+     * For an "example", check contiki/apps/serial-shell/serial-shell.c
+     */
+    while(1){
+        PROCESS_YIELD();
+
+        if (ev == serial_line_event_message)
+        {
+
+            leds_toggle(LEDS_RED);
+
+            uartRxBuffer = (uint8_t*)data;
+
+            // If the received packet is a packet to start network discovery
+            if(uartRxBuffer[0] == SERIAL_PACKET_TYPE_NETWORK_DISCOVERY) {
+
+                // Do network discovery
+
+            }
+            else if(uartRxBuffer[0] == SERIAL_PACKET_TYPE_EMERGENCY) {
+
+                // Do Emergency
+            }
+            else if(uartRxBuffer[0] == SERIAL_PACKET_TYPE_SERVO_MANUAL){
+
+                // Do Servo Manual operation
+            }
+            //leds_off(LEDS_BLUE);
+        }
+    }
+    PROCESS_END();
+}
