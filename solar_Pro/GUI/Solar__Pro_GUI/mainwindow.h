@@ -6,8 +6,13 @@
 #include <QClipboard>
 #include "uart.h"
 
-#define SERIAL_PACKET_TYPE_ANEMOMETER       0
-#define SERIAL_PACKET_TYPE_NODE_SENSORS       1
+// Packet type flags used in UART/serial transmission.
+#define SERIAL_PACKET_TYPE_ANEMOMETER         	0
+#define SERIAL_PACKET_TYPE_NODE_SENSORS       	1
+#define SERIAL_PACKET_TYPE_NETWORK_DISCOVERY	2
+#define SERIAL_PACKET_TYPE_EMERGENCY			3
+#define SERIAL_PACKET_TYPE_SERVO_MANUAL			4
+#define SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS  5
 
 namespace Ui {
 class MainWindow;
@@ -22,10 +27,10 @@ typedef struct {
 } SensorValue;
 
 typedef struct {
-    signed char windspeed;
-    signed char windspeedAvg;
-    signed char windspeedMax;
-    signed char windspeedThreshold;
+    unsigned char windspeed;
+    unsigned char windspeedAvg;
+    unsigned char windspeedMax;
+    unsigned char windspeedThreshold;
 }Anemometer;
 
 class MainWindow : public QMainWindow
@@ -52,7 +57,7 @@ private slots:
     void on_button_NetDiscover_clicked();
     void on_button_Emergency_clicked();
     void on_pushButton_SetWindSpeedThreshold_clicked();
-    void on_dial_SetManualAngle_clicked();
+    void on_pushButton_SetManualAngle_clicked();
     void receive(QString str);
     void send(QByteArray data);
     void packet_received(QByteArray str);

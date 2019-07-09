@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     m_record = false;
@@ -56,6 +57,7 @@ void MainWindow::on_pushButton_close_clicked() {
 void MainWindow::receive(QString str) {
     ui->textEdit_Status->append(str);
     ui->textEdit_Status->ensureCursorVisible();
+    qDebug() << "receive";
 }
 
 void MainWindow::send(QByteArray data) {
@@ -63,6 +65,7 @@ void MainWindow::send(QByteArray data) {
 }
 
 void MainWindow::packet_received(QByteArray str) {
+    qDebug() << "packet_received";
     if (str.length() == 0) return;
 
     switch (str.at(0)) {

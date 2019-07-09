@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[15];
-    char stringdata0[306];
+    char stringdata0[312];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -38,14 +38,14 @@ QT_MOC_LITERAL(3, 40, 26), // "on_pushButton_open_clicked"
 QT_MOC_LITERAL(4, 67, 29), // "on_button_NetDiscover_clicked"
 QT_MOC_LITERAL(5, 97, 27), // "on_button_Emergency_clicked"
 QT_MOC_LITERAL(6, 125, 43), // "on_pushButton_SetWindSpeedThr..."
-QT_MOC_LITERAL(7, 169, 30), // "on_dial_SetManualAngle_clicked"
-QT_MOC_LITERAL(8, 200, 7), // "receive"
-QT_MOC_LITERAL(9, 208, 3), // "str"
-QT_MOC_LITERAL(10, 212, 4), // "send"
-QT_MOC_LITERAL(11, 217, 4), // "data"
-QT_MOC_LITERAL(12, 222, 15), // "packet_received"
-QT_MOC_LITERAL(13, 238, 32), // "on_radioButton_AngleAuto_clicked"
-QT_MOC_LITERAL(14, 271, 34) // "on_radioButton_AngleManual_cl..."
+QT_MOC_LITERAL(7, 169, 36), // "on_pushButton_SetManualAngle_..."
+QT_MOC_LITERAL(8, 206, 7), // "receive"
+QT_MOC_LITERAL(9, 214, 3), // "str"
+QT_MOC_LITERAL(10, 218, 4), // "send"
+QT_MOC_LITERAL(11, 223, 4), // "data"
+QT_MOC_LITERAL(12, 228, 15), // "packet_received"
+QT_MOC_LITERAL(13, 244, 32), // "on_radioButton_AngleAuto_clicked"
+QT_MOC_LITERAL(14, 277, 34) // "on_radioButton_AngleManual_cl..."
 
     },
     "MainWindow\0on_pushButton_close_clicked\0"
@@ -53,8 +53,8 @@ QT_MOC_LITERAL(14, 271, 34) // "on_radioButton_AngleManual_cl..."
     "on_button_NetDiscover_clicked\0"
     "on_button_Emergency_clicked\0"
     "on_pushButton_SetWindSpeedThreshold_clicked\0"
-    "on_dial_SetManualAngle_clicked\0receive\0"
-    "str\0send\0data\0packet_received\0"
+    "on_pushButton_SetManualAngle_clicked\0"
+    "receive\0str\0send\0data\0packet_received\0"
     "on_radioButton_AngleAuto_clicked\0"
     "on_radioButton_AngleManual_clicked"
 };
@@ -113,7 +113,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->on_button_NetDiscover_clicked(); break;
         case 3: _t->on_button_Emergency_clicked(); break;
         case 4: _t->on_pushButton_SetWindSpeedThreshold_clicked(); break;
-        case 5: _t->on_dial_SetManualAngle_clicked(); break;
+        case 5: _t->on_pushButton_SetManualAngle_clicked(); break;
         case 6: _t->receive((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 7: _t->send((*reinterpret_cast< QByteArray(*)>(_a[1]))); break;
         case 8: _t->packet_received((*reinterpret_cast< QByteArray(*)>(_a[1]))); break;

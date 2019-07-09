@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -73,22 +74,23 @@ void MainWindow::packet_received(QByteArray str) {
         anemometer.windspeed = str.at(1);
         anemometer.windspeedAvg = str.at(2);
         anemometer.windspeedMax = str.at(3);
-        anemometer.windspeedThreshold = str.at(4);
+        //anemometer.windspeedThreshold = str.at(4);
 
-        /*int row = ui->tableWidget->rowCount();
-        row++;
-        ui->tableWidget->setRowCount(row);
-        ui->tableWidget->scrollToBottom();
-        QTableWidgetItem *index = new QTableWidgetItem(QString::number(radioTest.number));
-        ui->tableWidget->setItem(row-1, 0, index);
-        QTableWidgetItem *distance = new QTableWidgetItem(QString::number(ui->doubleSpinBox_distance->value())); //tr("%1 %2").arg(row).arg(str)
-        ui->tableWidget->setItem(row-1, 1, distance);
-        QTableWidgetItem *TxPower = new QTableWidgetItem(QString::number(radioTest.tx_power));
-        ui->tableWidget->setItem(row-1, 2, TxPower);
-        QTableWidgetItem *RxPower = new QTableWidgetItem(QString::number(radioTest.rssi));
-        ui->tableWidget->setItem(row-1, 3, RxPower);*/
+
+        ui->lcdWindSpeed->setPalette(Qt::black);
+        ui->lcdWindSpeed->display(anemometer.windspeed);
+
+        ui->lcdWindSpeed_Avg->setPalette(Qt::black);
+        ui->lcdWindSpeed_Avg->display(anemometer.windspeedAvg);
+
+        ui->lcdWindSpeed_Max->setPalette(Qt::black);
+        ui->lcdWindSpeed_Max->display(anemometer.windspeedMax);
+
+        ui->lcdWindSpeed_Threshold->setPalette(Qt::black);
+        ui->lcdWindSpeed_Threshold->display(anemometer.windspeedThreshold);
 
         break;
+
     case SERIAL_PACKET_TYPE_NODE_SENSORS:
         SensorValue sensorvalue;
         sensorvalue.destNode = str.at(1);
@@ -103,27 +105,42 @@ void MainWindow::packet_received(QByteArray str) {
 }
 
 void MainWindow::on_button_NetDiscover_clicked(){
-
+    qDebug() << "NetDiscover clicked";
+    QByteArray data = QByteArray((int) 1, (char) 0);
+    data[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
+    this->send(data);
 }
 
 void MainWindow::on_button_Emergency_clicked(){
-
+    qDebug() << "Emergency clicked";
+    QByteArray data = QByteArray((int) 1, (char) 0);
+    data[0] = SERIAL_PACKET_TYPE_EMERGENCY;
+    this->send(data);
 }
 
 void MainWindow::on_pushButton_SetWindSpeedThreshold_clicked(){
-
+    qDebug() << "Threshold clicked";
+    qDebug() << (signed char) ui->spinBox_WindSpeedThreshold->value();
+    QByteArray data = QByteArray((int) 2, (char) 0);
+    data[0] = SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS;
+    data[1] = (signed char) ui->spinBox_WindSpeedThreshold->value();
+    this->send(data);
 }
 
-void MainWindow::on_dial_SetManualAngle_clicked(){
-
+void MainWindow::on_pushButton_SetManualAngle_clicked(){
+    qDebug() << "Set Manual Angle clicked";
+    QByteArray data = QByteArray((int) 2, (char) 0);
+    data[0] = SERIAL_PACKET_TYPE_SERVO_MANUAL;
+    data[1] = (signed char) ui->spinBox_ManualAngle->value();
+    this->send(data);
 }
 
 void MainWindow::on_radioButton_AngleAuto_clicked(){
-    ui->dial_SetManualAngle->setEnabled(false);
+    ui->pushButton_SetManualAngle->setEnabled(false);
 }
 
 void MainWindow::on_radioButton_AngleManual_clicked(){
-    ui->dial_SetManualAngle->setEnabled(true);
+    ui->pushButton_SetManualAngle->setEnabled(true);
 }
 
 
