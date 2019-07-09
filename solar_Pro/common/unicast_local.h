@@ -1,3 +1,4 @@
+
 /*
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
@@ -13,18 +14,14 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is specifically designed for the base node.
+ This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef BASE_H
-#define BASE_H
+#ifndef UNICASTLOCAL_H
+#define UNICASTLOCAL_H
 
-#define STARTUNICAST    1
-#define STARTBROADCAST  2
-#define STOPUNICAST     3
-#define STOPBROADCAST   4
-#define ACKMODE         5
-#define STARTEMERGENCY  6
-#define STOPEMERGENCY   7
+#include "nodeID.h"
+
+int doAckMode(node_num_t n);
 
 #endif

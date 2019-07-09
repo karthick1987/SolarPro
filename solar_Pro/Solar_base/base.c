@@ -34,14 +34,19 @@ contributors:
 #include <stdio.h>
 #include <stdint.h>
 
-//project headers
+// Project headers
+#include "base.h"
+
+// Common headers
+#include "unicast_local.h"
 #include "helpers.h"
 #include "nodeID.h"
-#include "anemometer.h"
 #include "routing.h"
+#include "anemometer.h"
 
 #define TX_POWER 7
 #define UNICASTTRASMITINTERVAL 5*CLOCK_SECOND
+#define ACKMODETRASMITINTERVAL 3*CLOCK_SECOND
 
 // int power_options[] =    {255,237,213,197,182,176,161,145,136,114,98 ,88 ,66 ,0};
 // int power_dBm[] =        {7  ,5  ,3  ,1  ,0  ,-1 ,-3 ,-5 ,-7 ,-9 ,-11,-13,-15,-24};
@@ -58,9 +63,9 @@ static struct etimer et;
 /*---------------------------------------------------------------------------*/
 
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
-PROCESS(networkdiscoveryThread, "Network Discovery Thread");
+PROCESS(broadCastThread, "BroadCast Thread");
 PROCESS(uniCastThread, "Unicast Thread");
-AUTOSTART_PROCESSES(&windSpeedThread, &networkdiscoveryThread, &uniCastThread);
+AUTOSTART_PROCESSES(&windSpeedThread, &broadCastThread, &uniCastThread);
 
 
 /*---------------------------------------------------------------------------*/
@@ -83,7 +88,7 @@ PROCESS_THREAD (windSpeedThread, ev, data)
     PROCESS_BEGIN ();
 
     static uint16_t wind_speed;
-    static uint16_t wind_speed_avg;
+    static uint16_t wind_speed_aDECTvg;
     static uint16_t wind_speed_avg_2m;
     static uint16_t wind_speed_max;
 
@@ -111,7 +116,7 @@ PROCESS_THREAD (windSpeedThread, ev, data)
         /* If timer expired, print sensor readings */
 
         wind_speed = anemometer.value(ANEMOMETER);
-        wind_speed_avg = anemometer.value(ANEMOMETER_AVG);
+        // wind_speed_avg = anemometer.value(ANEMOMETER_AVG);
         wind_speed_avg_2m = anemometer.value(ANEMOMETER_AVG_X);
         wind_speed_max = anemometer.value(ANEMOMETER_MAX);
 
@@ -127,7 +132,7 @@ PROCESS_THREAD (windSpeedThread, ev, data)
     PROCESS_END ();
 }
 
-PROCESS_THREAD (networkdiscoveryThread, ev, data)
+PROCESS_THREAD (broadCastThread, ev, data)
 {
     PROCESS_BEGIN();
 
@@ -141,7 +146,7 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
     static struct etimer et_broadCastOver;
-    etimer_set(&et_broadCastOver, 10*CLOCK_SECOND);
+    etimer_set(&et_broadCastOver, 1*CLOCK_SECOND);
     static int i = 0;
 
     while(1) {
@@ -154,16 +159,23 @@ PROCESS_THREAD (networkdiscoveryThread, ev, data)
                 if( button_sensor.value(BUTTON_SENSOR_VALUE_TYPE_LEVEL) ==
                         BUTTON_SENSOR_PRESSED_LEVEL )
                 {
-                    //initNetworkDisc();
+                    initNetworkDisc();
                 }
             }
         }//end if(ev == sensors_event)
+
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            process_post(&uniCastThread, PROCESS_EVENT_MSG, i++);
-            etimer_reset(&et_broadCastOver);
+            process_post(&uniCastThread, PROCESS_EVENT_MSG, (int) ACKMODE);//(((i)%7)+1));
+            etimer_stop(&et_broadCastOver);
         }
-    }//end while(1)
+        else if (ev == PROCESS_EVENT_MSG)
+        {
+            // DO the emergency broadcast task
+
+            // Wake up from the emergency task and go to normal polling
+        }
+    }
 
     PROCESS_END();
 }
@@ -176,8 +188,9 @@ PROCESS_THREAD (uniCastThread, ev, data)
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
 
-    static struct etimer et_unicastTransmit;
-    etimer_set(&et_unicastTransmit, UNICASTTRASMITINTERVAL);
+    static struct etimer et_unicastTransmit, et_ackModeTransmit;
+    static int status = 0;
+    static node_num_t node = 1;
 
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
@@ -191,13 +204,63 @@ PROCESS_THREAD (uniCastThread, ev, data)
         //}//end if(ev == sensors_event)
         if (ev == PROCESS_EVENT_TIMER)
         {
-            etimer_reset(&et_unicastTransmit);
-            leds_toggle(LEDS_BLUE);
-            print_active_procs();
+            // In case the unicast timer 
+            if (etimer_expired(&et_unicastTransmit))
+            {
+                //etimer_reset(&et_unicastTransmit);
+                // Start polling the devices one by one
+                leds_toggle(LEDS_BLUE);
+                //print_active_procs();
+            }
+            if (etimer_expired(&et_ackModeTransmit))
+            {
+                etimer_reset(&et_ackModeTransmit);
+                process_post(&uniCastThread, PROCESS_EVENT_MSG, (int) ACKMODE);
+                // Start polling the devices one by one
+                leds_toggle(LEDS_BLUE);
+                //print_active_procs();
+            }
         }
         else if (ev == PROCESS_EVENT_MSG)
         {
-            printf("Received  MSG!!! is %d\n",data);
+            switch((int) data)
+            {
+                case ACKMODE:
+                    // Send unicast but the payload is hop history
+                    // Set up the ACKMODE Packet and send data in round robin fashion
+                    status = doAckMode(node++);
+                    etimer_set(&et_ackModeTransmit, ACKMODETRASMITINTERVAL);
+                    printf("Here in ACKMODE to node %d\n",node);
+                    if ( status == 0 )
+                    {
+                        process_post(&uniCastThread, PROCESS_EVENT_MSG, (int) STARTUNICAST);
+                        node = 1;
+                        etimer_stop(&et_ackModeTransmit);
+                    }
+                    break;
+                case STARTUNICAST:
+                    // Set the timer for Unicast interval
+                    // etimer_set(&et_unicastTransmit, UNICASTTRASMITINTERVAL);
+                    // start unicast polling one by one
+                    printf("Here in STARTUNICAST\n");
+                    break;
+                case STARTBROADCAST:
+                    // stop unicast polling and go to Broadcast mode
+                    printf("Here in STARTBROADCAST\n");
+                    break;
+                case STOPBROADCAST:
+                    // stop unicast polling and go to Broadcast mode
+                    printf("Here in STOPBROADCAST\n");
+                    break;
+                case STARTEMERGENCY:
+                    // stop unicast polling and go to Broadcast mode
+                    printf("Here in STARTEMERGENCY\n");
+                    break;
+                case STOPEMERGENCY:
+                    // EMERGENCY is done so start polling as normal again
+                    printf("Here in STOPUNICAST\n");
+                    break;
+            }
         }
     }//end while(1)
 

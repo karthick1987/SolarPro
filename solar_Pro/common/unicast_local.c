@@ -1,3 +1,4 @@
+
 /*
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
@@ -13,18 +14,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is specifically designed for the base node.
+ This c-file is specifically designed for the base node.
  */
 
-#ifndef BASE_H
-#define BASE_H
+// Contiki-specific includes:
+#include "unicast_local.h"
 
-#define STARTUNICAST    1
-#define STARTBROADCAST  2
-#define STOPUNICAST     3
-#define STOPBROADCAST   4
-#define ACKMODE         5
-#define STARTEMERGENCY  6
-#define STOPEMERGENCY   7
-
-#endif
+int doAckMode(node_num_t n)
+{
+    return (n == TOTAL_NODES?0:-1);
+}
