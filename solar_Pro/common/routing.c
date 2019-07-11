@@ -9,6 +9,8 @@
 // Private includes
 #include "routing.h"
 #include "nodeID.h"
+#include "base.h"
+#include "broadcast_local.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -39,6 +41,9 @@ static r_table_t myrTable;
 
 // Global payload to transmit
 static payload_t payload;
+
+// eTimer to signal End of broadcast
+struct etimer et_broadCastOver;
 
 static void printRTable2(r_table_t r, const char *text);
 static void printRTable(const char *);
@@ -77,7 +82,7 @@ static void delay_ms(uint16_t ms)
     return;
 }
 
-void initNetworkDisc(struct process *p, struct etimer *et)
+void initNetworkDisc(struct process *p)
 {
     printf("Network Discovery Initiated\n");
     // reset routing table
@@ -97,8 +102,8 @@ void initNetworkDisc(struct process *p, struct etimer *et)
     // initiate controlled flooding
     bdct_send(&broadcast, t);
 
-    process_post(p, PROCESS_EVENT_MSG, (int )56);
-    etimer_set(et, 5*CLOCK_SECOND);
+    printf("Setting timer to expire INITNETWORKDISC\n");
+    etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
 
     return;
 }
@@ -185,7 +190,6 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);
 
     printRTable2(payload.b.rTable,"======= Received Payload is =======");
-
     printRTable("=======My Table before the Update=======");
 
     // Compare payload with rTable
@@ -212,6 +216,9 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     // Else do nothing and dont Broadcast again
     leds_off(LEDS_GREEN);
+
+    // TODO BroadCastOver timer needs to be reset here
+    etimer_reset(&et_broadCastOver);
 }
 
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)

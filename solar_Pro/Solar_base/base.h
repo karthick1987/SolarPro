@@ -45,4 +45,11 @@ contributors:
 // Tx buffer size in bytes.
 #define MAX_USB_PAYLOAD_SIZE	4
 
+enum state_t {
+IDLE        = 46,
+INITNETWORKDISC ,
+EMERGENCYSTATE  ,
+ACKMODE         ,
+UNICASTMODE     ,
+};
 #endif

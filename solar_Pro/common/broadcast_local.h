@@ -17,13 +17,9 @@ contributors:
  This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef UNICASTLOCAL_H
-#define UNICASTLOCAL_H
+#ifndef BROADCASTLOCAL_H
+#define BROADCASTLOCAL_H
 
-#include "nodeID.h"
-#include "routing.h"
-
-int doAckMode(node_num_t n, payload_t *);
-int doUniCastMode(node_num_t n, payload_t *);
+#define BROADCASTTIMEOUT    5*CLOCK_SECOND
 
 #endif

@@ -38,7 +38,7 @@
 #define UNINITCOST  0xFF
 
 void setUpRtable(void);
-void initNetworkDisc(struct process *p, struct etimer *et);
+void initNetworkDisc(struct process *p);
 void openBroadcast(void);
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);
