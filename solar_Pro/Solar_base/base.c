@@ -161,7 +161,7 @@ PROCESS_THREAD (broadCastThread, ev, data)
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
     static struct etimer et_broadCastOver;
-    etimer_set(&et_broadCastOver, 3*CLOCK_SECOND);
+    //etimer_set(&et_broadCastOver, 3*CLOCK_SECOND);
 
     while(1) {
         PROCESS_WAIT_EVENT();
@@ -173,19 +173,21 @@ PROCESS_THREAD (broadCastThread, ev, data)
                 if( button_sensor.value(BUTTON_SENSOR_VALUE_TYPE_LEVEL) ==
                         BUTTON_SENSOR_PRESSED_LEVEL )
                 {
-                    initNetworkDisc();
+                    initNetworkDisc(&broadCastThread, &et_broadCastOver);
                 }
             }
         }//end if(ev == sensors_event)
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            process_post(&uniCastThread, PROCESS_EVENT_MSG, ACKMODE);//(((i)%7)+1));
+            //process_post(&uniCastThread, PROCESS_EVENT_MSG, ACKMODE);//(((i)%7)+1));
+            printf("Timer for Network Discovery expired\n");
             etimer_stop(&et_broadCastOver);
         }
 
         else if (ev == PROCESS_EVENT_MSG)
         {
+            printf("File sent this process a message %d!\n", (int) data);
             // DO the emergency broadcast task
 
             // Wake up from the emergency task and go to normal polling

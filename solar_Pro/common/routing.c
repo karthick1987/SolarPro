@@ -1,7 +1,6 @@
 
 #include "contiki.h"
-#include "sys/timer.h"
-#include "sys/process.h"
+#include "sys/etimer.h"
 #include "sys/clock.h"
 #include "net/rime/rime.h"     // Establish connections.
 #include "net/netstack.h"      // Wireless-stack definitions
@@ -78,7 +77,7 @@ static void delay_ms(uint16_t ms)
     return;
 }
 
-void initNetworkDisc(void)
+void initNetworkDisc(struct process *p, struct etimer *et)
 {
     printf("Network Discovery Initiated\n");
     // reset routing table
@@ -97,6 +96,9 @@ void initNetworkDisc(void)
 
     // initiate controlled flooding
     bdct_send(&broadcast, t);
+
+    process_post(p, PROCESS_EVENT_MSG, (int )56);
+    etimer_set(et, 5*CLOCK_SECOND);
 
     return;
 }

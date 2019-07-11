@@ -28,6 +28,7 @@
 #define ROUTING_H
 
 #include "core/net/linkaddr.h"
+#include "sys/process.h"
 
 // Private includes
 #include "nodeID.h"
@@ -37,7 +38,7 @@
 #define UNINITCOST  0xFF
 
 void setUpRtable(void);
-void initNetworkDisc(void);
+void initNetworkDisc(struct process *p, struct etimer *et);
 void openBroadcast(void);
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);
