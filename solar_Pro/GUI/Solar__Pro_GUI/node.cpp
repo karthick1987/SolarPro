@@ -8,13 +8,14 @@
 #include <QPainter>
 #include <QStyleOption>
 
-Node::Node(GraphWidget *graphWidget)
+Node::Node(GraphWidget *graphWidget, char IDVal)
     :graph(graphWidget)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
+    this->ID = IDVal;
 }
 
 void Node::addEdge(Edge *edge)
@@ -27,6 +28,7 @@ QList<Edge *> Node::edges() const
 {
     return edgeList;
 }
+
 
 
 void Node::calculateForces()
@@ -115,8 +117,8 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     if(option->state & QStyle::State_Sunken){
         gradient.setCenter(3, 3);
         gradient.setFocalPoint(3, 3);
-        gradient.setColorAt(1, QColor(Qt::yellow).light(120));
-        gradient.setColorAt(0, QColor(Qt::darkYellow).light(120));
+        gradient.setColorAt(1, QColor(Qt::red).light(120));
+        gradient.setColorAt(0, QColor(Qt::darkRed).light(120));
     }
     else{
         gradient.setColorAt(1, QColor(Qt::yellow));
@@ -124,8 +126,15 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
     painter->setBrush(gradient);
 
+    QFont font = painter->font();
+    font.setBold(true);
+    font.setPointSize(12);
+    painter->setFont(font);
     painter->setPen(QPen(Qt::black, 0));
     painter->drawEllipse(-10, -10, 20, 20);
+
+    QRectF textRect(-10, -10, 20, 20);
+    painter->drawText(textRect,Qt::AlignCenter,static_cast<const QString>(ID));
 }
 
 
