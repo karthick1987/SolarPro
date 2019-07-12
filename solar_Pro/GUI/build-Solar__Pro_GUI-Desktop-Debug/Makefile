@@ -53,20 +53,28 @@ OBJECTS_DIR   = ./
 SOURCES       = ../Solar__Pro_GUI/main.cpp \
 		../Solar__Pro_GUI/mainwindow.cpp \
 		../Solar__Pro_GUI/uart.cpp \
+		../Solar__Pro_GUI/edge.cpp \
+		../Solar__Pro_GUI/node.cpp \
+		../Solar__Pro_GUI/graphwidget.cpp \
 		../qextserialport/src/qextserialport.cpp \
 		../qextserialport/src/qextserialenumerator.cpp \
 		../qextserialport/src/qextserialport_unix.cpp \
 		../qextserialport/src/qextserialenumerator_linux.cpp moc_mainwindow.cpp \
-		moc_uart.cpp
+		moc_uart.cpp \
+		moc_graphwidget.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		uart.o \
+		edge.o \
+		node.o \
+		graphwidget.o \
 		qextserialport.o \
 		qextserialenumerator.o \
 		qextserialport_unix.o \
 		qextserialenumerator_linux.o \
 		moc_mainwindow.o \
-		moc_uart.o
+		moc_uart.o \
+		moc_graphwidget.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -153,6 +161,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../Solar__Pro_GUI/Solar__Pro_GUI.pro ../Solar__Pro_GUI/mainwindow.h \
 		../Solar__Pro_GUI/uart.h \
+		../Solar__Pro_GUI/edge.h \
+		../Solar__Pro_GUI/node.h \
+		../Solar__Pro_GUI/graphwidget.h \
 		../qextserialport/src/qextserialport.h \
 		../qextserialport/src/qextserialenumerator.h \
 		../qextserialport/src/qextserialport_global.h \
@@ -160,6 +171,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../qextserialport/src/qextserialenumerator_p.h ../Solar__Pro_GUI/main.cpp \
 		../Solar__Pro_GUI/mainwindow.cpp \
 		../Solar__Pro_GUI/uart.cpp \
+		../Solar__Pro_GUI/edge.cpp \
+		../Solar__Pro_GUI/node.cpp \
+		../Solar__Pro_GUI/graphwidget.cpp \
 		../qextserialport/src/qextserialport.cpp \
 		../qextserialport/src/qextserialenumerator.cpp \
 		../qextserialport/src/qextserialport_unix.cpp \
@@ -367,8 +381,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Solar__Pro_GUI/mainwindow.h ../Solar__Pro_GUI/uart.h ../qextserialport/src/qextserialport.h ../qextserialport/src/qextserialenumerator.h ../qextserialport/src/qextserialport_global.h ../qextserialport/src/qextserialport_p.h ../qextserialport/src/qextserialenumerator_p.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Solar__Pro_GUI/main.cpp ../Solar__Pro_GUI/mainwindow.cpp ../Solar__Pro_GUI/uart.cpp ../qextserialport/src/qextserialport.cpp ../qextserialport/src/qextserialenumerator.cpp ../qextserialport/src/qextserialport_unix.cpp ../qextserialport/src/qextserialenumerator_linux.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Solar__Pro_GUI/mainwindow.h ../Solar__Pro_GUI/uart.h ../Solar__Pro_GUI/edge.h ../Solar__Pro_GUI/node.h ../Solar__Pro_GUI/graphwidget.h ../qextserialport/src/qextserialport.h ../qextserialport/src/qextserialenumerator.h ../qextserialport/src/qextserialport_global.h ../qextserialport/src/qextserialport_p.h ../qextserialport/src/qextserialenumerator_p.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Solar__Pro_GUI/main.cpp ../Solar__Pro_GUI/mainwindow.cpp ../Solar__Pro_GUI/uart.cpp ../Solar__Pro_GUI/edge.cpp ../Solar__Pro_GUI/node.cpp ../Solar__Pro_GUI/graphwidget.cpp ../qextserialport/src/qextserialport.cpp ../qextserialport/src/qextserialenumerator.cpp ../qextserialport/src/qextserialport_unix.cpp ../qextserialport/src/qextserialenumerator_linux.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../Solar__Pro_GUI/mainwindow.ui $(DISTDIR)/
 
 
@@ -401,9 +415,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_uart.cpp moc_qextserialport.cpp moc_qextserialenumerator.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_uart.cpp moc_graphwidget.cpp moc_qextserialport.cpp moc_qextserialenumerator.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_uart.cpp moc_qextserialport.cpp moc_qextserialenumerator.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_uart.cpp moc_graphwidget.cpp moc_qextserialport.cpp moc_qextserialenumerator.cpp
 moc_mainwindow.cpp: ../Solar__Pro_GUI/uart.h \
 		../qextserialport/src/qextserialport.h \
 		../qextserialport/src/qextserialport_global.h \
@@ -420,6 +434,11 @@ moc_uart.cpp: ../qextserialport/src/qextserialport.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/nas/ei/home/ge73vig/group1/solar_Pro/GUI/Solar__Pro_GUI -I/nas/ei/home/ge73vig/group1/solar_Pro/GUI/qextserialport/src -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../Solar__Pro_GUI/uart.h -o moc_uart.cpp
+
+moc_graphwidget.cpp: ../Solar__Pro_GUI/graphwidget.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/nas/ei/home/ge73vig/group1/solar_Pro/GUI/Solar__Pro_GUI -I/nas/ei/home/ge73vig/group1/solar_Pro/GUI/qextserialport/src -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../Solar__Pro_GUI/graphwidget.h -o moc_graphwidget.cpp
 
 moc_qextserialport.cpp: ../qextserialport/src/qextserialport_global.h \
 		../qextserialport/src/qextserialport.h \
@@ -456,7 +475,8 @@ main.o: ../Solar__Pro_GUI/main.cpp ../Solar__Pro_GUI/mainwindow.h \
 		../Solar__Pro_GUI/uart.h \
 		../qextserialport/src/qextserialport.h \
 		../qextserialport/src/qextserialport_global.h \
-		../qextserialport/src/qextserialenumerator.h
+		../qextserialport/src/qextserialenumerator.h \
+		../Solar__Pro_GUI/graphwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Solar__Pro_GUI/main.cpp
 
 mainwindow.o: ../Solar__Pro_GUI/mainwindow.cpp ../Solar__Pro_GUI/mainwindow.h \
@@ -472,6 +492,20 @@ uart.o: ../Solar__Pro_GUI/uart.cpp ../Solar__Pro_GUI/uart.h \
 		../qextserialport/src/qextserialport_global.h \
 		../qextserialport/src/qextserialenumerator.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o uart.o ../Solar__Pro_GUI/uart.cpp
+
+edge.o: ../Solar__Pro_GUI/edge.cpp ../Solar__Pro_GUI/edge.h \
+		../Solar__Pro_GUI/node.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o edge.o ../Solar__Pro_GUI/edge.cpp
+
+node.o: ../Solar__Pro_GUI/node.cpp ../Solar__Pro_GUI/edge.h \
+		../Solar__Pro_GUI/node.h \
+		../Solar__Pro_GUI/graphwidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o node.o ../Solar__Pro_GUI/node.cpp
+
+graphwidget.o: ../Solar__Pro_GUI/graphwidget.cpp ../Solar__Pro_GUI/graphwidget.h \
+		../Solar__Pro_GUI/edge.h \
+		../Solar__Pro_GUI/node.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o graphwidget.o ../Solar__Pro_GUI/graphwidget.cpp
 
 qextserialport.o: ../qextserialport/src/qextserialport.cpp ../qextserialport/src/qextserialport.h \
 		../qextserialport/src/qextserialport_global.h \
@@ -500,6 +534,9 @@ moc_mainwindow.o: moc_mainwindow.cpp
 
 moc_uart.o: moc_uart.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_uart.o moc_uart.cpp
+
+moc_graphwidget.o: moc_graphwidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_graphwidget.o moc_graphwidget.cpp
 
 ####### Install
 

@@ -452,12 +452,12 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView_NetGraph">
+     <widget class="GraphWidget" name="NetworkGraph">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>30</y>
-        <width>391</width>
+        <width>401</width>
         <height>431</height>
        </rect>
       </property>
@@ -535,6 +535,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>GraphWidget</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">graphwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

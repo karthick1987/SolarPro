@@ -27,11 +27,17 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-	uart.cpp
+	uart.cpp \
+    edge.cpp \
+    node.cpp \
+    graphwidget.cpp
 
 HEADERS += \
         mainwindow.h \
-	uart.h
+	uart.h \
+    edge.h \
+    node.h \
+    graphwidget.h
 
 FORMS += \
         mainwindow.ui

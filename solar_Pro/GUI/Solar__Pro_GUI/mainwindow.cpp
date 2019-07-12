@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "graphwidget.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -14,6 +15,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
     QObject::connect(uart, SIGNAL(debugReceived(QString)), this, SLOT(receive(QString)));
     QObject::connect(uart, SIGNAL(packetReceived(QByteArray)), this, SLOT(packet_received(QByteArray)));
+
+}
+
+Ui::MainWindow * getUiPtr(void)
+{
+    return nullptr;
 }
 
 MainWindow::~MainWindow()

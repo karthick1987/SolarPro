@@ -1,5 +1,9 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QApplication>
+#include <QTime>
+#include <QMainWindow>
+#include <QtWidgets>
 
 int main(int argc, char *argv[])
 {

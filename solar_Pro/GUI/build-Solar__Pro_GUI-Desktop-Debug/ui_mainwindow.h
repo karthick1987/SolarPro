@@ -14,7 +14,6 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLCDNumber>
@@ -27,6 +26,7 @@
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
+#include <graphwidget.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -65,7 +65,7 @@ public:
     QLCDNumber *lcdNumber_Angle;
     QPushButton *pushButton_SetManualAngle;
     QSpinBox *spinBox_ManualAngle;
-    QGraphicsView *graphicsView_NetGraph;
+    GraphWidget *NetworkGraph;
     QWidget *tab_2;
     QTextEdit *textEdit_Status;
     QComboBox *comboBox_Interface;
@@ -191,9 +191,9 @@ public:
         spinBox_ManualAngle->setGeometry(QRect(100, 200, 52, 32));
         spinBox_ManualAngle->setMaximum(180);
         spinBox_ManualAngle->setSingleStep(10);
-        graphicsView_NetGraph = new QGraphicsView(tab);
-        graphicsView_NetGraph->setObjectName(QStringLiteral("graphicsView_NetGraph"));
-        graphicsView_NetGraph->setGeometry(QRect(20, 30, 391, 431));
+        NetworkGraph = new GraphWidget(tab);
+        NetworkGraph->setObjectName(QStringLiteral("NetworkGraph"));
+        NetworkGraph->setGeometry(QRect(10, 30, 401, 431));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -233,7 +233,7 @@ public:
         button_NetDiscover->setText(QApplication::translate("MainWindow", "Network Discovery", Q_NULLPTR));
         button_Emergency->setText(QApplication::translate("MainWindow", "Emergency", Q_NULLPTR));
         label_NetGraph->setText(QApplication::translate("MainWindow", "Network Graph", Q_NULLPTR));
-        groupBox->setTitle(QApplication::translate("MainWindow", "Wind Speed", Q_NULLPTR));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Wind Speed [km/h]", Q_NULLPTR));
         label_WindSpeed->setText(QApplication::translate("MainWindow", "Actual Wind Speed", Q_NULLPTR));
         label_WindSpeed_Avg->setText(QApplication::translate("MainWindow", "Average Wind Speed", Q_NULLPTR));
         label_WindSpeed_Max->setText(QApplication::translate("MainWindow", "Max Wind Speed", Q_NULLPTR));

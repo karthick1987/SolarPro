@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QClipboard>
+#include <QGraphicsView>
 #include "uart.h"
 
 // Packet type flags used in UART/serial transmission.
@@ -13,6 +14,8 @@
 #define SERIAL_PACKET_TYPE_EMERGENCY			3
 #define SERIAL_PACKET_TYPE_SERVO_MANUAL			4
 #define SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS  5
+
+class Node;
 
 namespace Ui {
 class MainWindow;
@@ -39,16 +42,19 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    Ui::MainWindow * getUiPtr(void);
     ~MainWindow();
 
 protected:
     void changeEvent(QEvent *e);
+    //void keyPressEvent(QKeyEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
     QMessageBox error;
     bool m_record;
     Uart *uart;
+    Node *centerNode;
 
 
 private slots:
