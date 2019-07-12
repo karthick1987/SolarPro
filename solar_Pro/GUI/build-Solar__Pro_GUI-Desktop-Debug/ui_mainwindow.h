@@ -66,6 +66,7 @@ public:
     QPushButton *pushButton_SetManualAngle;
     QSpinBox *spinBox_ManualAngle;
     GraphWidget *NetworkGraph;
+    QLabel *label_systemTime;
     QWidget *tab_2;
     QTextEdit *textEdit_Status;
     QComboBox *comboBox_Interface;
@@ -194,6 +195,9 @@ public:
         NetworkGraph = new GraphWidget(tab);
         NetworkGraph->setObjectName(QStringLiteral("NetworkGraph"));
         NetworkGraph->setGeometry(QRect(10, 30, 401, 431));
+        label_systemTime = new QLabel(tab);
+        label_systemTime->setObjectName(QStringLiteral("label_systemTime"));
+        label_systemTime->setGeometry(QRect(10, 10, 81, 18));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -248,6 +252,7 @@ public:
         radioButton_AngleAuto->setText(QApplication::translate("MainWindow", "Automatic", Q_NULLPTR));
         radioButton_AngleManual->setText(QApplication::translate("MainWindow", "&Manual", Q_NULLPTR));
         pushButton_SetManualAngle->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
+        label_systemTime->setText(QApplication::translate("MainWindow", "Systemtime", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "General", Q_NULLPTR));
         label_Port->setText(QApplication::translate("MainWindow", "Port:", Q_NULLPTR));
         pushButton_open->setText(QApplication::translate("MainWindow", "Open", Q_NULLPTR));

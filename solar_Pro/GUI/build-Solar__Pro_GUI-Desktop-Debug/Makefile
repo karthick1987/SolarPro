@@ -458,7 +458,8 @@ compiler_uic_make_all: ui_mainwindow.h
 compiler_uic_clean:
 	-$(DEL_FILE) ui_mainwindow.h
 ui_mainwindow.h: ../Solar__Pro_GUI/mainwindow.ui \
-		/usr/lib/qt5/bin/uic
+		/usr/lib/qt5/bin/uic \
+		../Solar__Pro_GUI/graphwidget.h
 	/usr/lib/qt5/bin/uic ../Solar__Pro_GUI/mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
@@ -476,6 +477,7 @@ main.o: ../Solar__Pro_GUI/main.cpp ../Solar__Pro_GUI/mainwindow.h \
 		../qextserialport/src/qextserialport.h \
 		../qextserialport/src/qextserialport_global.h \
 		../qextserialport/src/qextserialenumerator.h \
+		ui_mainwindow.h \
 		../Solar__Pro_GUI/graphwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Solar__Pro_GUI/main.cpp
 
@@ -484,7 +486,8 @@ mainwindow.o: ../Solar__Pro_GUI/mainwindow.cpp ../Solar__Pro_GUI/mainwindow.h \
 		../qextserialport/src/qextserialport.h \
 		../qextserialport/src/qextserialport_global.h \
 		../qextserialport/src/qextserialenumerator.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../Solar__Pro_GUI/graphwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Solar__Pro_GUI/mainwindow.cpp
 
 uart.o: ../Solar__Pro_GUI/uart.cpp ../Solar__Pro_GUI/uart.h \
@@ -499,7 +502,12 @@ edge.o: ../Solar__Pro_GUI/edge.cpp ../Solar__Pro_GUI/edge.h \
 
 node.o: ../Solar__Pro_GUI/node.cpp ../Solar__Pro_GUI/edge.h \
 		../Solar__Pro_GUI/node.h \
-		../Solar__Pro_GUI/graphwidget.h
+		../Solar__Pro_GUI/graphwidget.h \
+		../Solar__Pro_GUI/mainwindow.h \
+		../Solar__Pro_GUI/uart.h \
+		../qextserialport/src/qextserialport.h \
+		../qextserialport/src/qextserialport_global.h \
+		../qextserialport/src/qextserialenumerator.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o node.o ../Solar__Pro_GUI/node.cpp
 
 graphwidget.o: ../Solar__Pro_GUI/graphwidget.cpp ../Solar__Pro_GUI/graphwidget.h \

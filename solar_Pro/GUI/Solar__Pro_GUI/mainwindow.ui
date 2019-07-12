@@ -462,6 +462,19 @@
        </rect>
       </property>
      </widget>
+     <widget class="QLabel" name="label_systemTime">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>81</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Systemtime</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">

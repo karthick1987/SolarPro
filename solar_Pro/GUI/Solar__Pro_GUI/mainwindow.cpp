@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "graphwidget.h"
 #include <QDebug>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -16,16 +17,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(uart, SIGNAL(debugReceived(QString)), this, SLOT(receive(QString)));
     QObject::connect(uart, SIGNAL(packetReceived(QByteArray)), this, SLOT(packet_received(QByteArray)));
 
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()),this,SLOT(systemTime()));
+    timer->start(1000);
 }
 
-Ui::MainWindow * getUiPtr(void)
-{
-    return nullptr;
-}
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::systemTime()
+{
+   QTime time = QTime::currentTime();
+   QString time_text = time.toString("hh : mm : ss");
+   ui->label_systemTime->setText(time_text);
 }
 
 void MainWindow::changeEvent(QEvent *e) {

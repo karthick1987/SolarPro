@@ -46,7 +46,7 @@ FORMS += \
 # This section will include QextSerialPort in
 # your project:
 
-HOMEDIR = $$(HOME)/Documents/Master_TUM/SS19/WSN
+HOMEDIR = $$(HOME)/
 
 include($$HOMEDIR/group1/solar_Pro/GUI/qextserialport/src/qextserialport.pri)
 

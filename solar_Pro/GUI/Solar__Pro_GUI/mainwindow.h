@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QClipboard>
 #include <QGraphicsView>
+#include <QTimer>
 #include "uart.h"
 
 // Packet type flags used in UART/serial transmission.
@@ -55,7 +56,7 @@ private:
     bool m_record;
     Uart *uart;
     Node *centerNode;
-
+    QTimer *timer;
 
 private slots:
     void on_pushButton_close_clicked();
@@ -69,6 +70,7 @@ private slots:
     void packet_received(QByteArray str);
     void on_radioButton_AngleAuto_clicked();
     void on_radioButton_AngleManual_clicked();
+    void systemTime();
 };
 
 
