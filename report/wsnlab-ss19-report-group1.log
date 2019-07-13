@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.9.11)  12 JUL 2019 12:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.9.11)  13 JUL 2019 13:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**bare_conf.tex
-(./bare_conf.tex
+**wsnlab-ss19-report-group1.tex
+(./wsnlab-ss19-report-group1.tex
 LaTeX2e <2018-04-01> patch level 5
 (./IEEEtran.cls
 Document Class: IEEEtran 2012/11/21 V1.8c by Harald Hanche-Olsen and Anders Chr
@@ -91,9 +91,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 \@IEEEtmpitemindent=\dimen116
 \c@IEEEbiography=\count91
 \@IEEEtranrubishbin=\box26
-)
-** ATTENTION: Overriding command lockouts (line 68).
-(/usr/local/texlive/2018/texmf-dist/tex/latex/cite/cite.sty
+) (/usr/local/texlive/2018/texmf-dist/tex/latex/cite/cite.sty
 LaTeX Info: Redefining \cite on input line 302.
 LaTeX Info: Redefining \nocite on input line 332.
 Package: cite 2015/02/27  v 5.5
@@ -323,33 +321,52 @@ SSOPTIONconference \hbox to\hsize {\normalfont \footnotesize \box \@tempboxa \h
 fil }\else \hbox to\hsize {\normalfont \footnotesize \box \@tempboxa \hfil }\fi
  \fi \fi .
 \c@ContinuedFloat=\count96
-) (/usr/local/texlive/2018/texmf-dist/tex/latex/base/inputenc.sty
+) (/usr/local/texlive/2018/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2018/04/06 v1.3b Input encoding file
 \inpenc@prehook=\toks16
 \inpenc@posthook=\toks17
 )
-(./bare_conf.aux)
-\openout1 = `bare_conf.aux'.
+(./wsnlab-ss19-report-group1.aux)
+\openout1 = `wsnlab-ss19-report-group1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 361.
-LaTeX Font Info:    ... okay on input line 361.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 361.
-LaTeX Font Info:    ... okay on input line 361.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 361.
-LaTeX Font Info:    ... okay on input line 361.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 361.
-LaTeX Font Info:    ... okay on input line 361.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 361.
-LaTeX Font Info:    ... okay on input line 361.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 361.
-LaTeX Font Info:    ... okay on input line 361.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 361.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 361.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 364.
+LaTeX Font Info:    ... okay on input line 364.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 364.
+LaTeX Font Info:    ... okay on input line 364.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 364.
+LaTeX Font Info:    ... okay on input line 364.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 364.
+LaTeX Font Info:    ... okay on input line 364.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 364.
+LaTeX Font Info:    ... okay on input line 364.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 364.
+LaTeX Font Info:    ... okay on input line 364.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 364.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 364.
 
- (/usr/local/texlive/2018/texmf-dist/tex/latex/base/ts1cmr.fd
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 361.
+LaTeX Font Info:    ... okay on input line 364.
+
 (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count97
@@ -424,44 +441,47 @@ Package caption Info: End \AtBeginDocument code.
 <img/SunsPath1.png, id=1, 321.2pt x 311.1625pt>
 File: img/SunsPath1.png Graphic file (type png)
 <use img/SunsPath1.png>
-Package pdftex.def Info: img/SunsPath1.png  used on input line 459.
+Package pdftex.def Info: img/SunsPath1.png  used on input line 462.
 (pdftex.def)             Requested size: 180.67499pt x 175.03322pt.
 
 
-LaTeX Warning: Citation `b1' on page 1 undefined on input line 462.
+LaTeX Warning: Citation `b1' on page 1 undefined on input line 465.
 
 
-LaTeX Warning: Citation `b1' on page 1 undefined on input line 462.
+LaTeX Warning: Citation `b1' on page 1 undefined on input line 465.
 
 <img/SunsPath2.png, id=3, 1927.2pt x 1341.01pt>
 File: img/SunsPath2.png Graphic file (type png)
 <use img/SunsPath2.png>
-Package pdftex.def Info: img/SunsPath2.png  used on input line 469.
+Package pdftex.def Info: img/SunsPath2.png  used on input line 472.
 (pdftex.def)             Requested size: 180.67499pt x 125.71938pt.
 
-LaTeX Warning: Citation `b2' on page 1 undefined on input line 472.
+LaTeX Warning: Citation `b2' on page 1 undefined on input line 475.
 
 
-LaTeX Warning: Citation `b2' on page 1 undefined on input line 472.
+LaTeX Warning: Citation `b2' on page 1 undefined on input line 475.
 
 <img/ComparisonTrackingVsNoTracking.png, id=4, 1170.3725pt x 679.53876pt>
 File: img/ComparisonTrackingVsNoTracking.png Graphic file (type png)
 <use img/ComparisonTrackingVsNoTracking.png>
 Package pdftex.def Info: img/ComparisonTrackingVsNoTracking.png  used on input 
-line 483.
+line 486.
 (pdftex.def)             Requested size: 180.67499pt x 104.90228pt.
 
-LaTeX Warning: Citation `b3' on page 1 undefined on input line 486.
+LaTeX Warning: Citation `b3' on page 1 undefined on input line 489.
 
 
-LaTeX Warning: Citation `b3' on page 1 undefined on input line 486.
+LaTeX Warning: Citation `b3' on page 1 undefined on input line 489.
 
-(./bare_conf.bbl [1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/p
-dftex.map}
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 504.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 504.
+[1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
  <./img/SunsPath1.png> <./img/SunsPath2.png> <./img/ComparisonTrackingVsNoTrack
-ing.png>])
+ing.png>] (./wsnlab-ss19-report-group1.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -475,28 +495,29 @@ Before submitting the final camera ready copy, remember to:
 
 [2
 
-] (./bare_conf.aux)
+] (./wsnlab-ss19-report-group1.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4009 strings out of 492641
- 65476 string characters out of 6129315
- 128286 words of memory out of 5000000
- 7862 multiletter control sequences out of 15000+600000
+ 4476 strings out of 492641
+ 70955 string characters out of 6129315
+ 139096 words of memory out of 5000000
+ 8323 multiletter control sequences out of 15000+600000
  35250 words of font info for 64 fonts, out of 8000000 for 9000
  1144 hyphenation exceptions out of 8191
- 41i,6n,39p,687b,299s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,7n,39p,704b,311s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/201
-8/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-d
-ist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/
-type1/urw/times/utmri8a.pfb>
-Output written on bare_conf.pdf (2 pages, 763883 bytes).
+exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
+xlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018
+/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-di
+st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/t
+ype1/urw/times/utmri8a.pfb>
+Output written on wsnlab-ss19-report-group1.pdf (2 pages, 770848 bytes).
 PDF statistics:
- 35 PDF objects out of 1000 (max. 8388607)
- 20 compressed objects within 1 object stream
+ 39 PDF objects out of 1000 (max. 8388607)
+ 23 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

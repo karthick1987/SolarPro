@@ -31,7 +31,7 @@ static void zeroOut(payload_t *p, pkttype_t type)
         case ACK:
             for(i=0;i<TOTAL_NODES;i++)
             {
-                (p->a).hopHist[i].u16 = 0;
+                (p->a).hopHist[i].u16 = 0xFFFF;
             }
             break;
         case UNICAST:
@@ -50,6 +50,7 @@ static void setupPacket(payload_t *p, pkttype_t type, node_num_t n)
     {
         case ACK:
             (p->a).apkt = ACK;
+            (p->a).dest.u16 = getRIMEID(n);
             zeroOut(p, type);
             printPacket(p);
             break;
@@ -71,7 +72,7 @@ static void printPacket(payload_t *p)
     switch(p->a.apkt)
     {
         case ACK:
-            printf("---ACK PKT---\n");
+            printf("---ACK PKT---\nDestination Node is %x\n",(p->a).dest.u16);
             for(i=0;i<TOTAL_NODES;i++)
             {
                printf("%d:%d\n",i,(p->a).hopHist[i].u16);
@@ -90,7 +91,7 @@ static void printPacket(payload_t *p)
 
 int doAckMode(node_num_t n, payload_t *p)
 {
-    setupPacket(p,ACK,0);
+    setupPacket(p,ACK,n);
     return (n == TOTAL_NODES?0:-1);
 }
 

@@ -61,7 +61,7 @@ linkaddr_t * getMyRIMEID( void )
 
 uint16_t getRIMEID(node_num_t index)
 {
-    return nodes[index].rimeID;
+    return nodes[index-1].rimeID;
 }
 
 node_num_t getMyNodeID( void )

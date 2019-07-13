@@ -32,6 +32,8 @@ typedef enum {
     EMERGENCY = 2,
     ACK = 3,
     UNICAST = 4,
+    PATH,
+    MANUAL,
 }pkttype_t;
 
 // custom structures
@@ -58,6 +60,7 @@ typedef struct {
 
 typedef struct {
     pkttype_t apkt;
+    linkaddr_t dest;
     linkaddr_t hopHist[TOTAL_NODES];
 }__attribute__((packed)) ackModeMsg_t;
 
