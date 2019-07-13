@@ -497,22 +497,65 @@ In order to track the sun's rays so that the solar panel is always perpendicular
 
 \section{Application Set up}
 
+For our application of using a Wireless sensor network for solar tracking, we are using 3 different kinds of sensors, 7 motes to control 7 panels, 
+
 \subsection{Sensors}
 Described below are the different types of sensors used in our application along and their uses:
 
 \begin{itemize}
-    \item Servo Motor x 7 (1 per mote). The servos will be used to change the angle of solar panels.
-    \item Light Sensor x 7(1 per mote). The light sensors are used in this proof of concept to simulate the power output of the solar panel.
+    \item Servo Motor - HS-422\cite{servoMotor}\newline
+        The servos will be used to change the angle of solar panels.
+    \item Light Sensors\cite{LightSensor}\newline
+        The light sensors are used in this proof of concept to simulate the power output of the solar panel.
+    \item Wind Speed Sensor\cite{WindSensor}\newline
+        This monitors the windspeed at all times and is connected directly to the base station. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.
+    \item Zolertia RE-mote platform\cite{REmote}\newline
+        This is the brain of the Wireless sensor network which will be used together with the Contiki OS
+
 \end{itemize}
 
 \subsection{Motes}
-Subsubsection text here
+We are using 8 motes in total out of which
+\begin{itemize}
+    \item 7x Zolertia REmotes are used as nodes attached to solar panels
+    \item 1x Zolertia REmote is used as a base station
+\end{itemize}
 
-\subsection{Sensors}
-Subsubsection text here ~\cite{bachir2010mac}.
+\subsubsection{Base station}
+    The base station is connected to a computer which displays the GUI (current state of the network). It runs a different code compared to the panel motes as it has to account for interfacing with the computer and collect data from the wind speed sensor at the same time.
+\subsubsection{Panel Motes}
+    The panel Motes runs a subset of the base station code.
 
-\section{Routing Algorithm}
-Subsection text here.
+\section{Network description and Routing Techniques}
+In this proof of concept we are demonstating an energy harvesting WSN which provides information on the status of the solar panel along with the ability to control the angle of the panel in 1 axis. In a real world scenario it is intended that the mote\cite{REmote} will be connected to the solar panel and be able to draw minimal power required for the functioning of the mote.
+\subsection{Network}
+Considering our application and the reliability as one of the factors, we decided that a centralised base station polling based quering scheme suits our application the most. The routes are first discovered during the network discovery phase and the routing tables are exchanged as described in \ref{NetDisc}
+
+\subsection{Modes of Operation}
+In our application we have 5 modes of operation, which are 
+\begin{itemize}
+    \item IDLE
+    \item NETWORKDISCOVERY
+    \item PATHMODE
+    \item UNICASTMODE
+    \item EMERGENCY
+\end{itemize}
+
+
+\subsubsection{IDLE} \label{IDLEMODE}
+When the device comes out of reset this is mode, the mote gets into.
+
+\begin{figure}[htbp]
+    \includegraphics[width=2.5in]{img/Application_Flow_Graph.jpg}
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Angle of incidence of the suns rays on the panel Source: \cite{b2}}
+    \label{fig:StateMachine}
+\end{figure}
+
+\subsection{Routes}
+
+\subsection{Network Discovery} \label{NetDisc}
 
 \section{Graphical User Interface (GUI)}
 The graphical user interface (GUI) is a desktop application programmed with the aid of the QT Creator and focuses on displaying information about the motes operating in the field and allows the user to interact with a desired mote .The computer running the GUI is directly connected to the base station mote via a serial link.\\
@@ -523,6 +566,7 @@ Two info boxes aligned to the right side of the window show the sensor informati
 The lower info box shows the sensor information of the selected mote. A mote is selected by clicking on a mote in the network graph. The particular information such as the Node ID, the temperature, voltage, luminosity and panel angle are presented. For maintenance reasons it is also possible to operate the selected mote by clicking on the "Manual" button. It is then possible to enter an angle between 0 and 180 degrees to manually align the selected solar panel by clicking the "Set" button next to the number field.\\
 The second tab of the GUI allows the user to connect and disconnect the serial link to the base station via selecting the respective port and clicking the buttons "Open" to connect or "Close" to disconnect. The textbox aligned to the bottom of the tab shows possible debug information from the base station.
 
+\section{Future work and Optimisations}
 
 \begin{figure*}[!ht]
 \centering
@@ -630,7 +674,7 @@ With this information the base station is able to poll the sensor informations o
 The network graph and sensor information are visually presented in the graphical user interface, which also allows to operate the servo position manually, set a wind speed emergency threshold or simply trigger an emergency case manually. It is also possible to manually restart the network discovery.\\
 Further ideas to advance the application are a sun tracking algorithm which steers the solar panel according to sensor values. Another useful feature would be to integrate data visualization of the sensor values as a graph showing the history of e.g. the last 24 hours.
 
-
+The conclusion goes here.\cite{dunkels2011contikimac}
 
 
 % conference papers do not normally have an appendix
@@ -668,14 +712,11 @@ Further ideas to advance the application are a sun tracking algorithm which stee
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\newpage
-\bibliography{IEEEabrv, sources}
+%\newpage
+\bibliography{IEEEabrv,sources}
 \bibliographystyle{IEEEtran}
-
-
 
 
 % that's all folks
 \end{document}
-
-
+ 

@@ -21,10 +21,15 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{bachir2010mac}
-A.~Bachir, M.~Dohler, T.~Watteyne, and K.~K. Leung, ``Mac essentials for
-  wireless sensor networks,'' \emph{IEEE Communications Surveys \& Tutorials},
-  vol.~12, no.~2, pp. 222--248, 2010.
+\bibitem{servoMotor}
+K.~Sukumar, ``{Servo Motor HS-422},''
+  \url{https://www.multiplex-rc.de/produkte/112422-servo-hs-422}, 2008,
+  [Online; accessed 19-July-2008].
+
+\bibitem{REmote}
+------, ``{Zolertia Remote},''
+  \url{https://github.com/Zolertia/Resources/wiki/RE-Mote}, 2008, [Online;
+  accessed 19-July-2008].
 
 \bibitem{dunkels2011contikimac}
 A.~Dunkels, ``The contikimac radio duty cycling protocol,'' 2011.

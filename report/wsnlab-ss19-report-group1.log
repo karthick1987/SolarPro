@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.9.11)  13 JUL 2019 13:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.9.11)  13 JUL 2019 16:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -91,7 +91,9 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 \@IEEEtmpitemindent=\dimen116
 \c@IEEEbiography=\count91
 \@IEEEtranrubishbin=\box26
-) (/usr/local/texlive/2018/texmf-dist/tex/latex/cite/cite.sty
+)
+** ATTENTION: Overriding command lockouts (line 68).
+(/usr/local/texlive/2018/texmf-dist/tex/latex/cite/cite.sty
 LaTeX Info: Redefining \cite on input line 302.
 LaTeX Info: Redefining \nocite on input line 332.
 Package: cite 2015/02/27  v 5.5
@@ -343,6 +345,48 @@ Package: inputenc 2018/04/06 v1.3b Input encoding file
 \inpenc@prehook=\toks16
 \inpenc@posthook=\toks17
 )
+(/usr/local/texlive/2018/texmf-dist/tex/latex/tools/array.sty
+Package: array 2018/04/30 v2.4h Tabular extension package (FMi)
+\col@sep=\dimen126
+\ar@mcellbox=\box27
+\extrarowheight=\dimen127
+\NC@list=\toks18
+\extratabsurround=\skip46
+\backup@length=\skip47
+\ar@cellbox=\box28
+)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+\c@KVtest=\count97
+\sf@farskip=\skip48
+\sf@captopadj=\dimen128
+\sf@capskip=\skip49
+\sf@nearskip=\skip50
+\c@subfigure=\count98
+\c@subfigure@save=\count99
+\c@lofdepth=\count100
+\c@subtable=\count101
+\c@subtable@save=\count102
+\c@lotdepth=\count103
+\sf@top=\skip51
+\sf@bottom=\skip52
+)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/base/fixltx2e.sty
+Package: fixltx2e 2016/12/29 v2.1a fixes to LaTeX (obsolete)
+Applying: [2015/01/01] Old fixltx2e package on input line 46.
+
+
+Package fixltx2e Warning: fixltx2e is not required with releases after 2015
+(fixltx2e)                All fixes are now in the LaTeX kernel.
+(fixltx2e)                See the latexrelease package for details.
+
+Already applied: [0000/00/00] Old fixltx2e package on input line 53.
+) (/usr/local/texlive/2018/texmf-dist/tex/latex/sttools/stfloats.sty
+Package: stfloats 2017/03/27 v3.3 Improve float mechanism and baselineskip sett
+ings
+\@dblbotnum=\count104
+\c@dblbotnumber=\count105
+)
 (./wsnlab-ss19-report-group1.aux)
 \openout1 = `wsnlab-ss19-report-group1.aux'.
 
@@ -369,17 +413,17 @@ LaTeX Font Info:    ... okay on input line 364.
 
 (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count97
-\scratchdimen=\dimen126
-\scratchbox=\box27
-\nofMPsegments=\count98
-\nofMParguments=\count99
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count100
-\MPscratchDim=\dimen127
-\MPnumerator=\count101
-\makeMPintoPDFobject=\count102
-\everyMPtoPDFconversion=\toks19
+\scratchcounter=\count106
+\scratchdimen=\dimen129
+\scratchbox=\box29
+\nofMPsegments=\count107
+\nofMParguments=\count108
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count109
+\MPscratchDim=\dimen130
+\MPnumerator=\count110
+\makeMPintoPDFobject=\count111
+\everyMPtoPDFconversion=\toks20
 ) (/usr/local/texlive/2018/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -437,6 +481,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
 <img/SunsPath1.png, id=1, 321.2pt x 311.1625pt>
 File: img/SunsPath1.png Graphic file (type png)
@@ -474,14 +519,56 @@ LaTeX Warning: Citation `b3' on page 1 undefined on input line 489.
 LaTeX Warning: Citation `b3' on page 1 undefined on input line 489.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 504.
+(Font)              <7> on input line 506.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 504.
+(Font)              <5> on input line 506.
+
+LaTeX Warning: Citation `LightSensor' on page 1 undefined on input line 508.
+
 [1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
  <./img/SunsPath1.png> <./img/SunsPath2.png> <./img/ComparisonTrackingVsNoTrack
-ing.png>] (./wsnlab-ss19-report-group1.bbl)
+ing.png>]
+
+LaTeX Warning: Citation `WindSensor' on page 2 undefined on input line 510.
+
+<img/Application_Flow_Graph.jpg, id=18, 963.6pt x 542.025pt>
+File: img/Application_Flow_Graph.jpg Graphic file (type jpg)
+<use img/Application_Flow_Graph.jpg>
+Package pdftex.def Info: img/Application_Flow_Graph.jpg  used on input line 549
+.
+(pdftex.def)             Requested size: 180.67499pt x 101.62943pt.
+
+LaTeX Warning: Citation `b2' on page 2 undefined on input line 552.
+
+
+LaTeX Warning: Citation `b2' on page 2 undefined on input line 552.
+
+<img/GUI_screenshot_general.png, id=19, 696.6025pt x 599.23875pt>
+File: img/GUI_screenshot_general.png Graphic file (type png)
+<use img/GUI_screenshot_general.png>
+Package pdftex.def Info: img/GUI_screenshot_general.png  used on input line 574
+.
+(pdftex.def)             Requested size: 252.94499pt x 217.59108pt.
+<img/GUI_screenshot_connections.png, id=20, 696.6025pt x 599.23875pt>
+File: img/GUI_screenshot_connections.png Graphic file (type png)
+<use img/GUI_screenshot_connections.png>
+Package pdftex.def Info: img/GUI_screenshot_connections.png  used on input line
+ 577.
+(pdftex.def)             Requested size: 252.94499pt x 217.59108pt.
+[2 <./img/Application_Flow_Graph.jpg>] (./wsnlab-ss19-report-group1.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 25--28
+[]\OT1/ptm/m/n/8 K. Suku-mar, ``Servo Mo-tor HS-422,'' https://www.multiplex-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--28
+\OT1/ptm/m/n/8 rc.de/produkte/112422-servo-hs-422, 2008, [On-line; ac-cessed 19
+-
+ []
+
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -493,31 +580,30 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[2
-
-] (./wsnlab-ss19-report-group1.aux)
+[3 <./img/GUI_screenshot_general.png> <./img/GUI_screenshot_connections.png>]
+(./wsnlab-ss19-report-group1.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4476 strings out of 492641
- 70955 string characters out of 6129315
- 139096 words of memory out of 5000000
- 8323 multiletter control sequences out of 15000+600000
- 35250 words of font info for 64 fonts, out of 8000000 for 9000
+ 4730 strings out of 492641
+ 75309 string characters out of 6129315
+ 149233 words of memory out of 5000000
+ 8560 multiletter control sequences out of 15000+600000
+ 34114 words of font info for 63 fonts, out of 8000000 for 9000
  1144 hyphenation exceptions out of 8191
- 41i,7n,39p,704b,311s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,10n,49p,783b,346s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
 xlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018
 /texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-di
 st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/t
 ype1/urw/times/utmri8a.pfb>
-Output written on wsnlab-ss19-report-group1.pdf (2 pages, 770848 bytes).
+Output written on wsnlab-ss19-report-group1.pdf (3 pages, 923668 bytes).
 PDF statistics:
- 39 PDF objects out of 1000 (max. 8388607)
- 23 compressed objects within 1 object stream
+ 47 PDF objects out of 1000 (max. 8388607)
+ 25 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
