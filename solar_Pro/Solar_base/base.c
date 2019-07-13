@@ -62,6 +62,8 @@ contributors:
 /*---------------------------------------------------------------------------*/
 #define READ_SENSOR_PERIOD          CLOCK_SECOND
 #define ANEMOMETER_THRESHOLD_TICK   13  /**< (value*1.2) = 16 Km/h */
+int threshold_tick = 13;
+int threshold = 16;
 /*---------------------------------------------------------------------------*/
 
 static struct etimer et;
@@ -76,7 +78,7 @@ PROCESS(stateMachineThread, "State Machine Thread");
 //PROCESS(uniCastThread, "Unicast Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
 //AUTOSTART_PROCESSES(&broadCastThread, &uniCastThread, &rxUSB_process);
-AUTOSTART_PROCESSES(&stateMachineThread, &rxUSB_process);
+AUTOSTART_PROCESSES(&stateMachineThread, &rxUSB_process, &windSpeedThread);
 //&windSpeedThread
 
 /*---------------------------------------------------------------------------*/
@@ -116,7 +118,7 @@ PROCESS_THREAD (windSpeedThread, ev, data)
     SENSORS_ACTIVATE(anemometer);
 
     /* And the upper threshold value to compare and generate an interrupt */
-    anemometer.configure(ANEMOMETER_INT_OVER, ANEMOMETER_THRESHOLD_TICK);
+    anemometer.configure(ANEMOMETER_INT_OVER, threshold_tick);
 
 
     etimer_set(&et, READ_SENSOR_PERIOD);
@@ -136,9 +138,10 @@ PROCESS_THREAD (windSpeedThread, ev, data)
         uartTxBuffer[1] = wind_speed/1000;
         uartTxBuffer[2] = wind_speed_avg/1000;
         uartTxBuffer[3] = wind_speed_max/1000;
+        uartTxBuffer[4] = threshold;
 
         uart_write_byte(0,START_CHAR);
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 6; i++)
         {
             uart_write_byte(0,uartTxBuffer[i]);
         }
@@ -326,7 +329,7 @@ PROCESS_THREAD (uniCastThread, ev, data)
         PROCESS_WAIT_EVENT();
         if (ev == PROCESS_EVENT_TIMER)
         {
-            // In case the unicast timer 
+            // In case the unicast timer
             if (etimer_expired(&et_unicastTransmit) && (state == UNICASTMODE))
             {
                 //etimer_reset(&et_unicastTransmit);
@@ -452,23 +455,38 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
         if (ev == serial_line_event_message)
         {
 
-            leds_toggle(LEDS_RED);
+            leds_on(LEDS_RED);
 
             uartRxBuffer = (uint8_t*)data;
 
-            // If the received packet is a packet to start network discovery
-            if(uartRxBuffer[0] == SERIAL_PACKET_TYPE_NETWORK_DISCOVERY) {
+            switch (uartRxBuffer[0]) {
+              case SERIAL_PACKET_TYPE_NETWORK_DISCOVERY:
+                //initiate network discover
+                break;
 
-                // Do network discovery
+              case SERIAL_PACKET_TYPE_EMERGENCY:
+                //run emergency mode
+                break;
 
-            }
-            else if(uartRxBuffer[0] == SERIAL_PACKET_TYPE_EMERGENCY) {
+              case SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS:
+                threshold = uartRxBuffer[1];
+                threshold_tick = threshold/1.2;
+                printf("Set Windspeed Thrshold to %d km/h",uartRxBuffer[1]);
+                break;
 
-                // Do Emergency
-            }
-            else if(uartRxBuffer[0] == SERIAL_PACKET_TYPE_SERVO_MANUAL){
+              case SERIAL_PACKET_TYPE_ANEMOMETER:
+                break;
 
-                // Do Servo Manual operation
+              case SERIAL_PACKET_TYPE_SERVO_MANUAL:
+                //set servo angle manually
+                break;
+
+              case SERIAL_PACKET_TYPE_NODE_SENSORS:
+                break;
+
+              default:
+                printf("Unknown UART command");
+                break;
             }
             //leds_off(LEDS_BLUE);
         }

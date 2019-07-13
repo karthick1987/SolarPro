@@ -43,7 +43,7 @@ contributors:
 #define SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS  5
 
 // Tx buffer size in bytes.
-#define MAX_USB_PAYLOAD_SIZE	4
+#define MAX_USB_PAYLOAD_SIZE	5
 
 enum state_t {
 IDLE        = 46,

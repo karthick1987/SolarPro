@@ -88,7 +88,7 @@ void MainWindow::packet_received(QByteArray str) {
         anemometer.windspeed = str.at(1);
         anemometer.windspeedAvg = str.at(2);
         anemometer.windspeedMax = str.at(3);
-        //anemometer.windspeedThreshold = str.at(4);
+        anemometer.windspeedThreshold = str.at(4);
 
 
         ui->lcdWindSpeed->setPalette(Qt::black);
@@ -106,13 +106,29 @@ void MainWindow::packet_received(QByteArray str) {
         break;
 
     case SERIAL_PACKET_TYPE_NODE_SENSORS:
-        SensorValue sensorvalue;
-        sensorvalue.destNode = str.at(1);
-        sensorvalue.originNode = str.at(2);
-        sensorvalue.temp_mC = str.at(3);
-        sensorvalue.battVolt_mV = str.at(4);
-        sensorvalue.lightSensor = str.at(5);
-        sensorvalue.servoPos_degs = str.at(6);
+        SensorValue sensorvalues[AMOUNT_OF_MOTES];
+        int index = str.at(1);
+        sensorvalues[index].destNode = str.at(1);
+        sensorvalues[index].originNode = str.at(2);
+        sensorvalues[index].temp_mC = str.at(3);
+        sensorvalues[index].battVolt_mV = str.at(4);
+        sensorvalues[index].lightSensor = str.at(5);
+        sensorvalues[index].servoPos_degs = str.at(6);
+
+        ui->lcdNumber_NodeID->setPalette(Qt::black);
+        ui->lcdNumber_NodeID->display(sensorvalues[index].destNode);
+
+        ui->lcdNumber_Temperature->setPalette(Qt::black);
+        ui->lcdNumber_Temperature->display(sensorvalues[index].temp_mC);
+
+        ui->lcdNumber_Voltage->setPalette(Qt::black);
+        ui->lcdNumber_Voltage->display(sensorvalues[index].battVolt_mV);
+
+        ui->lcdNumber_Luminosity->setPalette(Qt::black);
+        ui->lcdNumber_Luminosity->display(sensorvalues[index].lightSensor);
+
+        ui->lcdNumber_Angle->setPalette(Qt::black);
+        ui->lcdNumber_Angle->display(sensorvalues[index].servoPos_degs);0
 
         break;
     }

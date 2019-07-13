@@ -16,6 +16,8 @@
 #define SERIAL_PACKET_TYPE_SERVO_MANUAL			4
 #define SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS  5
 
+#define AMOUNT_OF_MOTES 20
+
 class Node;
 
 namespace Ui {
@@ -23,7 +25,7 @@ class MainWindow;
 }
 
 typedef struct {
-    unsigned char destNode, originNode;
+    int destNode, originNode;
     signed char temp_mC;
     unsigned char battVolt_mV;
     unsigned char lightSensor;

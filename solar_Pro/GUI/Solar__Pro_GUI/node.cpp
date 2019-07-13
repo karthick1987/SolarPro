@@ -88,7 +88,7 @@ bool Node::advancePosition()
         return false;
     }
 
-    setPos(newPos);
+    //setPos(newPos);
     return true;
 }
 
@@ -114,6 +114,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRadialGradient gradient(-3, -3, 10);
 
+    if(ID != '0'){
     if(option->state & QStyle::State_Sunken){
         gradient.setCenter(3, 3);
         gradient.setFocalPoint(3, 3);
@@ -124,6 +125,21 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         gradient.setColorAt(1, QColor(Qt::yellow));
         gradient.setColorAt(0, QColor(Qt::darkYellow));
     }
+    }
+    if(ID == '0'){
+        if(option->state & QStyle::State_Sunken){
+            gradient.setCenter(3, 3);
+            gradient.setFocalPoint(3, 3);
+            gradient.setColorAt(1, QColor(Qt::red).light(120));
+            gradient.setColorAt(0, QColor(Qt::darkRed).light(120));
+        }
+        else{
+            gradient.setColorAt(1, QColor(Qt::green));
+            gradient.setColorAt(0, QColor(Qt::darkGreen));
+        }
+
+    }
+
     painter->setBrush(gradient);
 
     QFont font = painter->font();
