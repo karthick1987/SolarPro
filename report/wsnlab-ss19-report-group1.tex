@@ -514,7 +514,7 @@ Described below are the different types of sensors used in our application along
 
 \begin{itemize}
     \item Digital Servo Motor - HS-422\cite{servoMotor}\newline
-        A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms. The correspondence between pulsewidth and servo angle is as in formula The servos will be used to change the angle of solar panels.
+        A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms. The correspondence between pulsewidth and servo angle is as in formula~\ref{eq:Servo_PWM}. The servos will be used to change the angle of solar panels.
 \begin{equation}\label{eq:Servo_PWM}
 pw = 1.0ms + 1.0ms \cdot (\frac{\alpha}{\alpha_{max}})
 \end{equation}
