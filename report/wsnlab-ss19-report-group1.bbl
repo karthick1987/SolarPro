@@ -26,8 +26,21 @@ K.~Sukumar, ``{Servo Motor HS-422},''
   \url{https://www.multiplex-rc.de/produkte/112422-servo-hs-422}, 2008,
   [Online; accessed 19-July-2008].
 
+\bibitem{howServoworks}
+\BIBentryALTinterwordspacing
+Jameco.com, ``How servo motors work,'' accessed 2019-08-14. [Online].
+  Available:
+  \url{https://www.jameco.com/jameco/workshop/howitworks/how-servo-motors-work.html}
+\BIBentrySTDinterwordspacing
+
+\bibitem{anemometer}
+\BIBentryALTinterwordspacing
+A.~Egger, ``Arduino anemometer bauen,'' 2018, accessed 2019-08-14. [Online].
+  Available: \url{https://www.aeq-web.com/anemometer-mit-dem-arduino-bauen/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{REmote}
-------, ``{Zolertia Remote},''
+K.~Sukumar, ``{Zolertia Remote},''
   \url{https://github.com/Zolertia/Resources/wiki/RE-Mote}, 2008, [Online;
   accessed 19-July-2008].
 

@@ -20,7 +20,7 @@
 %% Legal Notice:
 %% This code is offered as-is without any warranty either expressed or
 %% implied; without even the implied warranty of MERCHANTABILITY or
-%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% FITNESS FOR A PARTICULAR PURPOSE!
 %% User assumes all risk.
 %% In no event shall IEEE or any contributor to this code be liable for
 %% any damages or losses, including, but not limited to, incidental,
@@ -160,7 +160,7 @@
 % graphicx was written by David Carlisle and Sebastian Rahtz. It is
 % required if you want graphics, photos, etc. graphicx.sty is already
 % installed on most LaTeX systems. The latest version and documentation can
-% be obtained at: 
+% be obtained at:
 % http://www.ctan.org/tex-archive/macros/latex/required/graphics/
 % Another good source of documentation is "Using Imported Graphics in
 % LaTeX2e" by Keith Reckdahl which can be found as epslatex.ps or
@@ -285,7 +285,7 @@
 % IEEEtran.cls handling of captions and this will result in nonIEEE style
 % figure/table captions. To prevent this problem, be sure and preload
 % caption.sty with its "caption=false" package option. This is will preserve
-% IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later 
+% IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later
 % (recommended due to many improvements over 1.2) of subfig.sty supports
 % the caption=false option directly:
 %\usepackage[caption=false,font=footnotesize]{subfig}
@@ -386,7 +386,7 @@ johannes.machleid@tum.de
 
 
 % \thanks{*This paper is a reinterpretation of the paper \emph{J. Caesar. ``Digital sundials and broadband technology,'' in Proc.
-% IOOC-ECOC, 19XX, pp. 557-998}. It was presented on December 24, 2006 (Paper submission deadline) as a part of MSCE Seminar (MSCE course TUM), under the supervision of M. Sc. (or Dipl. Ing.) 
+% IOOC-ECOC, 19XX, pp. 557-998}. It was presented on December 24, 2006 (Paper submission deadline) as a part of MSCE Seminar (MSCE course TUM), under the supervision of M. Sc. (or Dipl. Ing.)
 % Aurelia Cotta (aurelia.cotta@roma.it).}
 }
 
@@ -397,10 +397,10 @@ johannes.machleid@tum.de
 
 % for over three affiliations, or if they all won't fit within the width
 % of the page, use this alternative format:
-% 
+%
 %\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
 %Homer Simpson\IEEEauthorrefmark{2},
-%James Kirk\IEEEauthorrefmark{3}, 
+%James Kirk\IEEEauthorrefmark{3},
 %Montgomery Scott\IEEEauthorrefmark{3} and
 %Eldon Tyrell\IEEEauthorrefmark{4}}
 %\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
@@ -477,7 +477,7 @@ The sun's path in the horizon is dynamic and dependent on the time of the year. 
 \end{figure}
 
 \par\smallskip
-As we can see from Fig. ~\ref{fig:SunsPath2}, consequent of the sun's path in the sky the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the different months of the year.
+As we can see from Fig.~\ref{fig:SunsPath2}, consequent of the sun's path in the sky the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the different months of the year.
 
 \par\smallskip
 In order to track the sun's rays, so that the solar panel is always perpendicular to it, we need a dynamic system that adjusts to the E-W changes in the suns angle during the different times of the day as well the N-S tracking during the changes in the months.
@@ -491,14 +491,14 @@ In order to track the sun's rays, so that the solar panel is always perpendicula
 \end{figure}
 
 %\hfill mds
-% 
+%
 %\hfill January 11, 2007
 
 
 \section{Application Set up}
 
 Our proof of concept showcases the potential to utilising a wireless sensor network to not only control the tracking of the panel but also log panel data. In order to achieve this we employ three different kinds of sensors, eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the basestation to function as sensor and panel control motes.\\
-Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig~\ref{fig:ApplicationSetup}.
+Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig.~\ref{fig:ApplicationSetup}.
 
 \begin{figure}[htbp]
     \includegraphics[width=3in]{img/Application_Setup.png}
@@ -513,27 +513,20 @@ Described below are the different types of sensors used in our application along
 
 \begin{itemize}
     \item Digital Servo Motor - HS-422\cite{servoMotor}\newline
-<<<<<<< HEAD
-        A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms. The correspondence between pulsewidth and servo angle is as in formula~\ref{eq:Servo_PWM}. The servos will be used to change the angle of solar panels.
+        A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms~\cite{howServoworks}. The correspondence between pulsewidth and servo angle is depicted in formula~\eqref{eq:Servo_PWM}. The servos will be used to change the angle of solar panels.
 \begin{equation}\label{eq:Servo_PWM}
-pw = 1.0ms + 1.0ms \cdot (\frac{\alpha}{\alpha_{max}})
+pw = 1.0ms + 1.0ms \cdot \left(\frac{\alpha}{\alpha_{max}}\right)
 \end{equation}
-        
-        
-=======
-        A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms. The correspondence between pulsewidth and servo angle is as in formula The servos will be used to change the angle of solar panels.
-        \begin{equation}\label{eq:Servo_PWM}
-            pw = 1.0ms + 1.0ms \cdot (\frac{\alpha}{\alpha_{max}})
-        \end{equation}
->>>>>>> 0613ec0e8ca91897c6fc5670d8f7a0797eaf3cfb
+
+
     \item Light Sensors\cite{LightSensor}\newline
-        The light sensors are used in this proof of concept to simulate the power output of the solar panel.
+        The light sensors are used in this proof of concept to measure the luminosity and thus simulate the power output of the solar panel, since no real solar panels are available. In this proof of concept, the actual luminosity in lux is not calculated, since only the qualitative ADC 12-bit values of the sensors are of interest.
+        
     \item Wind Speed Sensor\cite{WindSensor}\newline
-        This monitors the windspeed at all times and is connected directly to the base station. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.\newline
-        The Windspeed sensor interfaces with the base station by sending a digital signal, which is processed by the base station using interrupts and the interrupt trigger interval gives us the windspeed.
+        The wind speed sensor, also called anemometer, is directly connected to the base station. It measures the wind speed at all times. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.\newline
+        The anemometer works with a simple reed contact and a magnet attached to the rotating axis~\cite{anemometer}. Every time the magnet passes the reed contact, a digital HIGH is set to the connected port of the mote digital port, which is processed by the base station using interrupts. The measure interval $t_{measure}$ together with the interrupt count $n_{ticks}$ delivers the actual wind speed \textit{ws} in km/h after formula~\eqref{eq:WindSpeed}.
         \begin{equation}\label{eq:WindSpeed}
-            % TODO
-            ws = 0ms \cdot (\frac{\alpha}{\alpha_{max}})
+            ws = \frac{n_{ticks}}{t_{measure}} \cdot 2.4 \dfrac{km/h}{tick}
         \end{equation}
     \item Zolertia RE-mote platform\cite{REmote}\newline
         This is the brain of the Wireless sensor network which will be used together with the Contiki OS
@@ -558,7 +551,7 @@ In this proof of concept we are demonstating an energy harvesting WSN which prov
 Considering our application and the reliability as one of the factors, we decided that a centralised base station polling based quering scheme suits our application the most. The routes are first discovered during the network discovery phase and the routing tables are exchanged as described in \ref{NetDisc}
 
 \subsection{Modes of Operation}
-In our application we have 5 modes of operation, which are 
+In our application we have 5 modes of operation, which are
 \begin{itemize}
     \item IDLE
     \item NETWORKDISCOVERY
@@ -624,7 +617,7 @@ The MAC layer is not modified and runs the Contiki standard configuration "Conti
 %\begin{figure}[!t]
 %\centering
 %\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
+% where an .eps filename suffix will be assumed under latex,
 % and a .pdf suffix will be assumed for pdflatex; or what has been declared
 % via \DeclareGraphicsExtensions.
 %\caption{Simulation Results}
@@ -658,7 +651,7 @@ The MAC layer is not modified and runs the Contiki standard configuration "Conti
 % reference/describe all of them (a), (b), etc., within the main caption.
 
 
-% An example of a floating table. Note that, for IEEE style tables, the 
+% An example of a floating table. Note that, for IEEE style tables, the
 % \caption command should come BEFORE the table. Table text will default to
 % \footnotesize as IEEE normally uses this smaller font for tables.
 % The \label must come after \caption as always.
@@ -745,4 +738,3 @@ The conclusion goes here.\cite{dunkels2011contikimac}
 
 % that's all folks
 \end{document}
- 
