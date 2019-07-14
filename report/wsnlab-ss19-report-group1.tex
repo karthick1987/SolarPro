@@ -477,13 +477,13 @@ The sun's path in the horizon is dynamic and dependent on the time of the year. 
 \end{figure}
 
 \par\smallskip
-As we can see from Fig.~\ref{fig:SunsPath2}, consequent of the sun's path in the sky the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the different months of the year.
+As we can see from Fig. ~\ref{fig:SunsPath2}, consequent of the sun's path in the sky, the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the months of the year.
 
 \par\smallskip
-In order to track the sun's rays, so that the solar panel is always perpendicular to it, we need a dynamic system that adjusts to the E-W changes in the suns angle during the different times of the day as well the N-S tracking during the changes in the months.
+In order to track the sun's rays, so that the solar panel is always perpendicular to it, we need a dynamic system that adjusts to the E-W changes in the suns angle during the different times of the day as well the N-S tracking during the changes in the months. 
 
 \begin{figure}[htbp]
-    \includegraphics[width=2.5in]{img/ComparisonTrackingVsNoTracking.png}
+    \includegraphics[width=70mm]{img/ComparisonTrackingVsNoTracking.png}
     \centering
     \captionsetup{justification=centering}
     \caption{Comparison of energy produced by a tracking vs non tracking system Source: \cite{b3}}
@@ -496,9 +496,8 @@ In order to track the sun's rays, so that the solar panel is always perpendicula
 
 
 \section{Application Set up}
-
-Our proof of concept showcases the potential to utilising a wireless sensor network to not only control the tracking of the panel but also log panel data. In order to achieve this we employ three different kinds of sensors, eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the basestation to function as sensor and panel control motes.\\
-Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig.~\ref{fig:ApplicationSetup}.
+ ~\ref{fig:ComparisonTvsNT} is a comparison of the percentage of total power generated between a tracking and a non-tracking panel. There are definitely gains to be made from employing a tracking panel. Hence our proof of concept showcases the potential to deploy a wireless sensor network to not only control the tracking of solar panels but also log data. In order to achieve this we employ three different kinds of sensors, eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the basestation to function as sensor and panel control motes.\\
+Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig~\ref{fig:ApplicationSetup}.
 
 \begin{figure}[htbp]
     \includegraphics[width=3in]{img/Application_Setup.png}
@@ -518,10 +517,9 @@ Described below are the different types of sensors used in our application along
 pw = 1.0ms + 1.0ms \cdot \left(\frac{\alpha}{\alpha_{max}}\right)
 \end{equation}
 
-
     \item Light Sensors\cite{LightSensor}\newline
         The light sensors are used in this proof of concept to measure the luminosity and thus simulate the power output of the solar panel, since no real solar panels are available. In this proof of concept, the actual luminosity in lux is not calculated, since only the qualitative ADC 12-bit values of the sensors are of interest.
-        
+
     \item Wind Speed Sensor\cite{WindSensor}\newline
         The wind speed sensor, also called anemometer, is directly connected to the base station. It measures the wind speed at all times. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.\newline
         The anemometer works with a simple reed contact and a magnet attached to the rotating axis~\cite{anemometer}. Every time the magnet passes the reed contact, a digital HIGH is set to the connected port of the mote digital port, which is processed by the base station using interrupts. The measure interval $t_{measure}$ together with the interrupt count $n_{ticks}$ delivers the actual wind speed \textit{ws} in km/h after formula~\eqref{eq:WindSpeed}.
@@ -543,15 +541,16 @@ We are using 8 motes in total out of which
 \subsubsection{Base station}
     The base station is connected to a computer which displays the GUI (current state of the network). It runs a different code compared to the panel motes as it has to account for interfacing with the computer and collect data from the wind speed sensor at the same time.
 \subsubsection{Panel Motes}
-    The panel Motes runs a subset of the base station code.
+    The panel Motes runs a subset of the base station code and is more simplified. They only react to unicast and broadcast messages and they resond based on the packet type.
 
 \section{Network description and Routing Techniques}
 In this proof of concept we are demonstating an energy harvesting WSN which provides information on the status of the solar panel along with the ability to control the angle of the panel in 1 axis. In a real world scenario it is intended that the mote\cite{REmote} will be connected to the solar panel and be able to draw minimal power required for the functioning of the mote.
 \subsection{Network}
-Considering our application and the reliability as one of the factors, we decided that a centralised base station polling based quering scheme suits our application the most. The routes are first discovered during the network discovery phase and the routing tables are exchanged as described in \ref{NetDisc}
+Considering our application and the reliability as one of the factors, we decided that a centralised base station polling based quering scheme suits our application the most. This also eliminates the need for synchronisations (which are potentially required in a distributed system) and makes the operations simpler.\newline
+The routes are first discovered during the network discovery phase and the routing tables are exchanged as described in \ref{NetDisc}
 
-\subsection{Modes of Operation}
-In our application we have 5 modes of operation, which are
+\subsection{Base Station State Machine}
+In our application we have 5 modes of operation, which are 
 \begin{itemize}
     \item IDLE
     \item NETWORKDISCOVERY
@@ -560,24 +559,54 @@ In our application we have 5 modes of operation, which are
     \item EMERGENCY
 \end{itemize}
 
-
 \subsubsection{IDLE} \label{IDLEMODE}
-When the device comes out of reset this is mode, the mote gets into.
+When the device comes out of reset this is the state, the mote gets into. In this state there are no broadcast or unicast messages that are sent out by the base station.
+
+\subsubsection{NETWORKDISCOVERY} \label{NetDiscMode}
+This state is entered upon a user button press or a trigger from the GUI. The network discovery is used to obtain the network graph with the base station as the sink for the information
+
+\subsubsection{PATHMODE} \label{PathMode}
+This state is a transition from \label{NetDiscMode} where the base station polls the nodes for their total path to the base station
+
+\subsubsection{UNICASTMODE} \label{UNICASTMODE}
+In this state the nodes are polled in a round-robin manner and when the base station queries the information it sends the servo angle data along with the query packet
+
+\subsubsection{EMERGENCY} \label{EMERGENCY}
 
 \begin{figure}[htbp]
     %\includegraphics[width=2.5in]{img/Application_Flow_Graph.jpg}
     \includegraphics[width=110mm]{img/Application_Flow_Graph.jpg}\centering
     \captionsetup{justification=centering}
-    \caption{Angle of incidence of the suns rays on the panel Source: \cite{b2}}
+    \caption{Base Station State Machine}
     \label{fig:StateMachine}
 \end{figure}
 
-\subsection{Routes}
+\subsection{Cost} \label{Cost}
+An important consideration is the cost for a route. There are many factors that can determine the calculation of a route cost. It could include battery state, transmission power, hop count, RSSI, etc... , in our application we have directly equated hop count with the cost.
+%TODO
 
 \subsection{Network Discovery} \label{NetDisc}
+This is the most critical phase of the state machine. The Network discovery here is initiated by a user button press which makes it easier to demonstrate our proof of concept. Furthermore it can also be triggered from the GUI as explained in \ref{GUI}. Any mote can initiate a network discovery which then sends a broadcast packet. This node's complete routing table is sent as a payload in this broadcast message to exchange with others. This is received by all the neighbours and compared with their own tables. If there are updates to be made i.e. routes with lower cost from the senders routing table, the receiver updates their table and retransmits the broadcast after a short delay. This is illustrated in fig %TODO
 
-\section{Graphical User Interface (GUI)}
-The graphical user interface (GUI) is a desktop application programmed with the aid of the QT Creator and focuses on displaying information about the motes operating in the field and allows the user to interact with a desired mote .The computer running the GUI is directly connected to the base station mote via a serial link.\\
+\subsection{Packet Types} \label{PacketTypes}
+We have 2 different communication schemes which can be found below
+\begin{itemize}
+    \item Broadcast
+        \begin{itemize}
+            \item EMERGENCY - This broadcast packet is sent out in the emergency phase which stows the panels at a predefined safe angle
+
+            \item NETDISC - This packet type is sent out during the network discovery phase which contains sender's routing tables
+        \end{itemize}
+    \item Unicast
+        \begin{itemize}
+            \item PATH - This unicast packet type is sent during the PATHMODE of operation as described in \ref{PathMode}
+            \item ACK - This unicast packet type is an ackledgement responce sent during the PATHMODE. This contains the hop history of from the base station to the target node
+            \item UNICAST - This unicast packet type is sent during the UNICASTMODE of operation as described in \ref{UNICASTMODE}. In this mode the nodes are polled in round-robin fashion at regular intervals and this goes on uninterrupted unless an Emergency is triggered
+        \end{itemize}
+\end{itemize}
+
+\section{Graphical User Interface (GUI)} \label{GUI}
+The graphical user interface (GUI) is a desktop application programmed with the aid of the QT Creator and focuses on displaying information about the motes operating in the field and allows the user to interact with a desired mote. The computer running the GUI is directly connected to the base station mote via a serial link.\\
 The GUI basically consists of the two tabs "General" and "Connections" as shown in Fig.~\ref{GUI_general} and Fig.~\ref{GUI_connections}.\\
 The "General" tab shows a network graph of the wireless sensor network and the system time. Communicating sensor motes are depicted with a yellow circle and a number inside, whereas the base station is shown centered as green circle. The doublesided arrows depict the wireless communication route and therefore the network topology. It does not show possible wireless communication between sensor motes, because only the shortest paths towards the base station as sink in the network is of importance.
 The two buttons "Network Discovery" and "Emergency" in the bottom left corner enable the user to trigger these two operational states manually.\\
@@ -585,7 +614,6 @@ Two info boxes aligned to the right side of the window show the sensor informati
 The lower info box shows the sensor information of the selected mote. A mote is selected by clicking on a mote in the network graph. The particular information such as the Node ID, the temperature, voltage, luminosity and panel angle are presented. For maintenance reasons it is also possible to operate the selected mote by clicking on the "Manual" button. It is then possible to enter an angle between 0 and 180 degrees to manually align the selected solar panel by clicking the "Set" button next to the number field.\\
 The second tab of the GUI allows the user to connect and disconnect the serial link to the base station via selecting the respective port and clicking the buttons "Open" to connect or "Close" to disconnect. The textbox aligned to the bottom of the tab shows possible debug information from the base station.
 
-\section{Future work and Optimisations}
 
 \begin{figure*}[!ht]
 \centering
@@ -601,6 +629,10 @@ The second tab of the GUI allows the user to connect and disconnect the serial l
 
 \section{Application specific features}
 The MAC layer is not modified and runs the Contiki standard configuration "ContikiMAC" according to~\cite{dunkels2011contikimac}.
+
+\section{Future work and Optimisations}
+Our implementation does not focus on low latency so this could be a possible improvement. One way of improving latency can be achieved by using hash tables instead of array based routing tables. This reduces the complexity from O(n) to a constant time. Considering that for every UNICAST transmission routing table walk is necessary, this could save time and power.
+
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
 % For figures, \caption should occur after the \includegraphics.
