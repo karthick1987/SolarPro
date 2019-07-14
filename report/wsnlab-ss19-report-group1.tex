@@ -477,10 +477,10 @@ The sun's path in the horizon is dynamic and dependent on the time of the year. 
 \end{figure}
 
 \par\smallskip
-As we can see from Fig.~\ref{fig:SunsPath2}, consequent of the sun's path in the sky the angle of incidence of the sun's rays on the panel changes during the day as well as during the different months.
+As we can see from Fig. ~\ref{fig:SunsPath2}, consequent of the sun's path in the sky the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the different months of the year.
 
 \par\smallskip
-In order to track the sun's rays so that the solar panel is always perpendicular to the sun's rays we need a dynamic system that adjusts to the E-W changes in the suns angle during the different times of the day as well the N-S tracking during the changes in the months.
+In order to track the sun's rays, so that the solar panel is always perpendicular to it, we need a dynamic system that adjusts to the E-W changes in the suns angle during the different times of the day as well the N-S tracking during the changes in the months.
 
 \begin{figure}[htbp]
     \includegraphics[width=2.5in]{img/ComparisonTrackingVsNoTracking.png}
@@ -497,9 +497,8 @@ In order to track the sun's rays so that the solar panel is always perpendicular
 
 \section{Application Set up}
 
-For our application of using a wireless sensor network for solar tracking, we employ three different kinds of sensors, eight wireless motes, of which one mote is set up as the base station connected to a desktop computer and seven motes are deployed around the basestation to function as sensor and panel control motes.\\
-Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays, but can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig~\ref{fig:ApplicationSetup}. 
-
+Our proof of concept showcases the potential to utilising a wireless sensor network to not only control the tracking of the panel but also log panel data. In order to achieve this we employ three different kinds of sensors, eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the basestation to function as sensor and panel control motes.\\
+Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig~\ref{fig:ApplicationSetup}.
 
 \begin{figure}[htbp]
     \includegraphics[width=3in]{img/Application_Setup.png}
@@ -514,16 +513,28 @@ Described below are the different types of sensors used in our application along
 
 \begin{itemize}
     \item Digital Servo Motor - HS-422\cite{servoMotor}\newline
+<<<<<<< HEAD
         A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms. The correspondence between pulsewidth and servo angle is as in formula~\ref{eq:Servo_PWM}. The servos will be used to change the angle of solar panels.
 \begin{equation}\label{eq:Servo_PWM}
 pw = 1.0ms + 1.0ms \cdot (\frac{\alpha}{\alpha_{max}})
 \end{equation}
         
         
+=======
+        A servo motor is a cheap rotary actuator which is connected to the mote via three wires: Ground (GND), Voltage (VDD) and Signal. The servo angle can be set via the signal wire by using a PWM-Signal. Most servos expect to see a pulse every 20ms. The correspondence between pulsewidth and servo angle is as in formula The servos will be used to change the angle of solar panels.
+        \begin{equation}\label{eq:Servo_PWM}
+            pw = 1.0ms + 1.0ms \cdot (\frac{\alpha}{\alpha_{max}})
+        \end{equation}
+>>>>>>> 0613ec0e8ca91897c6fc5670d8f7a0797eaf3cfb
     \item Light Sensors\cite{LightSensor}\newline
         The light sensors are used in this proof of concept to simulate the power output of the solar panel.
     \item Wind Speed Sensor\cite{WindSensor}\newline
-        This monitors the windspeed at all times and is connected directly to the base station. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.
+        This monitors the windspeed at all times and is connected directly to the base station. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.\newline
+        The Windspeed sensor interfaces with the base station by sending a digital signal, which is processed by the base station using interrupts and the interrupt trigger interval gives us the windspeed.
+        \begin{equation}\label{eq:WindSpeed}
+            % TODO
+            ws = 0ms \cdot (\frac{\alpha}{\alpha_{max}})
+        \end{equation}
     \item Zolertia RE-mote platform\cite{REmote}\newline
         This is the brain of the Wireless sensor network which will be used together with the Contiki OS
 
@@ -561,8 +572,8 @@ In our application we have 5 modes of operation, which are
 When the device comes out of reset this is mode, the mote gets into.
 
 \begin{figure}[htbp]
-    \includegraphics[width=2.5in]{img/Application_Flow_Graph.jpg}
-    \centering
+    %\includegraphics[width=2.5in]{img/Application_Flow_Graph.jpg}
+    \includegraphics[width=110mm]{img/Application_Flow_Graph.jpg}\centering
     \captionsetup{justification=centering}
     \caption{Angle of incidence of the suns rays on the panel Source: \cite{b2}}
     \label{fig:StateMachine}
