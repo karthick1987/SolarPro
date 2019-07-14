@@ -527,21 +527,21 @@ pw = 1.0ms + 1.0ms \cdot \left(\frac{\alpha}{\alpha_{max}}\right)
             ws = \frac{n_{ticks}}{t_{measure}} \cdot 2.4 \dfrac{km/h}{tick}
         \end{equation}
     \item Zolertia RE-mote platform\cite{REmote}\newline
-        This is the brain of the wireless sensor network which will be used together with the Contiki OS
+        The Zolertia RE-mote is a wireless module designed to be small, consume very little power, stay affordable and be easy to deploy in large quantities. In general, these type of devices are known as \textit{motes}. These motes are the brain of the wireless sensor network and are running Contiki as operating system.
 
 \end{itemize}
 
 \subsection{Motes}
-We are using 8 motes in total out of which
+We are using eight motes in total out of which
 \begin{itemize}
     \item 7x Zolertia REmotes are used as nodes attached to solar panels
     \item 1x Zolertia REmote is used as a base station
 \end{itemize}
 
 \subsubsection{Base station}
-    The base station is connected to a computer which displays the GUI (current state of the network). It runs a different code compared to the panel motes as it has to account for interfacing with the computer and collect data from the wind speed sensor at the same time.
+    The base station is connected to a desktop computer via a serial link and feeds the GUI with information. It runs a different code compared to the panel motes as it has to account for interfacing with the computer and collect data from the wind speed sensor at the same time.
 \subsubsection{Panel Motes}
-    The panel Motes runs a subset of the base station code and is more simplified. They only react to unicast and broadcast messages and they resond based on the packet type.
+    The panel motes run a more simplified subset of the base station code. They only react to unicast and broadcast messages and they resond based on the packet type.
 
 \section{Network description and Routing Techniques}
 In this proof of concept we are demonstating an energy harvesting WSN which provides information on the status of the solar panel along with the ability to control the angle of the panel in 1 axis. In a real world scenario it is intended that the mote\cite{REmote} will be connected to the solar panel and be able to draw minimal power required for the functioning of the mote.
