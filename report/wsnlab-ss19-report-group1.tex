@@ -477,7 +477,7 @@ The sun's path in the horizon is dynamic and dependent on the time of the year. 
 \end{figure}
 
 \par\smallskip
-As we can see from Fig. ~\ref{fig:SunsPath2}, consequent of the sun's path in the sky, the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the months of the year.
+As we can see from Fig.~\ref{fig:SunsPath2}, consequent of the sun's path in the sky, the angle of incidence of the sun's rays on the panel changes not only during the day but as well as during the months of the year.
 
 \par\smallskip
 In order to track the sun's rays, so that the solar panel is always perpendicular to it, we need a dynamic system that adjusts to the E-W changes in the suns angle during the different times of the day as well the N-S tracking during the changes in the months. 
@@ -496,8 +496,8 @@ In order to track the sun's rays, so that the solar panel is always perpendicula
 
 
 \section{Application Set up}
- ~\ref{fig:ComparisonTvsNT} is a comparison of the percentage of total power generated between a tracking and a non-tracking panel. There are definitely gains to be made from employing a tracking panel. Hence our proof of concept showcases the potential to deploy a wireless sensor network to not only control the tracking of solar panels but also log data. In order to achieve this we employ three different kinds of sensors, eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the basestation to function as sensor and panel control motes.\\
-Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig~\ref{fig:ApplicationSetup}.
+Fig.~\ref{fig:ComparisonTvsNT} is a comparison of the percentage of total power generated between a tracking and a non-tracking panel. It can be seen that there are definitely gains to be made from employing a tracking panel. Our proof of concept therefore showcases the potential to deploy a wireless sensor network to not only control the tracking of solar panels but log data at the same time. In order to achieve this we employ three different types of sensors and eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the basestation to function as sensor and panel control motes.\\
+Since only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less we can still measure and transmit sensor values. A possible setup with a multihop communication towards the base station is depicted in Fig.~\ref{fig:ApplicationSetup}.
 
 \begin{figure}[htbp]
     \includegraphics[width=3in]{img/Application_Setup.png}
@@ -518,11 +518,11 @@ pw = 1.0ms + 1.0ms \cdot \left(\frac{\alpha}{\alpha_{max}}\right)
 \end{equation}
 
     \item Light Sensors\cite{LightSensor}\newline
-        The light sensors are used in this proof of concept to measure the luminosity and thus simulate the power output of the solar panel, since no real solar panels are available. In this proof of concept, the actual luminosity in lux is not calculated, since only the qualitative ADC 12-bit values of the sensors are of interest.
+        The light sensors are used in this proof of concept to measure the luminosity and thus simulate the power output of the solar panel, since no real solar panels are available. The actual luminosity in lux is not calculated, since only the qualitative ADC 12-bit values of the sensors are of interest.
 
     \item Wind Speed Sensor\cite{WindSensor}\newline
         The wind speed sensor, also called anemometer, is directly connected to the base station. It measures the wind speed at all times. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.\newline
-        The anemometer works with a simple reed contact and a magnet attached to the rotating axis~\cite{anemometer}. Every time the magnet passes the reed contact, a digital HIGH is set to the connected port of the mote digital port, which is processed by the base station using interrupts. The measure interval $t_{measure}$ together with the interrupt count $n_{ticks}$ delivers the actual wind speed \textit{ws} in km/h after formula~\eqref{eq:WindSpeed}.
+        The anemometer works with a simple reed contact and a magnet attached to the rotating axis~\cite{anemometer}. Every time the magnet passes the reed contact, a digital HIGH is sent to the base station, which is processed by the base station using interrupts. The measured interval $t_{measure}$ together with the interrupt count $n_{ticks}$ delivers the actual wind speed \textit{ws} in km/h after formula~\eqref{eq:WindSpeed}.
         \begin{equation}\label{eq:WindSpeed}
             ws = \frac{n_{ticks}}{t_{measure}} \cdot 2.4 \dfrac{km/h}{tick}
         \end{equation}
@@ -543,10 +543,10 @@ We are using eight motes in total out of which
 \subsubsection{Panel Motes}
     The panel motes run a more simplified subset of the base station code. They only react to unicast and broadcast messages and they resond based on the packet type.
 
-\section{Network description and Routing Techniques}
+\section{Network description and Routing Technique}
 In this proof of concept we are demonstating an energy harvesting WSN which provides information on the status of the solar panel along with the ability to control the angle of the panel in 1 axis. In a real world scenario it is intended that the mote\cite{REmote} will be connected to the solar panel and be able to draw minimal power required for the functioning of the mote.
 \subsection{Network}
-Considering our application and the reliability as one of the factors, we decided that a centralised base station polling based quering scheme suits our application the most. This also eliminates the need for synchronisations (which are potentially required in a distributed system) and makes the operations simpler.\newline
+Considering our application and the reliability as one of the factors, we decided that a centralised base station with distributed routing table. A Centralised polling based quering scheme suits our application the most. This also eliminates the need for synchronisations (which are potentially required in a distributed system) and makes the implementation simpler.\newline
 The routes are first discovered during the network discovery phase and the routing tables are exchanged as described in \ref{NetDisc}
 
 \subsection{Base Station State Machine}
@@ -631,7 +631,8 @@ The second tab of the GUI allows the user to connect and disconnect the serial l
 The MAC layer is not modified and runs the Contiki standard configuration "ContikiMAC" according to~\cite{dunkels2011contikimac}.
 
 \section{Future work and Optimisations}
-Our implementation does not focus on low latency so this could be a possible improvement. One way of improving latency can be achieved by using hash tables instead of array based routing tables. This reduces the complexity from O(n) to a constant time. Considering that for every UNICAST transmission routing table walk is necessary, this could save time and power.
+Our implementation does not focus on low latency so this could be a possible improvement. One way of improving latency can be achieved by using hash tables instead of array based routing tables. This reduces the complexity from O(n) to a constant time. Considering that for every UNICAST transmission routing table walk is necessary, this could save time and power. Further ideas to advance the application are a sun tracking algorithm which steers the solar panel according to sensor values. Another useful feature would be to integrate data visualization of the sensor values as a graph showing the history of e.g. the last 24 hours.
+
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -723,10 +724,6 @@ The application setup consists of seven sensor motes, of which four motes operat
 The network is set up by first initialising a network discovery routine. All motes broadcast and collect information about their neighbors to set up their very own distance vector table. After completion, the base station reaches out to each mote with a unicast request to collect the shortest path through their respective acknowledge.\\
 With this information the base station is able to poll the sensor informations of each node by cycling through the network.\\
 The network graph and sensor information are visually presented in the graphical user interface, which also allows to operate the servo position manually, set a wind speed emergency threshold or simply trigger an emergency case manually. It is also possible to manually restart the network discovery.\\
-Further ideas to advance the application are a sun tracking algorithm which steers the solar panel according to sensor values. Another useful feature would be to integrate data visualization of the sensor values as a graph showing the history of e.g. the last 24 hours.
-
-The conclusion goes here.\cite{dunkels2011contikimac}
-
 
 % conference papers do not normally have an appendix
 
