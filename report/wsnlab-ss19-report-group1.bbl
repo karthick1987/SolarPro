@@ -21,30 +21,36 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{servoMotor}
-K.~Sukumar, ``{Servo Motor HS-422},''
-  \url{https://www.multiplex-rc.de/produkte/112422-servo-hs-422}, 2008,
-  [Online; accessed 19-July-2008].
 
+\bibitem{b1}
+https://physics.weber.edu/schroeder/ua/SunAndSeasons.html
+
+\bibitem{b2}
+https://greensarawak.com/wp-content/uploads/2017/11/sunspath.jpg
+
+\bibitem{b3}
+http://www.lauritzen.biz/blog/?p=49
+
+\bibitem{servoMotor}
+``{Servo Motor HS-422},''
+  \url{https://www.multiplex-rc.de/produkte/112422-servo-hs-422}
 \bibitem{howServoworks}
 \BIBentryALTinterwordspacing
-Jameco.com, ``How servo motors work,'' accessed 2019-08-14. [Online].
-  Available:
+``How servo motors work,''
   \url{https://www.jameco.com/jameco/workshop/howitworks/how-servo-motors-work.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{anemometer}
-\BIBentryALTinterwordspacing
+%\BIBentryALTinterwordspacing
 A.~Egger, ``Arduino anemometer bauen,'' 2018, accessed 2019-08-14. [Online].
   Available: \url{https://www.aeq-web.com/anemometer-mit-dem-arduino-bauen/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{REmote}
-K.~Sukumar, ``{Zolertia Remote},''
+``{Zolertia Remote},''
   \url{https://github.com/Zolertia/Resources/wiki/RE-Mote}, 2008, [Online;
   accessed 19-July-2008].
 
 \bibitem{dunkels2011contikimac}
 A.~Dunkels, ``The contikimac radio duty cycling protocol,'' 2011.
-
 \end{thebibliography}
