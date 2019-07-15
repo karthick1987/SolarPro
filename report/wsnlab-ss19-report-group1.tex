@@ -490,7 +490,7 @@ The sun's path in the horizon is dynamic and dependent on the time of the year. 
 Fig.~\ref{fig:ComparisonTvsNT} is a comparison of the percentage of total power generated between a tracking and a non-tracking panel. It can be seen that there are definitely efficiency gains to be made from employing a tracking panel. Our proof of concept therefore showcases the potential to deploy a wireless sensor network to not only control the tracking of solar panels but log data at the same time. In order to achieve this, we employ three different types of sensors and eight wireless motes, of which one is set up as the base station connected to a desktop computer and the seven others deployed around the base station to function as sensor and panel control motes.\\
 In this proof of concept as only four digital servo motors are available, not every mote in the field is able to align the solar panel according to the sun's rays. Never the less sensor values can still be measured and transmitted. A possible setup with a multihop communication towards the base station is depicted in Fig.~\ref{fig:ApplicationSetup}.
 
-\begin{figure}[htbp]
+\begin{figure}[!t]
     \includegraphics[width=3in]{img/Application_Setup.png}
     \centering
     \captionsetup{justification=centering}
@@ -558,11 +558,11 @@ In this state the nodes are polled in a round-robin manner and when the base sta
 \subsubsection{EMERGENCY} \label{EMERGENCY}
 This state is only entered upon when the base station records an over threshold wind speed value. This event driven mode sends out a broadcast message to all nodes around it to stow their panels at a predefined safe angle.
 
-\begin{figure}[htbp]
+\begin{figure}[!t]
     %\includegraphics[width=2.5in]{img/Application_Flow_Graph.jpg}
-    \includegraphics[width=110mm]{img/Application_Flow_Graph.jpg}\centering
+    \includegraphics[width=90mm]{img/Application_Flow_Graph.jpg}\centering
     \captionsetup{justification=centering}
-    \caption{Base Station State Machine}
+    \caption{Base station state machine.}
     \label{fig:StateMachine}
 \end{figure}
 
@@ -611,7 +611,7 @@ The second tab of the GUI allows the user to connect and disconnect the serial l
 \hfil
 \subfloat[GUI Connections Tab]{\includegraphics[width=3.5in]{img/GUI_screenshot_connections.png}
 \label{GUI_connections}}
-\caption{Graphical User Interface of the Solar Pro Application}
+\caption{Graphical user interface of the Solar Pro application.}
 \label{GUIFig}
 \end{figure*}
 
