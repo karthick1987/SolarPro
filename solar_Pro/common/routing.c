@@ -247,28 +247,30 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
             (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
 }
 
-node_num_t getNextHopIndex(payload_t tx_packet)
+static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
 {
-  switch(tx_packet.a.apkt)
-  {
-    case PATH:
-          return returnIDIndex(&(tx_packet.a.dest));
-    case UNICAST:
-          return tx_packet.u.destNode;
-    default:
-        break;
-  }
+    node_num_t destination;
+    switch(tx_packet.a.apkt)
+    {
+        case PATH:
+            destination = returnIDIndex(&(tx_packet.a.dest));
+            break;
+        case UNICAST:
+            destintation = tx_packet.u.destNode;
+            break;
+        default:
+            break;
+    }
+    return &(myrTable.next_hop[destination]);
 }
 
 void unict_send(payload_t tx_packet)
 {
     packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
-    unicast_send(&unicast, &myrTable.next_hop[getNextHopIndex(tx_packet)]);
+    unicast_send(&unicast, getNextHopRIMEID(tx_packet));
 }
 
-
-
-// DEBUG PRINTS
+// ---------------------------- DEBUG PRINTS ---------------------------
 
 
 static void printRTable(const char *text)
