@@ -29,6 +29,9 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
+#include "cpu/cc2538/dev/uart.h"
+//#include "cpu/cc2538/usb/usb-serial.h"	// For UART-like I/O over USB.
+#include "dev/serial-line.h"			// For UART-like I/O over USB.
 
 
 // Standard C includes:
@@ -53,6 +56,9 @@ static struct etimer et;
 extern struct etimer et_broadCastOver;
 static uint16_t myNodeID;
 
+static struct etimer et;
+extern struct etimer et_broadCastOver;
+
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
@@ -71,7 +77,7 @@ PROCESS_THREAD (mainThread, ev, data)
     setUpRtable();
     myNodeID = getMyNodeID();
     printf("This is the Mote\n");
-    printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, myNodeID;
+    printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, myNodeID);
 
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);

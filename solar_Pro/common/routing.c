@@ -9,7 +9,6 @@
 // Private includes
 #include "routing.h"
 #include "nodeID.h"
-#include "base.h"
 #include "broadcast_local.h"
 
 // Standard C includes:
@@ -266,6 +265,11 @@ void unict_send(payload_t tx_packet)
     packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
     unicast_send(&unicast, &myrTable.next_hop[getNextHopIndex(tx_packet)]);
 }
+
+
+
+// DEBUG PRINTS
+
 
 static void printRTable(const char *text)
 {

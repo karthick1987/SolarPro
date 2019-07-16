@@ -74,11 +74,8 @@ extern struct etimer et_broadCastOver;
 
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
-//PROCESS(uniCastThread, "Unicast Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-//AUTOSTART_PROCESSES(&broadCastThread, &uniCastThread, &rxUSB_process);
-AUTOSTART_PROCESSES(&stateMachineThread, &rxUSB_process, &windSpeedThread);
-//&windSpeedThread
+AUTOSTART_PROCESSES(&stateMachineThread ,&rxUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -306,119 +303,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
     PROCESS_END();
 }
-
-
-
-
-/*
-PROCESS_THREAD (uniCastThread, ev, data)
-{
-    PROCESS_BEGIN();
-
-    // Configure your team's channel (11 - 26).
-    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
-    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
-
-    static struct etimer et_unicastTransmit, et_ackModeTransmit;
-    static int status = 0;
-    static node_num_t node = 1;
-    static enum unicast_state state = PATHMODE;
-
-    while(1) {
-        PROCESS_WAIT_EVENT();
-        if (ev == PROCESS_EVENT_TIMER)
-        {
-            // In case the unicast timer
-            if (etimer_expired(&et_unicastTransmit) && (state == UNICASTMODE))
-            {
-                //etimer_reset(&et_unicastTransmit);
-                printf("Restarted Unicast Timer\n");
-                process_post(&uniCastThread, PROCESS_EVENT_MSG, UNICASTMODE);
-                leds_toggle(LEDS_BLUE);
-                //print_active_procs();
-            }
-            if (etimer_expired(&et_ackModeTransmit) && (state == PATHMODE))
-            {
-                etimer_reset(&et_ackModeTransmit);
-                printf("Restarted ackMode Timer\n");
-                process_post(&uniCastThread, PROCESS_EVENT_MSG, PATHMODE);
-                // Start polling the devices one by one
-                leds_toggle(LEDS_RED);
-                //print_active_procs();
-            }
-        }
-        else if (ev == PROCESS_EVENT_MSG)
-        {
-            state = (enum unicast_state) (data);
-            printf("STATE is %d\n",state);
-            payload_t p;
-            switch((int) data)
-            {
-                case PATHMODE:
-                    // Send unicast and expect payload as hop history
-                    status = doAckMode(node,&p);
-
-                    printf("Here in PATHMODE to node %d, Status is %d\n",node,status);
-
-                    // Set up the PATHMODE Packet and send data in round robin fashion
-                    node++;
-
-                    // Set the etimer to expire again
-                    etimer_set(&et_ackModeTransmit, ACKMODETRASMITINTERVAL);
-                    if ( status == 0 )
-                    {
-                        etimer_stop(&et_ackModeTransmit);
-                        process_post(&uniCastThread, PROCESS_EVENT_MSG, UNICASTMODE);
-                        node = 1;
-                    }
-                    break;
-
-                case UNICASTMODE:
-                    // Collect data from the motes
-                    status = doUniCastMode(node);
-
-                    printf("Here in UNICASTMODE to node %d, Status is %d\n",node,status);
-
-                    // Go to the next mote
-                    node++;
-
-                    // Set the timer for Unicast interval
-                    etimer_set(&et_unicastTransmit, UNICASTTRASMITINTERVAL);
-                    if ( status == 0 )
-                    {
-                        // start again from Node 1 in a round robin manner
-                        node = 1;
-                        process_post(&uniCastThread, PROCESS_EVENT_MSG, UNICASTMODE);
-                    }
-                    // start unicast polling one by one
-                    break;
-
-                case STARTBROADCAST:
-                    // stop unicast polling and go to Broadcast mode
-                    printf("Here in STARTBROADCAST\n");
-                    break;
-                case STOPBROADCAST:
-                    // stop unicast polling and go to Broadcast mode
-                    printf("Here in STOPBROADCAST\n");
-                    break;
-                case STARTEMERGENCY:
-                    // stop unicast polling and go to Broadcast mode
-                    printf("Here in STARTEMERGENCY\n");
-                    break;
-                case STOPEMERGENCY:
-                    // EMERGENCY is done so start polling as normal again
-                    printf("Here in STOPUNICAST\n");
-                    break;
-                default:
-                    printf("Here in default\n");
-                    break;
-            }
-        }
-    }//end while(1)
-
-    PROCESS_END();
-}
-*/
 
 // Listens for data coming from the USB connection (UART0)
 // and prints it.
