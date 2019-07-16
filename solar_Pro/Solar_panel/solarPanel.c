@@ -29,9 +29,6 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
-#include "cpu/cc2538/dev/uart.h"
-//#include "cpu/cc2538/usb/usb-serial.h"	// For UART-like I/O over USB.
-#include "dev/serial-line.h"			// For UART-like I/O over USB.
 
 
 // Standard C includes:
@@ -39,6 +36,7 @@ contributors:
 #include <stdint.h>
 
 // Project headers
+#include "project-conf.h"
 
 // Common headers
 #include "unicast_local.h"
@@ -46,26 +44,20 @@ contributors:
 #include "helpers.h"
 #include "nodeID.h"
 #include "routing.h"
-#include "anemometer.h"
 
 /*---------------------------------------------------------------------------*/
-
-#define TX_POWER 7
 #define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
 #define ACKMODETRASMITINTERVAL 1*CLOCK_SECOND
 
-// int power_options[] =    {255,237,213,197,182,176,161,145,136,114,98 ,88 ,66 ,0};
-// int power_dBm[] =        {7  ,5  ,3  ,1  ,0  ,-1 ,-3 ,-5 ,-7 ,-9 ,-11,-13,-15,-24};
-
-
 static struct etimer et;
 extern struct etimer et_broadCastOver;
+static uint16_t myNodeID;
 
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
 
-PROCESS(mainThread, "State Machine Thread");
+PROCESS(mainThread, "Main Thread");
 AUTOSTART_PROCESSES(&mainThread);
 
 PROCESS_THREAD (mainThread, ev, data)
@@ -73,12 +65,13 @@ PROCESS_THREAD (mainThread, ev, data)
     PROCESS_BEGIN();
 
     // Configure your team's channel (11 - 26).
-    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
+    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, CHANNEL);
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
     openBroadcast();
     setUpRtable();
+    myNodeID = getMyNodeID();
     printf("This is the Mote\n");
-    printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, getMyNodeID());
+    printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, myNodeID;
 
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);

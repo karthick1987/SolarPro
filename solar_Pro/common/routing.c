@@ -197,7 +197,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     printRTable("=======My Table After the Update=======");
 
-    // if it hasnt changed 
+    // if it hasnt changed
     if ( tableUpdateRequired )
     {
 
@@ -240,7 +240,7 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
     payload_t rx_packet;
 
     packetbuf_copyto(&rx_packet);
-
+    doUnicast(&rx_packet);
     // For Debug purposes
     printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
             from->u8[0], from->u8[1],
@@ -248,10 +248,23 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
             (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
 }
 
+node_num_t getNextHopIndex(payload_t tx_packet)
+{
+  switch(tx_packet.a.apkt)
+  {
+    case PATH:
+          return returnIDIndex(&(tx_packet.a.dest));
+    case UNICAST:
+          return tx_packet.u.destNode;
+    default:
+        break;
+  }
+}
+
 void unict_send(payload_t tx_packet)
 {
     packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
-    unicast_send(&unicast, &myrTable.next_hop);
+    unicast_send(&unicast, &myrTable.next_hop[getNextHopIndex(tx_packet)]);
 }
 
 static void printRTable(const char *text)

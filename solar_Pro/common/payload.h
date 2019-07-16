@@ -32,8 +32,8 @@ typedef enum {
     EMERGENCY = 2,
     ACK = 3,
     UNICAST = 4,
-    PATH,
-    MANUAL,
+    PATH = 5,
+    MANUAL = 6,
 }pkttype_t;
 
 // custom structures
