@@ -508,10 +508,10 @@ Described below are the different types of sensors used in our application along
 pw = 1.0ms + 1.0ms \cdot \left(\frac{\alpha}{\alpha_{max}}\right)
 \end{equation}
 
-    \item Light Sensors\cite{LightSensor}\newline
+    \item Light Sensors\newline
         The light sensors are used in this proof of concept to measure the luminosity and thus simulate the power output of the solar panel, since no real solar panels are available. As a result, the relative ADC 12-bit values of the sensors are of interest.
 
-    \item Wind Speed Sensor\cite{WindSensor}\newline
+    \item Wind Speed Sensor\newline
         The wind speed sensor, also called anemometer, is directly connected to the base station. It measures the wind speed at all times. In the case of excessive wind speeds, the panels will have to be stowed at a safe angle.\newline
         The anemometer works with a simple reed contact and a magnet attached to the rotating axis~\cite{anemometer}. Every time the magnet passes the reed contact, a digital HIGH is sent to the base station, which is processed by the base station using interrupts. The measured interval $t_{measure}$ together with the interrupt count $n_{ticks}$ delivers the actual wind speed \textit{ws} in km/h after formula~\eqref{eq:WindSpeed}.
         \begin{equation}\label{eq:WindSpeed}

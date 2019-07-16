@@ -12,8 +12,6 @@ Database file #2: sources.bib
 Warning--I didn't find a database entry for "b1"
 Warning--I didn't find a database entry for "b2"
 Warning--I didn't find a database entry for "b3"
-Warning--I didn't find a database entry for "LightSensor"
-Warning--I didn't find a database entry for "WindSensor"
 -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
@@ -22,43 +20,43 @@ Warning--empty journal in dunkels2011contikimac
 Done.
 You've used 5 entries,
             4087 wiz_defined-function locations,
-            1378 strings with 18309 characters,
-and the built_in function-call counts, 2005 in all, are:
-= -- 160
-> -- 20
+            1373 strings with 18252 characters,
+and the built_in function-call counts, 1889 in all, are:
+= -- 146
+> -- 14
 < -- 0
-+ -- 10
-- -- 5
-* -- 86
-:= -- 390
++ -- 8
+- -- 3
+* -- 82
+:= -- 356
 add.period$ -- 10
 call.type$ -- 5
 change.case$ -- 9
 chr.to.int$ -- 0
 cite$ -- 6
-duplicate$ -- 163
-empty$ -- 181
-format.name$ -- 5
-if$ -- 420
+duplicate$ -- 159
+empty$ -- 177
+format.name$ -- 3
+if$ -- 398
 int.to.chr$ -- 0
 int.to.str$ -- 5
-missing$ -- 37
+missing$ -- 35
 newline$ -- 42
-num.names$ -- 5
+num.names$ -- 3
 pop$ -- 101
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 150
+skip$ -- 142
 stack$ -- 0
 substring$ -- 13
-swap$ -- 89
+swap$ -- 83
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 5
 type$ -- 5
 warning$ -- 1
-while$ -- 5
+while$ -- 3
 width$ -- 6
-write$ -- 68
-(There were 6 warnings)
+write$ -- 66
+(There were 4 warnings)
