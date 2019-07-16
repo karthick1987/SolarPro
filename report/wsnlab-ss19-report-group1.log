@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.9.11)  15 JUL 2019 22:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.9.11)  16 JUL 2019 10:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -560,13 +560,13 @@ Package pdftex.def Info: img/SunsPath1.png  used on input line 462.
 File: img/SunsPath2.png Graphic file (type png)
 <use img/SunsPath2.png>
 Package pdftex.def Info: img/SunsPath2.png  used on input line 472.
-(pdftex.def)             Requested size: 180.67499pt x 125.71938pt.
+(pdftex.def)             Requested size: 202.35622pt x 140.79997pt.
 <img/ComparisonTrackingVsNoTracking.png, id=4, 1170.3725pt x 679.53876pt>
 File: img/ComparisonTrackingVsNoTracking.png Graphic file (type png)
 <use img/ComparisonTrackingVsNoTracking.png>
 Package pdftex.def Info: img/ComparisonTrackingVsNoTracking.png  used on input 
 line 481.
-(pdftex.def)             Requested size: 199.16928pt x 115.63411pt.
+(pdftex.def)             Requested size: 213.39566pt x 123.89813pt.
 
 [1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
@@ -577,7 +577,7 @@ ing.png>]
 File: img/Application_Setup.png Graphic file (type png)
 <use img/Application_Setup.png>
 Package pdftex.def Info: img/Application_Setup.png  used on input line 494.
-(pdftex.def)             Requested size: 216.81pt x 68.75043pt.
+(pdftex.def)             Requested size: 199.16928pt x 63.15639pt.
 LaTeX Font Info:    Try loading font information for U+msa on input line 505.
  (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -586,25 +586,13 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 505.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-LaTeX Warning: Citation `LightSensor' on page 2 undefined on input line 511.
-
-
-LaTeX Warning: Citation `WindSensor' on page 2 undefined on input line 514.
-
-[2 <./img/Application_Setup.png>]
+) [2 <./img/Application_Setup.png>]
 <img/Application_Flow_Graph.jpg, id=27, 702.625pt x 533.995pt>
 File: img/Application_Flow_Graph.jpg Graphic file (type jpg)
 <use img/Application_Flow_Graph.jpg>
 Package pdftex.def Info: img/Application_Flow_Graph.jpg  used on input line 563
 .
-(pdftex.def)             Requested size: 256.0748pt x 194.6173pt.
-
-Overfull \hbox (3.02493pt too wide) in paragraph at lines 563--565
- [][] 
- []
-
+(pdftex.def)             Requested size: 227.62204pt x 172.99225pt.
 <img/GUI_screenshot_general.png, id=28, 696.6025pt x 599.23875pt>
 File: img/GUI_screenshot_general.png Graphic file (type png)
 <use img/GUI_screenshot_general.png>
@@ -617,14 +605,49 @@ File: img/GUI_screenshot_connections.png Graphic file (type png)
 Package pdftex.def Info: img/GUI_screenshot_connections.png  used on input line
  613.
 (pdftex.def)             Requested size: 252.94499pt x 217.59108pt.
-[3 <./img/Application_Flow_Graph.jpg>] (./wsnlab-ss19-report-group1.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 39--42
-[]\OT1/ptm/m/n/8 ``How servo mo-tors work,''
+ [3 <./img/Application_Flow_Graph.jpg>]
+(./wsnlab-ss19-report-group1.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 25--28
+[]\OT1/ptm/m/n/8 D. V. Schroeder, ``The Sun and the Sea-sons,''
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--28
+\OT1/ptm/m/n/8 https://physics.weber.edu/schroeder/ua/SunAndSeasons.html, 2010-
+
+ []
+
+
+Underfull \hbox (badness 7522) in paragraph at lines 30--33
+[]\OT1/ptm/m/n/8 G. Sarawak, ``Know where to face your so-lar PV pan-els,''
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--33
+\OT1/ptm/m/n/8 https://greensarawak.com/wp-content/uploads/2017/11/sunspath.jpg
+,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+[]\OT1/ptm/m/n/8 A. S. Track-ers, ``What is so-lar track-ing,''
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 39--42
-\OT1/ptm/m/n/8 https://www.jameco.com/jameco/workshop/howitworks/how-servo-
+[]\OT1/ptm/m/n/8 K. Suku-mar, ``Servo Mo-tor HS-422,'' https://www.multiplex-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--42
+\OT1/ptm/m/n/8 rc.de/produkte/112422-servo-hs-422, 2008, [On-line; ac-cessed 19
+-
+ []
+
+
+Overfull \hbox (21.09105pt too wide) in paragraph at lines 57--60
+[]\OT1/ptm/m/n/8 K. Suku-mar, ``Zol-er-tia Re-mote,'' https://github.com/Zolert
+ia/Resources/wiki/RE-
  []
 
 )
@@ -640,30 +663,26 @@ Before submitting the final camera ready copy, remember to:
  process uses the appropriate paper size.
 
 [4 <./img/GUI_screenshot_general.png> <./img/GUI_screenshot_connections.png>]
-(./wsnlab-ss19-report-group1.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+(./wsnlab-ss19-report-group1.aux) ) 
 Here is how much of TeX's memory you used:
- 5637 strings out of 492641
- 85720 string characters out of 6129315
+ 5634 strings out of 492641
+ 85689 string characters out of 6129315
  158426 words of memory out of 5000000
- 9430 multiletter control sequences out of 15000+600000
- 35813 words of font info for 71 fonts, out of 8000000 for 9000
+ 9428 multiletter control sequences out of 15000+600000
+ 34706 words of font info for 70 fonts, out of 8000000 for 9000
  1144 hyphenation exceptions out of 8191
  41i,10n,49p,911b,350s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
-xlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
-live/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texli
-ve/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive
-/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/
-2018/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf
--dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2018/texmf-dist/fon
-ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/u
-rw/times/utmri8a.pfb>
-Output written on wsnlab-ss19-report-group1.pdf (4 pages, 1057833 bytes).
+{/usr/local/texlive/2018/texmf-dist/fonts/en
+c/dvips/base/8r.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmb8a.p
+fb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/
+local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texl
+ive/2018/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on wsnlab-ss19-report-group1.pdf (4 pages, 1057839 bytes).
 PDF statistics:
  68 PDF objects out of 1000 (max. 8388607)
  39 compressed objects within 1 object stream

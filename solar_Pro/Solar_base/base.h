@@ -48,8 +48,8 @@ contributors:
 enum state_t {
 IDLE        = 46,
 INITNETWORKDISC ,
-EMERGENCYSTATE  ,
-ACKMODE         ,
+PATHMODE         ,
 UNICASTMODE     ,
+EMERGENCYSTATE  ,
 };
 #endif

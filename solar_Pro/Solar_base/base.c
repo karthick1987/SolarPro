@@ -199,8 +199,8 @@ PROCESS_THREAD (stateMachineThread, ev, data)
         {
             if ((etimer_expired(&et_broadCastOver)) && (state == INITNETWORKDISC))
             {
-                //process_post(&uniCastThread, PROCESS_EVENT_MSG, ACKMODE);//(((i)%7)+1));
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, ACKMODE);
+                //process_post(&uniCastThread, PROCESS_EVENT_MSG, PATHMODE);//(((i)%7)+1));
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, PATHMODE);
                 printf("NETWORKDISC expires in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
                 node = 1;
                 ackCount = 0;
@@ -214,11 +214,11 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 leds_toggle(LEDS_BLUE);
                 //print_active_procs();
             }
-            if (etimer_expired(&et_ackModeTransmit) && (state == ACKMODE))
+            if (etimer_expired(&et_ackModeTransmit) && (state == PATHMODE))
             {
                 etimer_reset(&et_ackModeTransmit);
                 printf("Restarted ackMode Timer\n");
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, ACKMODE);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, PATHMODE);
                 // Start polling the devices one by one
                 leds_toggle(LEDS_RED);
                 //print_active_procs();
@@ -237,7 +237,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 case INITNETWORKDISC:
                     initNetworkDisc(&stateMachineThread);
                     break;
-                case ACKMODE:
+                case PATHMODE:
                     if (node == getMyNodeID())
                     {
                         node++;
@@ -249,9 +249,9 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
                     // Count the number of Ack Msgs sent
                     ackCount++;
-                    printf("Here in ACKMODE to node %d, Status is %d AckCount is %d\n",node,status, ackCount);
+                    printf("Here in PATHMODE to node %d, Status is %d AckCount is %d\n",node,status, ackCount);
 
-                    // Set up the ACKMODE Packet and send data in round robin fashion
+                    // Set up the PATHMODE Packet and send data in round robin fashion
                     node++;
 
                     // Set the etimer to expire again
@@ -323,7 +323,7 @@ PROCESS_THREAD (uniCastThread, ev, data)
     static struct etimer et_unicastTransmit, et_ackModeTransmit;
     static int status = 0;
     static node_num_t node = 1;
-    static enum unicast_state state = ACKMODE;
+    static enum unicast_state state = PATHMODE;
 
     while(1) {
         PROCESS_WAIT_EVENT();
@@ -338,11 +338,11 @@ PROCESS_THREAD (uniCastThread, ev, data)
                 leds_toggle(LEDS_BLUE);
                 //print_active_procs();
             }
-            if (etimer_expired(&et_ackModeTransmit) && (state == ACKMODE))
+            if (etimer_expired(&et_ackModeTransmit) && (state == PATHMODE))
             {
                 etimer_reset(&et_ackModeTransmit);
                 printf("Restarted ackMode Timer\n");
-                process_post(&uniCastThread, PROCESS_EVENT_MSG, ACKMODE);
+                process_post(&uniCastThread, PROCESS_EVENT_MSG, PATHMODE);
                 // Start polling the devices one by one
                 leds_toggle(LEDS_RED);
                 //print_active_procs();
@@ -355,13 +355,13 @@ PROCESS_THREAD (uniCastThread, ev, data)
             payload_t p;
             switch((int) data)
             {
-                case ACKMODE:
+                case PATHMODE:
                     // Send unicast and expect payload as hop history
                     status = doAckMode(node,&p);
 
-                    printf("Here in ACKMODE to node %d, Status is %d\n",node,status);
+                    printf("Here in PATHMODE to node %d, Status is %d\n",node,status);
 
-                    // Set up the ACKMODE Packet and send data in round robin fashion
+                    // Set up the PATHMODE Packet and send data in round robin fashion
                     node++;
 
                     // Set the etimer to expire again
@@ -419,10 +419,6 @@ PROCESS_THREAD (uniCastThread, ev, data)
 
     PROCESS_END();
 }
-
-
-
-
 */
 
 // Listens for data coming from the USB connection (UART0)

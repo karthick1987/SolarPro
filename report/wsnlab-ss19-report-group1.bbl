@@ -21,36 +21,44 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-
 \bibitem{b1}
-https://physics.weber.edu/schroeder/ua/SunAndSeasons.html
+D.~V. Schroeder, ``{The Sun and the Seasons},''
+  \url{https://physics.weber.edu/schroeder/ua/SunAndSeasons.html}, 2010-2011,
+  [].
 
 \bibitem{b2}
-https://greensarawak.com/wp-content/uploads/2017/11/sunspath.jpg
+G.~Sarawak, ``{Know where to face your solar PV panels},''
+  \url{https://greensarawak.com/wp-content/uploads/2017/11/sunspath.jpg}, 2017,
+  [].
 
 \bibitem{b3}
-http://www.lauritzen.biz/blog/?p=49
+A.~S. Trackers, ``{What is solar tracking},''
+  \url{http://www.lauritzen.biz/blog/?p=49}, 2014, [].
 
 \bibitem{servoMotor}
-``{Servo Motor HS-422},''
-  \url{https://www.multiplex-rc.de/produkte/112422-servo-hs-422}
+K.~Sukumar, ``{Servo Motor HS-422},''
+  \url{https://www.multiplex-rc.de/produkte/112422-servo-hs-422}, 2008,
+  [Online; accessed 19-July-2008].
+
 \bibitem{howServoworks}
 \BIBentryALTinterwordspacing
-``How servo motors work,''
+Jameco.com, ``How servo motors work,'' accessed 2019-08-14. [Online].
+  Available:
   \url{https://www.jameco.com/jameco/workshop/howitworks/how-servo-motors-work.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{anemometer}
-%\BIBentryALTinterwordspacing
+\BIBentryALTinterwordspacing
 A.~Egger, ``Arduino anemometer bauen,'' 2018, accessed 2019-08-14. [Online].
   Available: \url{https://www.aeq-web.com/anemometer-mit-dem-arduino-bauen/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{REmote}
-``{Zolertia Remote},''
+K.~Sukumar, ``{Zolertia Remote},''
   \url{https://github.com/Zolertia/Resources/wiki/RE-Mote}, 2008, [Online;
   accessed 19-July-2008].
 
 \bibitem{dunkels2011contikimac}
 A.~Dunkels, ``The contikimac radio duty cycling protocol,'' 2011.
+
 \end{thebibliography}
