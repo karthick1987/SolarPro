@@ -168,7 +168,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
     payload_t p; // For setting up payload for ackmode and Unicast modes
 
-    static struct etimer et_unicastTransmit, et_ackModeTransmit;
+    static struct etimer et_unicastTransmit, et_pathModeTransmit;
     static int status = 0;
     static node_num_t node = 1;
     static int ackCount = 1;
@@ -210,9 +210,9 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 leds_toggle(LEDS_BLUE);
                 //print_active_procs();
             }
-            if (etimer_expired(&et_ackModeTransmit) && (state == PATHMODE))
+            if (etimer_expired(&et_pathModeTransmit) && (state == PATHMODE))
             {
-                etimer_reset(&et_ackModeTransmit);
+                etimer_reset(&et_pathModeTransmit);
                 printf("Restarted ackMode Timer\n");
                 process_post(&stateMachineThread, PROCESS_EVENT_MSG, PATHMODE);
                 // Start polling the devices one by one
@@ -251,11 +251,11 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     node++;
 
                     // Set the etimer to expire again
-                    etimer_set(&et_ackModeTransmit, ACKMODETRASMITINTERVAL);
+                    etimer_set(&et_pathModeTransmit, ACKMODETRASMITINTERVAL);
                     if ( ackCount >= TOTAL_NODES-1 )
                     {
                         // Stop the AckMode timer
-                        etimer_stop(&et_ackModeTransmit);
+                        etimer_stop(&et_pathModeTransmit);
                         // Move into Unicast mode
                         process_post(&stateMachineThread, PROCESS_EVENT_MSG, UNICASTMODE);
                         // Set the node count to 1
