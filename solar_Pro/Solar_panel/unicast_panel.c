@@ -104,15 +104,13 @@ int doUniCast(payload_t *rx_packet)
   {
       case ACK:
           // always forward to basestation
-          printf("---ACK PKT---\nDestination Node is %x\n",(p->a).dest.u16);
-          for(i=0;i<TOTAL_NODES;i++)
-          {
-             printf("%d:%d\n",i,(p->a).hopHist[i].u16);
-          }
           unict_send(rx_packet);
           break;
       case UNICAST:
           //check if Destination
+          if(rx_packet->u.destNode == getMyNodeID()){
+            setupPacket
+          }
           //if not forward to Destination
           //if yes fill buffer with sensor values
           printf("---UNICAST PKT---\n");
