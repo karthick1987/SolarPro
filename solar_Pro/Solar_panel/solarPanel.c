@@ -42,7 +42,7 @@ contributors:
 #include "project-conf.h"
 
 // Common headers
-#include "unicast_local.h"
+#include "unicast_panel.h"
 #include "broadcast_local.h"
 #include "helpers.h"
 #include "nodeID.h"
@@ -52,11 +52,9 @@ contributors:
 #define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
 #define ACKMODETRASMITINTERVAL 1*CLOCK_SECOND
 
-static struct etimer et;
 extern struct etimer et_broadCastOver;
 static uint16_t myNodeID;
 
-static struct etimer et;
 extern struct etimer et_broadCastOver;
 
 /*---------------------------------------------------------------------------*/
@@ -102,7 +100,11 @@ PROCESS_THREAD (mainThread, ev, data)
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            // DO the emergency broadcast task
+            if ((etimer_expired(&et_broadCastOver)))
+            {
+                printf("NETWORKDISC expired in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
+                etimer_stop(&et_broadCastOver);
+            }
 
             // Wake up from the emergency task and go to normal polling
         }

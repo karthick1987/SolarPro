@@ -85,7 +85,6 @@ void initNetworkDisc(struct process *p)
 {
     printf("Network Discovery Initiated\n");
     // reset routing table
-    int i = 0;
     broadcastCount = 0;
 
     setUpRtable();
@@ -163,9 +162,6 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
             rssi);
 
 
-    // return the index of the corresponding rime ID in myrTable
-    node_num_t rcvdNode = returnIDIndex(from);
-
     // If the RSSI value is less than a threshold value drop the packet
     if ( rssi <= RCVTHRESHOLD )
     {
@@ -180,8 +176,6 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     }
 
     leds_on(LEDS_GREEN);
-    // myrTable.next_hop[rcvdNode].u16 = from->u16;
-    // myrTable.cost[rcvdNode] = 1;
 
     packetbuf_copyto(&(payload.b));
 
@@ -256,7 +250,7 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
             destination = returnIDIndex(&(tx_packet.a.dest));
             break;
         case UNICAST:
-            destintation = tx_packet.u.destNode;
+            destination = tx_packet.u.destNode;
             break;
         default:
             break;
