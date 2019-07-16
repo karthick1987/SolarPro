@@ -165,7 +165,7 @@
                             							
                             <targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1172982409.1397720974" name=""/>
                             							
-                            <builder arguments="TARGET=zoul BOARD=remote-revb solarPro.upload" command="make" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.956183032" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+                            <builder arguments="TARGET=zoul BOARD=remote-revb solarPanel.upload" command="make" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.956183032" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
                             							
                             <tool id="org.eclipse.cdt.build.core.settings.holder.libs.2133539584" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
                             							

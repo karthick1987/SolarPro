@@ -4599,9 +4599,9 @@ END GROUP
  .text.qsend_packet
                 0x0000000000208106       0x22 obj_zoul/contikimac.o
  .text.init     0x0000000000208128        0x2 obj_zoul/nullsec.o
- .text.doAckMode
+ .text.doPathMode
                 0x000000000020812a       0x48 obj_zoul/unicast_local.o
-                0x000000000020812a                doAckMode
+                0x000000000020812a                doPathMode
  .text.doUniCastMode
                 0x0000000000208172       0x3a obj_zoul/unicast_local.o
                 0x0000000000208172                doUniCastMode
@@ -5852,7 +5852,7 @@ disk_status                                       obj_zoul/diskio.o
                                                   obj_zoul/ff.o
 disk_write                                        obj_zoul/diskio.o
                                                   obj_zoul/ff.o
-doAckMode                                         obj_zoul/unicast_local.o
+doPathMode                                        obj_zoul/unicast_local.o
                                                   base.co
 doUniCastMode                                     obj_zoul/unicast_local.o
                                                   base.co

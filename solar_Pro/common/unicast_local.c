@@ -89,7 +89,7 @@ static void printPacket(payload_t *p)
     }
 }
 
-int doAckMode(node_num_t n, payload_t *p)
+int doPathMode(node_num_t n, payload_t *p)
 {
     setupPacket(p,ACK,n);
     return (n == TOTAL_NODES?0:-1);

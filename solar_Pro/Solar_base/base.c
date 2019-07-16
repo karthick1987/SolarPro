@@ -48,7 +48,6 @@ contributors:
 #include "nodeID.h"
 #include "routing.h"
 #include "anemometer.h"
-#include "base.h"
 
 /*---------------------------------------------------------------------------*/
 
@@ -245,7 +244,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                             node = 1;
                     }
                     // Send unicast and expect payload as hop history
-                    status = doAckMode(node,&p);
+                    status = doPathMode(node,&p);
 
                     // Count the number of Ack Msgs sent
                     ackCount++;
