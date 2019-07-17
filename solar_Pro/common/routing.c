@@ -18,8 +18,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAXBROADCASTRETRANSMIT  5
-#define RCVTHRESHOLD    -60
+#define MAXBROADCASTRETRANSMIT  1
+#define RCVTHRESHOLD    -70
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
@@ -129,8 +129,8 @@ static void forward_msg(const char * message)
             printf("Size of payload is %d\n",sizeof(payload_t));
             packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
             broadcast_send(&broadcast);
-            //delay_ms(200);
             broadcastCount++;
+            //delay_ms(20);
         //}
         //else {
         //}
