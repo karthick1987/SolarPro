@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAXBROADCASTRETRANSMIT  20
+#define MAXBROADCASTRETRANSMIT  5
 #define RCVTHRESHOLD    -60
 
 // Creates an instance of a unicast connection.
@@ -54,6 +54,7 @@ extern const nodeID_t nodes[];
 void setUpRtable(void)
 {
     int i;
+    broadcastCount = 0;
     for(i=0;i<TOTAL_NODES;i++)
     {
         myrTable.dest[i].u16 = nodes[i].rimeID;
@@ -118,19 +119,23 @@ void openBroadcast(void)
  */
 static void forward_msg(const char * message)
 {
-    if (broadcastCount < MAXBROADCASTRETRANSMIT)
+    int i;
+    for (i=0;i<MAXBROADCASTRETRANSMIT;i++)
     {
-        //send the message
-        printf("%d broadcasts\n", broadcastCount);
-        printf("Size of payload is %d\n",sizeof(payload_t));
-        packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
-        broadcast_send(&broadcast);
-        //delay_ms(200);
-        broadcastCount++;
+        //if (broadcastCount < MAXBROADCASTRETRANSMIT)
+        //{
+            //send the message
+            printf("%d broadcasts\n", i);
+            printf("Size of payload is %d\n",sizeof(payload_t));
+            packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
+            broadcast_send(&broadcast);
+            //delay_ms(200);
+            broadcastCount++;
+        //}
+        //else {
+        //}
     }
-    else {
-        printf("Maximum amount of %d broadcasts reached\n", MAXBROADCASTRETRANSMIT);
-    }
+    printf("Maximum amount of %d broadcasts reached\n", i);
 }
 
 static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
