@@ -128,7 +128,7 @@ void MainWindow::packet_received(QByteArray str) {
         ui->lcdNumber_Luminosity->display(sensorvalues[index].lightSensor);
 
         ui->lcdNumber_Angle->setPalette(Qt::black);
-        ui->lcdNumber_Angle->display(sensorvalues[index].servoPos_degs);0
+        ui->lcdNumber_Angle->display(sensorvalues[index].servoPos_degs);
 
         break;
     }

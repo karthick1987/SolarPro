@@ -234,7 +234,7 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
     payload_t rx_packet;
 
     packetbuf_copyto(&rx_packet);
-    doUnicast(&rx_packet);
+    doUniCastMode(0, &rx_packet);
     // For Debug purposes
     printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
             from->u8[0], from->u8[1],

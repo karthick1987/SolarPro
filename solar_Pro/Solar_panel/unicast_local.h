@@ -23,7 +23,7 @@ contributors:
 #include "nodeID.h"
 #include "routing.h"
 
-int doPathMode(node_num_t n, payload_t *);
-int doUniCastMode(node_num_t n, payload_t *);
+int doPathMode(node_num_t dest, payload_t *);
+int doUniCastMode(node_num_t dest, payload_t *);
 
 #endif

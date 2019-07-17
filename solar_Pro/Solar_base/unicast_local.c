@@ -89,15 +89,14 @@ static void printPacket(payload_t *p)
     }
 }
 
-int doPathMode(node_num_t n, payload_t *p)
+int doPathMode(node_num_t dest, payload_t *p)
 {
-    setupPacket(p,ACK,n);
-    return (n == TOTAL_NODES?0:-1);
+    setupPacket(p,ACK,dest);
+    return (dest == TOTAL_NODES?0:-1);
 }
 
-int doUniCastMode(node_num_t n, payload_t *p)
+int doUniCastMode(node_num_t dest, payload_t *p)
 {
-    setupPacket(p,UNICAST,n);
-    return (n == TOTAL_NODES?0:-1);
+    setupPacket(p,UNICAST,dest);
+    return (dest == TOTAL_NODES?0:-1);
 }
-

@@ -338,7 +338,8 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
 
             switch (uartRxBuffer[0]) {
               case SERIAL_PACKET_TYPE_NETWORK_DISCOVERY:
-                //initiate network discover
+                // Signal that Network Disc has been inited
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
                 break;
 
               case SERIAL_PACKET_TYPE_EMERGENCY:
@@ -365,7 +366,7 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
                 printf("Unknown UART command");
                 break;
             }
-            //leds_off(LEDS_BLUE);
+            leds_off(LEDS_RED);
         }
     }
     PROCESS_END();

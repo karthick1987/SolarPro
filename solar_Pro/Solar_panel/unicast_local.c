@@ -117,8 +117,10 @@ static void addSelfToHist(payload_t *rx_packet)
 }
 
 
-int doUniCast(payload_t *rx_packet)
+int doUniCastMode(node_num_t dest, payload_t *rx_packet)
 {
+    // dest is not used here
+    (void) dest;
     //check if destination byte 2
     //read out byte 1 if PATH or UNICAST
     switch(rx_packet->a.apkt)
@@ -158,7 +160,7 @@ int doUniCast(payload_t *rx_packet)
                 tx_packet.a.hopHist[0].u16 = getMyRIMEID()->u16;
                 // Lets Keep it Simple
                 // What happends here is that if the destination has been reached
-                // a new transmit packet is created and it zeroed out 
+                // a new transmit packet is created and it zeroed out
                 // with the 1st entry of the hopHist as the nodes RIMEID and send it across
             }
             else{
