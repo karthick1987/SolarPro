@@ -91,7 +91,7 @@ void initNetworkDisc(struct process *p)
     setUpRtable();
 
     // Copy information to payload
-    strncpy(payload.b.msg,"Hello",BROADCASTMSGSIZE_BYTES);
+    strncpy(&(payload.b.msg),"Hello",BROADCASTMSGSIZE_BYTES);
     payload.b.bpkt = DISCOVERY;
     payload.b.rTable = myrTable;
 
@@ -178,9 +178,9 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     leds_on(LEDS_GREEN);
 
-    packetbuf_copyto(&(payload.b));
+    packetbuf_copyto(&payload);
 
-    strncpy(payload.b.msg, "Herro",BROADCASTMSGSIZE_BYTES);
+    strncpy(&(payload.b.msg), "Herro",BROADCASTMSGSIZE_BYTES);
     //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);
 
     printRTable2(payload.b.rTable,"======= Received Payload is =======");
@@ -202,7 +202,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
         payload.b.rTable = myrTable;
 
         // Copy new table into the packet
-        strncpy(payload.b.msg, "Hello",BROADCASTMSGSIZE_BYTES);
+        strncpy(&(payload.b.msg), "Hello",BROADCASTMSGSIZE_BYTES);
 
         //rebroadcast it
         forward_msg((const char *)&payload);
@@ -254,6 +254,8 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
             destination = tx_packet.u.destNode;
             break;
         default:
+            destination = 0;
+            printf("Shouldnt be here!!!\n");
             break;
     }
     return &(myrTable.next_hop[destination]);
