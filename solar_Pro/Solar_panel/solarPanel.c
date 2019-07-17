@@ -42,7 +42,7 @@ contributors:
 #include "project-conf.h"
 
 // Common headers
-#include "unicast_panel.h"
+#include "unicast_local.h"
 #include "broadcast_local.h"
 #include "helpers.h"
 #include "nodeID.h"
@@ -94,6 +94,7 @@ PROCESS_THREAD (mainThread, ev, data)
                 {
                     // Signal that Network Disc has been inited
                     // process_post(&mainThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
+                    initNetworkDisc(&mainThread);
                 }
             }
         }//end if(ev == sensors_event)

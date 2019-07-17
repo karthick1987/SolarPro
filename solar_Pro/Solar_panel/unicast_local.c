@@ -21,7 +21,7 @@ contributors:
 #include <stdio.h>
 #include "servoControl.h"
 #include "projSensors.h"
-#include "unicast_panel.h"
+#include "unicast_local.h"
 
 #define RESETADDR   0xFFFF
 

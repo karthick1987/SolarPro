@@ -4,7 +4,7 @@ all: $(CONTIKI_PROJECT)
 EXTERNALDIRS += ../common
 
 PROJECT_SOURCEFILES += helpers.c nodeID.c projSensors.c servoControl.c servo.c
-PROJECT_SOURCEFILES += routing.c unicast_panel.c
+PROJECT_SOURCEFILES += routing.c unicast_local.c
 CONTIKI_WITH_RIME = 1
 CONTIKI = $(HOME)/contiki
 

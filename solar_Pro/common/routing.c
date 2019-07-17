@@ -10,6 +10,7 @@
 #include "routing.h"
 #include "nodeID.h"
 #include "broadcast_local.h"
+#include "unicast_local.h"
 
 // Standard C includes:
 #include <stdio.h>
