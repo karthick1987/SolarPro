@@ -50,8 +50,6 @@ contributors:
 #include "anemometer.h"
 
 /*---------------------------------------------------------------------------*/
-
-#define TX_POWER 7
 #define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
 #define ACKMODETRASMITINTERVAL 1*CLOCK_SECOND
 
@@ -154,7 +152,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     PROCESS_BEGIN();
 
     // Configure your team's channel (11 - 26).
-    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL,11);
+    NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, CHANNEL);
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
     openBroadcast();
     setUpRtable();
