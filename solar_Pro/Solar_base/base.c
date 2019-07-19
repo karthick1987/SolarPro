@@ -133,7 +133,7 @@ PROCESS_THREAD (windSpeedThread, ev, data)
 
         uartTxBuffer[0] = SERIAL_PACKET_TYPE_ANEMOMETER;
         uartTxBuffer[1] = wind_speed/1000;
-        uartTxBuffer[2] = wind_speed_avg/1000;
+        uartTxBuffer[2] = wind_speed_avg_2m/1000;
         uartTxBuffer[3] = wind_speed_max/1000;
         uartTxBuffer[4] = threshold;
 
@@ -172,7 +172,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     static int status = 0;
     static node_num_t node = 1;
     static int ackCount = 1;
-    process_post(&stateMachineThread, PROCESS_EVENT_MSG, IDLE);
+    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)IDLE);
 
 
     while(1) {
@@ -186,7 +186,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                         BUTTON_SENSOR_PRESSED_LEVEL )
                 {
                     // Signal that Network Disc has been inited
-                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, PREPNETDISC);
+                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PREPNETDISC);
                 }
             }
         }//end if(ev == sensors_event)
@@ -196,7 +196,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
             if ((etimer_expired(&et_broadCastOver)) && (state == INITNETWORKDISC))
             {
                 //process_post(&uniCastThread, PROCESS_EVENT_MSG, PATHMODE);//(((i)%7)+1));
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, PATHMODE);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PATHMODE);
                 printf("NETWORKDISC expires in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
                 node = 1;
                 ackCount = 0;
@@ -206,7 +206,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
             {
                 etimer_reset(&et_unicastTransmit);
                 printf("Restarted Unicast Timer\n");
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, UNICASTMODE);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
                 leds_toggle(LEDS_BLUE);
                 //print_active_procs();
             }
@@ -214,7 +214,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
             {
                 etimer_reset(&et_pathModeTransmit);
                 printf("Restarted ackMode Timer\n");
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, PATHMODE);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PATHMODE);
                 // Start polling the devices one by one
                 leds_toggle(LEDS_RED);
                 //print_active_procs();
@@ -231,7 +231,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 case IDLE:
                     break;
                 case PREPNETDISC:
-                    prepNetworkDisc(&broadcastSendProcess);
+                    prepNetworkDisc();
                     // TODO Timer for 20 and we should send it 3 times
                     // Signal that Network Disc has been inited
                     // process_post(&stateMachineThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
@@ -263,7 +263,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                         // Stop the AckMode timer
                         etimer_stop(&et_pathModeTransmit);
                         // Move into Unicast mode
-                        process_post(&stateMachineThread, PROCESS_EVENT_MSG, UNICASTMODE);
+                        process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
                         // Set the node count to 1
                         node = 1;
                         // Set the timer for Unicast interval
@@ -373,12 +373,12 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
             switch (uartRxBuffer[0]) {
               case SERIAL_PACKET_TYPE_NETWORK_DISCOVERY:
                 // Signal that Network Disc has been inited
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, PREPNETDISC);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PREPNETDISC);
                 break;
 
               case SERIAL_PACKET_TYPE_EMERGENCY:
                 //run emergency mode
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, EMERGENCY);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)EMERGENCY);
                 break;
 
               case SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS:

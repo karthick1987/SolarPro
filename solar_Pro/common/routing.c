@@ -91,7 +91,7 @@ void initNetworkDisc(void)
 
     // TODO set up enum/defines for different broadcast functions
     // initiate controlled flooding
-    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, DISCOVERY);
+    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG,(void *) DISCOVERY);
 
     return;
 }
@@ -105,11 +105,12 @@ void prepNetworkDisc(void)
     setUpRtable();
 
     // Copy information to payload
-    strncpy(payload.b.msg,"Prep",BROADCASTMSGSIZE_BYTES);
-    payload.b.bpkt = PREPDISC;
+    strncpy(payload_transmit.b.msg,"Prep",BROADCASTMSGSIZE_BYTES);
+    payload_transmit.b.bpkt = PREPDISC;
+    printRTable("=======My Table Clearing for NetDiscPrep=======");
 
     // initiate controlled flooding
-    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, PREPDISC);
+    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)PREPDISC);
 
     return;
 }
@@ -183,7 +184,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
         case EMERGENCY:
             // TODO trigger emergency
             //rebroadcast it
-            process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, EMERGENCY);
+            process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
             break;
 
         case DISCOVERY:
@@ -207,10 +208,10 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
                 payload_transmit.b.rTable = myrTable;
 
                 // Copy new table into the packet
-                strncpy(payload_transmit.b.msg, "Trans",BROADCASTMSGSIZE_BYTES);
+                strncpy(payload_transmit.b.msg, "Disc",BROADCASTMSGSIZE_BYTES);
 
                 //rebroadcast it
-                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, 0);
+                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *) DISCOVERY);
             }
             break;
 
@@ -221,7 +222,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
             // Set up Prepare Network DISCOVERY
             payload_transmit.b.bpkt = PREPDISC;
             //rebroadcast it
-            doBroadCast();
+            process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *) PREPDISC);
             break;
 
         default:

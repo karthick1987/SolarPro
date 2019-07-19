@@ -8,49 +8,83 @@
 #include "sys/etimer.h"
 #include "broadcast_common.h"
 #include "routing.h"
+#include "base.h"
 #include "payload.h"
 
 #define BROADCASTRETRANSMITS    3
+
+PROCESS_NAME(stateMachineThread);
 PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
 PROCESS_THREAD (broadcastSendProcess, ev, data)
 {
-    static struct etimer bcnow;
+    static struct etimer bcinterval, transitiontimer;
     static int i = 0;
+    static pkttype_t pkt_type;
+    static bool bcinterval_flag = false, transition_flag = false;
     PROCESS_BEGIN();
     while(1) {
         PROCESS_WAIT_EVENT();
         if (ev == PROCESS_EVENT_MSG)
         {
-            if((int)data == DISCOVERY)
+            if (transition_flag)
+            {
+                etimer_reset(&transitiontimer);
+            }
+            pkt_type = (int) data;
+            if(pkt_type == DISCOVERY)
             {
                 i = 0;
-                etimer_set(&bcnow, CLOCK_SECOND/2);
-                printf("Setting timer to broadcast\n");
+                etimer_set(&bcinterval, BROADCASTINTERVAL);
+                bcinterval_flag = true;
+                printf("Setting timer to BROADCAST\n");
             }
-            else if ((int) data == EMERGENCY)
+            else if (pkt_type == EMERGENCY)
             {
             }
-            else if((int) data == PREPDISC)
+            else if(pkt_type == PREPDISC)
             {
-                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, DISCOVERY);
+                i = 0;
+                etimer_set(&bcinterval,BROADCASTINTERVAL);
+                bcinterval_flag = true;
+                printf("Setting timer for PREPDISC\n");
             }
-
         }
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            if (etimer_expired(&bcnow) )
+            if (etimer_expired(&bcinterval) && bcinterval_flag)
             {
-                printf("Timer expired going broadcasting try:(%d)\n",i+1);
                 if (i<BROADCASTRETRANSMITS)
                 {
                     doBroadCast();
-                    etimer_reset(&bcnow);
+                    etimer_reset(&bcinterval);
                     i++;
+                    printf("Timer expired going broadcasting try:(%d)\n",i);
                 }
                 else
                 {
-                    etimer_stop(&bcnow);
+                    etimer_stop(&bcinterval);
+                    bcinterval_flag = false;
+                    etimer_set(&transitiontimer, BROADCASTTIMEOUT);
+                    transition_flag = true;
+                }
+            }
+            if (etimer_expired(&transitiontimer) && transition_flag)
+            {
+                printf("Broadcast Common: Pkt_Type is %d\n",pkt_type);
+                etimer_stop(&transitiontimer);
+                transition_flag = false;
+
+                switch(pkt_type)
+                {
+                    case DISCOVERY:
+                        process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PATHMODE);
+                        break;
+                    case PREPDISC:
+                        process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)INITNETWORKDISC);
+                        break;
+                    default:
+                        break;
                 }
             }
         }

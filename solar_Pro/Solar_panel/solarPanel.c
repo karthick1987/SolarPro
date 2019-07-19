@@ -62,10 +62,10 @@ extern struct etimer et_broadCastOver;
 /*---------------------------------------------------------------------------*/
 // The process is defined in another file
 PROCESS_NAME(broadcastSendProcess);
-PROCESS(mainThread, "Main Thread");
-AUTOSTART_PROCESSES(&mainThread, &broadcastSendProcess);
+PROCESS(stateMachineThread, "Main Thread");
+AUTOSTART_PROCESSES(&stateMachineThread, &broadcastSendProcess);
 
-PROCESS_THREAD (mainThread, ev, data)
+PROCESS_THREAD (stateMachineThread, ev, data)
 {
     PROCESS_BEGIN();
 
@@ -95,10 +95,10 @@ PROCESS_THREAD (mainThread, ev, data)
                 {
                     // Signal that Network Disc has been inited
                     // process_post(&mainThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
-                    initNetworkDisc();
+                    prepNetworkDisc();
                 }
             }
-        }//end if(ev == sensors_event)
+        }
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
@@ -107,49 +107,9 @@ PROCESS_THREAD (mainThread, ev, data)
                 printf("NETWORKDISC expired in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
                 etimer_stop(&et_broadCastOver);
             }
-
             // Wake up from the emergency task and go to normal polling
         }
     }
 
     PROCESS_END();
 }
-
-/*
-PROCESS_THREAD (broadcastSendProcess, ev, data)
-{
-    static struct etimer bcnow;
-    static int i = 0;
-    PROCESS_BEGIN();
-    while(1) {
-        PROCESS_WAIT_EVENT();
-        if (ev == PROCESS_EVENT_MSG)
-        {
-            i = 0;
-            etimer_set(&bcnow, CLOCK_SECOND/2);
-            printf("Setting timer to broadcast\n");
-
-        }
-
-        else if (ev == PROCESS_EVENT_TIMER)
-        {
-            if (etimer_expired(&bcnow) )
-            {
-                printf("Timer expired going to broadcast %d now\n",i+2);
-                if (i<BROADCASTRETRANSMITS)
-                {
-                    doBroadCast();
-                    etimer_reset(&bcnow);
-                    i++;
-                }
-                else
-                {
-                    etimer_stop(&bcnow);
-                }
-            }
-        }
-    }
-
-    PROCESS_END();
-}
-*/
