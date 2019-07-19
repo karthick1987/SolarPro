@@ -34,6 +34,7 @@ typedef enum {
     UNICAST = 4,
     PATH = 5,
     MANUAL = 6,
+    PREPDISC = 7,
 }pkttype_t;
 
 // custom structures

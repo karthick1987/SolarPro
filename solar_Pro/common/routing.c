@@ -19,7 +19,7 @@
 #include <stdbool.h>
 
 #define MAXBROADCASTRETRANSMIT  1
-#define RCVTHRESHOLD    -60
+#define RCVTHRESHOLD    -70
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
@@ -105,6 +105,26 @@ void initNetworkDisc(struct process *p)
     return;
 }
 
+void prepNetworkDisc(struct process *p)
+{
+    printf("Network Discovery Preparing\n");
+    // reset routing table
+    broadcastCount = 0;
+
+    setUpRtable();
+
+    // Copy information to payload
+    strncpy(payload.b.msg,"Hello",BROADCASTMSGSIZE_BYTES);
+    payload.b.bpkt = PREPDISC;
+
+    // initiate controlled flooding
+    process_post(p, PROCESS_EVENT_MSG, 0);
+
+    //doBroadCast();
+
+    return;
+}
+
 void openBroadcast(void)
 {
     //open the connection, if necessary
@@ -174,40 +194,63 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     packetbuf_copyto(&payload);
 
-    strncpy(payload.b.msg, "Herro",BROADCASTMSGSIZE_BYTES);
-    //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);
-
-    printRTable2(payload.b.rTable,"======= Received Payload is =======");
-    printRTable("=======My Table before the Update=======");
-
-    // Compare payload with rTable
-    tableUpdateRequired = compareAndUpdateTable(payload, from);
-
-    printRTable("=======My Table After the Update=======");
-
-    // if it hasnt changed
-    if ( tableUpdateRequired )
+    switch(payload.b.bpkt)
     {
-
-        // Set up discovery mode
-        payload.b.bpkt = DISCOVERY;
-
-        // Copy new table into the packet
-        payload.b.rTable = myrTable;
-
-        // Copy new table into the packet
-        strncpy(payload.b.msg, "Hello",BROADCASTMSGSIZE_BYTES);
-
+      case EMERGENCY:
         //rebroadcast it
         doBroadCast();
+        break;
+
+      case DISCOVERY:
+        strncpy(payload.b.msg, "Herro",BROADCASTMSGSIZE_BYTES);
+        /*printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);*/
+
+        printRTable2(payload.b.rTable,"======= Received Payload is =======");
+        printRTable("=======My Table before the Update=======");
+
+        // Compare payload with rTable
+        tableUpdateRequired = compareAndUpdateTable(payload, from);
+
+        printRTable("=======My Table After the Update=======");
+
+        // if it hasnt changed
+        if ( tableUpdateRequired )
+        {
+
+          // Set up discovery mode
+          payload.b.bpkt = DISCOVERY;
+
+          // Copy new table into the packet
+          payload.b.rTable = myrTable;
+
+          // Copy new table into the packet
+          strncpy(payload.b.msg, "Hello",BROADCASTMSGSIZE_BYTES);
+
+          //rebroadcast it
+          doBroadCast();
+        }
+
+        // Else do nothing and dont Broadcast again
+        leds_off(LEDS_GREEN);
+
+        // TODO BroadCastOver timer needs to be reset here
+        // etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
+        etimer_reset(&et_broadCastOver);
+        break;
+
+      case PREPDISC:
+        // Clear own routing table
+        setUpRtable();
+        printRTable("=======My Table After PREPDISC=======");
+        // Set up Prepare Network DISCOVERY
+        payload.b.bpkt = PREPDISC;
+        //rebroadcast it
+        doBroadCast();
+        break;
+
+      default:
+        break;
     }
-
-    // Else do nothing and dont Broadcast again
-    leds_off(LEDS_GREEN);
-
-    // TODO BroadCastOver timer needs to be reset here
-    // etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
-    etimer_reset(&et_broadCastOver);
 }
 
 void doBroadCast(void)

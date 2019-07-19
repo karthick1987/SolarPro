@@ -184,7 +184,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                         BUTTON_SENSOR_PRESSED_LEVEL )
                 {
                     // Signal that Network Disc has been inited
-                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
+                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, PREPNETDISC);
                 }
             }
         }//end if(ev == sensors_event)
@@ -227,6 +227,11 @@ PROCESS_THREAD (stateMachineThread, ev, data)
             switch(state)
             {
                 case IDLE:
+                    break;
+                case PREPNETDISC:
+                    prepNetworkDisc(&broadcastSendProcess);
+                    // Signal that Network Disc has been inited
+                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
                     break;
                 case INITNETWORKDISC:
                     initNetworkDisc(&broadcastSendProcess);
@@ -363,11 +368,12 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
             switch (uartRxBuffer[0]) {
               case SERIAL_PACKET_TYPE_NETWORK_DISCOVERY:
                 // Signal that Network Disc has been inited
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, PREPNETDISC);
                 break;
 
               case SERIAL_PACKET_TYPE_EMERGENCY:
                 //run emergency mode
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, EMERGENCY);
                 break;
 
               case SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS:
