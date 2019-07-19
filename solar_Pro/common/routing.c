@@ -99,7 +99,6 @@ void initNetworkDisc(struct process *p)
     // initiate controlled flooding
     process_post(p, PROCESS_EVENT_MSG, 0);
 
-    //doBroadCast();
     printf("Setting timer to expire INITNETWORKDISC\n");
 
     return;
@@ -119,8 +118,6 @@ void prepNetworkDisc(struct process *p)
 
     // initiate controlled flooding
     process_post(p, PROCESS_EVENT_MSG, 0);
-
-    //doBroadCast();
 
     return;
 }
