@@ -20,7 +20,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define RCVTHRESHOLD    -70
+#define RCVTHRESHOLD    -60
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
