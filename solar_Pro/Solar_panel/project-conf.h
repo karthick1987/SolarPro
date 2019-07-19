@@ -5,8 +5,8 @@
 //// PHY LAYER PARAMETERS
 #define CHANNEL 11
 #define TX_POWER 7
-//// int power_options[] =    {255,237,213,197,182,176,161,145,136,114,98 ,88 ,66 ,0};
-//// int power_dBm[] =        {7  ,5  ,3  ,1  ,0  ,-1 ,-3 ,-5 ,-7 ,-9 ,-11,-13,-15,-24};
+// int power_options[] =    {255,237,213,197,182,176,161,145,136,114,98 ,88 ,66 ,0};
+// int power_dBm[] =        {7  ,5  ,3  ,1  ,0  ,-1 ,-3 ,-5 ,-7 ,-9 ,-11,-13,-15,-24};
 //
 //// MAC LAYER PARAMETERS
 #define NETSTACK_CONF_MAC csma_driver 				//	nullmac_driver or csma_driver

@@ -6,10 +6,12 @@
 #include "net/netstack.h"      // Wireless-stack definitions
 #include "dev/leds.h"          // Use LEDs.
 
-// Private includes
+// Private commom includes
 #include "routing.h"
 #include "nodeID.h"
-#include "broadcast_local.h"
+#include "broadcast_common.h"
+
+// Private local includes
 #include "unicast_local.h"
 
 // Standard C includes:
@@ -18,8 +20,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAXBROADCASTRETRANSMIT  1
-#define RCVTHRESHOLD    -60
+#define RCVTHRESHOLD    -70
 
 // Creates an instance of a unicast connection.
 static struct unicast_conn unicast;
@@ -50,6 +51,7 @@ static void printRTable(const char *);
 static void printFromRTable(payload_t , const char *);
 
 extern const nodeID_t nodes[];
+extern struct process broadcastSendProcess;
 
 void setUpRtable(void)
 {
@@ -83,7 +85,7 @@ static void delay_ms(uint16_t ms)
     return;
 }
 
-void initNetworkDisc(struct process *p)
+void initNetworkDisc(void)
 {
     printf("Network Discovery Initiated\n");
     // reset routing table
@@ -97,11 +99,10 @@ void initNetworkDisc(struct process *p)
     payload.b.rTable = myrTable;
 
     // initiate controlled flooding
-    process_post(p, PROCESS_EVENT_MSG, 0);
+    process_post( &broadcastSendProcess, PROCESS_EVENT_MSG, 0);
 
-    //doBroadCast();
     printf("Setting timer to expire INITNETWORKDISC\n");
-
+    etimer_set(&et_broadCastOver,6*CLOCK_SECOND);
     return;
 }
 
@@ -141,7 +142,6 @@ static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
             myrTable.next_hop[j] = *from;
             myrTable.cost[j] = (fromrTable->cost)[j] + 1;
             result = true;
-            broadcastCount = 0;
         }
     }
     return result;
@@ -199,7 +199,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
         strncpy(payload.b.msg, "Hello",BROADCASTMSGSIZE_BYTES);
 
         //rebroadcast it
-        doBroadCast();
+        process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, 0);
     }
 
     // Else do nothing and dont Broadcast again
@@ -207,6 +207,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     // TODO BroadCastOver timer needs to be reset here
     // etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
+    printf("Resetting broadcastOVer Timer\n");
     etimer_reset(&et_broadCastOver);
 }
 
@@ -214,8 +215,6 @@ void doBroadCast(void)
 {
     // Whats my RIME ID
     linkaddr_t *t = getMyRIMEID();
-
-    printf("doing broadcast\n");
 
     // initiate controlled flooding
     bdct_send(&broadcast, t);

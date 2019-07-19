@@ -37,13 +37,14 @@ contributors:
 // Standard C includes:
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 // Project headers
 #include "base.h"
 
 // Common headers
 #include "unicast_local.h"
-#include "broadcast_local.h"
+#include "broadcast_common.h"
 #include "helpers.h"
 #include "nodeID.h"
 #include "routing.h"
@@ -229,7 +230,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 case IDLE:
                     break;
                 case INITNETWORKDISC:
-                    initNetworkDisc(&broadcastSendProcess);
+                    initNetworkDisc();
                     break;
                 case PATHMODE:
                     if (node == getMyNodeID())
@@ -293,15 +294,13 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     printf("In Default???\n");
                     break;
             }
-            // DO the emergency broadcast task
-
-            // Wake up from the emergency task and go to normal polling
         }
     }
 
     PROCESS_END();
 }
 
+/*
 PROCESS_THREAD (broadcastSendProcess, ev, data)
 {
     static struct etimer bcnow;
@@ -312,11 +311,12 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
         {
             etimer_set(&bcnow, CLOCK_SECOND);
             printf("Setting timer to broadcast\n");
+
         }
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            if (etimer_expired(&bcnow))
+            if (etimer_expired(&bcnow) )
             {
                 printf("Timer expired going to broadcast now\n");
                 doBroadCast();
@@ -326,6 +326,9 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
 
     PROCESS_END();
 }
+
+*/
+
 // Listens for data coming from the USB connection (UART0)
 // and prints it.
 PROCESS_THREAD(rxUSB_process, ev, data) {
