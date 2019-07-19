@@ -72,8 +72,9 @@ extern struct etimer et_broadCastOver;
 
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
+PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-AUTOSTART_PROCESSES(&stateMachineThread ,&rxUSB_process, &windSpeedThread);
+AUTOSTART_PROCESSES(&broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -162,7 +163,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
     static enum state_t state = IDLE;
-    //etimer_set(&et_broadCastOver, 3*CLOCK_SECOND);
 
     payload_t p; // For setting up payload for ackmode and Unicast modes
 
@@ -229,7 +229,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 case IDLE:
                     break;
                 case INITNETWORKDISC:
-                    initNetworkDisc(&stateMachineThread);
+                    initNetworkDisc(&broadcastSendProcess);
                     break;
                 case PATHMODE:
                     if (node == getMyNodeID())
@@ -302,6 +302,30 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     PROCESS_END();
 }
 
+PROCESS_THREAD (broadcastSendProcess, ev, data)
+{
+    static struct etimer bcnow;
+    PROCESS_BEGIN();
+    while(1) {
+        PROCESS_WAIT_EVENT();
+        if (ev == PROCESS_EVENT_MSG)
+        {
+            etimer_set(&bcnow, CLOCK_SECOND);
+            printf("Setting timer to broadcast\n");
+        }
+
+        else if (ev == PROCESS_EVENT_TIMER)
+        {
+            if (etimer_expired(&bcnow))
+            {
+                printf("Timer expired going to broadcast now\n");
+                doBroadCast();
+            }
+        }
+    }
+
+    PROCESS_END();
+}
 // Listens for data coming from the USB connection (UART0)
 // and prints it.
 PROCESS_THREAD(rxUSB_process, ev, data) {

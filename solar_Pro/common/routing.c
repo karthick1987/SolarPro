@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAXBROADCASTRETRANSMIT  5
+#define MAXBROADCASTRETRANSMIT  1
 #define RCVTHRESHOLD    -60
 
 // Creates an instance of a unicast connection.
@@ -96,14 +96,11 @@ void initNetworkDisc(struct process *p)
     payload.b.bpkt = DISCOVERY;
     payload.b.rTable = myrTable;
 
-    // Whats my RIME ID
-    linkaddr_t *t = getMyRIMEID();
-
     // initiate controlled flooding
-    bdct_send(&broadcast, t);
+    process_post(p, PROCESS_EVENT_MSG, 0);
 
+    //doBroadCast();
     printf("Setting timer to expire INITNETWORKDISC\n");
-    etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
 
     return;
 }
@@ -120,22 +117,13 @@ void openBroadcast(void)
 static void forward_msg(const char * message)
 {
     int i;
-    for (i=0;i<MAXBROADCASTRETRANSMIT;i++)
-    {
-        //if (broadcastCount < MAXBROADCASTRETRANSMIT)
-        //{
-            //send the message
-            printf("%d broadcasts\n", i);
-            printf("Size of payload is %d\n",sizeof(payload_t));
-            packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
-            broadcast_send(&broadcast);
-            //delay_ms(200);
-            broadcastCount++;
-        //}
-        //else {
-        //}
-    }
-    printf("Maximum amount of %d broadcasts reached\n", i);
+    //send the message
+    printf("%d broadcasts\n", i);
+    printf("Size of payload is %d\n",sizeof(payload_t));
+    packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
+    broadcast_send(&broadcast);
+    //delay_ms(200);
+    broadcastCount++;
 }
 
 static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
@@ -211,14 +199,26 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
         strncpy(payload.b.msg, "Hello",BROADCASTMSGSIZE_BYTES);
 
         //rebroadcast it
-        forward_msg((const char *)&payload);
+        doBroadCast();
     }
 
     // Else do nothing and dont Broadcast again
     leds_off(LEDS_GREEN);
 
     // TODO BroadCastOver timer needs to be reset here
+    // etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
     etimer_reset(&et_broadCastOver);
+}
+
+void doBroadCast(void)
+{
+    // Whats my RIME ID
+    linkaddr_t *t = getMyRIMEID();
+
+    printf("doing broadcast\n");
+
+    // initiate controlled flooding
+    bdct_send(&broadcast, t);
 }
 
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)

@@ -40,6 +40,7 @@
 void setUpRtable(void);
 void initNetworkDisc(struct process *p);
 void openBroadcast(void);
+void doBroadCast(void);
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from);
