@@ -8,6 +8,7 @@
 
 // Private commom includes
 #include "routing.h"
+#include "payload.h"
 #include "nodeID.h"
 #include "broadcast_common.h"
 
@@ -51,7 +52,8 @@ static void printRTable(const char *);
 static void printFromRTable(payload_t , const char *);
 
 extern const nodeID_t nodes[];
-extern struct process broadcastSendProcess;
+PROCESS_NAME(broadcastSendProcess);
+PROCESS_NAME(stateMachineThread);
 
 void setUpRtable(void)
 {
@@ -87,11 +89,28 @@ void initNetworkDisc(void)
     payload_transmit.b.bpkt = DISCOVERY;
     payload_transmit.b.rTable = myrTable;
 
+    // TODO set up enum/defines for different broadcast functions
     // initiate controlled flooding
-    process_post( &broadcastSendProcess, PROCESS_EVENT_MSG, 0);
+    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, DISCOVERY);
 
-    printf("Setting timer to expire INITNETWORKDISC\n");
-    //etimer_set(&et_broadCastOver,6*CLOCK_SECOND);
+    return;
+}
+
+void prepNetworkDisc(void)
+{
+    printf("Preparing Network Discovery\n");
+    // reset routing table
+    broadcastCount = 0;
+
+    setUpRtable();
+
+    // Copy information to payload
+    strncpy(payload.b.msg,"Prep",BROADCASTMSGSIZE_BYTES);
+    payload.b.bpkt = PREPDISC;
+
+    // initiate controlled flooding
+    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, PREPDISC);
+
     return;
 }
 
@@ -159,41 +178,56 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     leds_on(LEDS_GREEN);
 
-    strncpy(payload_receive.b.msg, "Herro",BROADCASTMSGSIZE_BYTES);
-    //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);
-
-    printRTable2(payload_receive.b.rTable,"======= Received Payload is =======");
-    printRTable("=======My Table before the Update=======");
-
-    // Compare payload with rTable
-    tableUpdateRequired = compareAndUpdateTable(payload_receive, from);
-
-    printRTable("=======My Table After the Update=======");
-
-    // if it hasnt changed
-    if ( tableUpdateRequired )
+    switch(payload_receive.b.bpkt)
     {
+        case EMERGENCY:
+            // TODO trigger emergency
+            //rebroadcast it
+            process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, EMERGENCY);
+            break;
 
-        // Set up discovery mode
-        payload_transmit.b.bpkt = DISCOVERY;
+        case DISCOVERY:
+            strncpy(payload_receive.b.msg, "Disc",BROADCASTMSGSIZE_BYTES);
 
-        // Copy new table into the packet
-        payload_transmit.b.rTable = myrTable;
+            printRTable2(payload_receive.b.rTable,"======= Received Payload is =======");
+            printRTable("=======My Table before the Update=======");
 
-        // Copy new table into the packet
-        strncpy(payload_transmit.b.msg, "Trans",BROADCASTMSGSIZE_BYTES);
+            // Compare payload with rTable
+            tableUpdateRequired = compareAndUpdateTable(payload_receive, from);
 
-        //rebroadcast it
-        process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, 0);
+            printRTable("=======My Table After the Update=======");
+
+            // if it hasnt changed
+            if ( tableUpdateRequired )
+            {
+                // Set up discovery mode
+                payload_transmit.b.bpkt = DISCOVERY;
+
+                // Copy new table into the packet
+                payload_transmit.b.rTable = myrTable;
+
+                // Copy new table into the packet
+                strncpy(payload_transmit.b.msg, "Trans",BROADCASTMSGSIZE_BYTES);
+
+                //rebroadcast it
+                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, 0);
+            }
+            break;
+
+        case PREPDISC:
+            // Clear own routing table
+            setUpRtable();
+            printRTable("=======My Table After PREPDISC=======");
+            // Set up Prepare Network DISCOVERY
+            payload_transmit.b.bpkt = PREPDISC;
+            //rebroadcast it
+            doBroadCast();
+            break;
+
+        default:
+            break;
     }
-
-    // Else do nothing and dont Broadcast again
     leds_off(LEDS_GREEN);
-
-    // TODO BroadCastOver timer needs to be reset here
-    // etimer_set(&et_broadCastOver, BROADCASTTIMEOUT);
-    printf("Resetting broadcastOVer Timer\n");
-    etimer_reset(&et_broadCastOver);
 }
 
 void doBroadCast(void)

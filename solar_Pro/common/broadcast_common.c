@@ -8,6 +8,7 @@
 #include "sys/etimer.h"
 #include "broadcast_common.h"
 #include "routing.h"
+#include "payload.h"
 
 #define BROADCASTRETRANSMITS    3
 PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
@@ -20,9 +21,19 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
         PROCESS_WAIT_EVENT();
         if (ev == PROCESS_EVENT_MSG)
         {
-            i = 0;
-            etimer_set(&bcnow, CLOCK_SECOND/2);
-            printf("Setting timer to broadcast\n");
+            if((int)data == DISCOVERY)
+            {
+                i = 0;
+                etimer_set(&bcnow, CLOCK_SECOND/2);
+                printf("Setting timer to broadcast\n");
+            }
+            else if ((int) data == EMERGENCY)
+            {
+            }
+            else if((int) data == PREPDISC)
+            {
+                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, DISCOVERY);
+            }
 
         }
 

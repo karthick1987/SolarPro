@@ -30,6 +30,7 @@ contributors:
 typedef enum {
     DISCOVERY = 1,
     EMERGENCY = 2,
+    PREPDISC = 7,
     ACK = 3,
     UNICAST = 4,
     PATH = 5,

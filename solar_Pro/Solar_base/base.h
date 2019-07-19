@@ -46,6 +46,7 @@ contributors:
 #define MAX_USB_PAYLOAD_SIZE	5
 
 enum state_t {
+PREPNETDISC = 45,
 IDLE        = 46,
 INITNETWORKDISC ,
 PATHMODE         ,
