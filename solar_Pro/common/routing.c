@@ -41,7 +41,7 @@ static int broadcastCount;
 static r_table_t myrTable;
 
 // Global payload to transmit
-static payload_t payload;
+static payload_t payload_receive, payload_transmit;
 
 // eTimer to signal End of broadcast
 struct etimer et_broadCastOver;
@@ -74,17 +74,6 @@ void setUpRtable(void)
     return;
 }
 
-// NOTE: If ms>500 then this will trigger the watchdog!!!
-static void delay_ms(uint16_t ms)
-{
-    for(int i = 0;i<ms;i++)
-    {
-        clock_delay_usec(1000);
-    }
-    printf("Delayed for %dms\n",ms);
-    return;
-}
-
 void initNetworkDisc(void)
 {
     printf("Network Discovery Initiated\n");
@@ -94,15 +83,15 @@ void initNetworkDisc(void)
     setUpRtable();
 
     // Copy information to payload
-    strncpy(payload.b.msg,"Hello",BROADCASTMSGSIZE_BYTES);
-    payload.b.bpkt = DISCOVERY;
-    payload.b.rTable = myrTable;
+    strncpy(payload_transmit.b.msg,"Init",BROADCASTMSGSIZE_BYTES);
+    payload_transmit.b.bpkt = DISCOVERY;
+    payload_transmit.b.rTable = myrTable;
 
     // initiate controlled flooding
     process_post( &broadcastSendProcess, PROCESS_EVENT_MSG, 0);
 
     printf("Setting timer to expire INITNETWORKDISC\n");
-    etimer_set(&et_broadCastOver,6*CLOCK_SECOND);
+    //etimer_set(&et_broadCastOver,6*CLOCK_SECOND);
     return;
 }
 
@@ -117,13 +106,10 @@ void openBroadcast(void)
  */
 static void forward_msg(const char * message)
 {
-    int i;
     //send the message
-    printf("%d broadcasts\n", i);
     printf("Size of payload is %d\n",sizeof(payload_t));
     packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
     broadcast_send(&broadcast);
-    //delay_ms(200);
     broadcastCount++;
 }
 
@@ -149,6 +135,7 @@ static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
 
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 {
+    packetbuf_copyto(&payload_receive);
     bool tableUpdateRequired = false;
     int16_t rssi = (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI);
     printf("Broadcast message received from 0x%x%x: '%s' [RSSI %d]\r\n",
@@ -172,16 +159,14 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
     leds_on(LEDS_GREEN);
 
-    packetbuf_copyto(&payload);
-
-    strncpy(payload.b.msg, "Herro",BROADCASTMSGSIZE_BYTES);
+    strncpy(payload_receive.b.msg, "Herro",BROADCASTMSGSIZE_BYTES);
     //printf("The beginning of broadcastMsg_t is %d %c\n",(uint16_t)(payload.b.rTable), payload.b.msg[0]);
 
-    printRTable2(payload.b.rTable,"======= Received Payload is =======");
+    printRTable2(payload_receive.b.rTable,"======= Received Payload is =======");
     printRTable("=======My Table before the Update=======");
 
     // Compare payload with rTable
-    tableUpdateRequired = compareAndUpdateTable(payload, from);
+    tableUpdateRequired = compareAndUpdateTable(payload_receive, from);
 
     printRTable("=======My Table After the Update=======");
 
@@ -190,13 +175,13 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     {
 
         // Set up discovery mode
-        payload.b.bpkt = DISCOVERY;
+        payload_transmit.b.bpkt = DISCOVERY;
 
         // Copy new table into the packet
-        payload.b.rTable = myrTable;
+        payload_transmit.b.rTable = myrTable;
 
         // Copy new table into the packet
-        strncpy(payload.b.msg, "Hello",BROADCASTMSGSIZE_BYTES);
+        strncpy(payload_transmit.b.msg, "Trans",BROADCASTMSGSIZE_BYTES);
 
         //rebroadcast it
         process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, 0);
@@ -224,7 +209,7 @@ void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 {
     leds_on(LEDS_BLUE);
     packetbuf_clear();
-    int copiedBytes = packetbuf_copyfrom(&(payload),sizeof(payload));
+    int copiedBytes = packetbuf_copyfrom(&(payload_transmit),sizeof(payload_transmit));
     printf("Copied bytes: %d\n",copiedBytes);
     printf("Broadcast message sent from 0x%x%x: '%s'\n",
             from->u8[0], from->u8[1],

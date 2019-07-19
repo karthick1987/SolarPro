@@ -71,9 +71,10 @@ extern struct etimer et_broadCastOver;
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
 
+PROCESS_NAME(broadcastSendProcess);
+
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
-PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
 AUTOSTART_PROCESSES(&broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
 

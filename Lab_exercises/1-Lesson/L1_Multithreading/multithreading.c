@@ -56,13 +56,13 @@ void print_active_procs(void)
     PRINTF("\n\n");
 }
 
-static struct etimer timerRed, timerGreen, timerBlue, twoSecond;
+static struct etimer timerGreen, timerBlue;
 
+PROCESS_NAME(red);
 //--------------------- PROCESS CONTROL BLOCK ---------------------
-PROCESS(red, "Red");
 PROCESS(green, "Green");
 PROCESS(blue, "Blue");
-AUTOSTART_PROCESSES(&red, &green, &blue);
+AUTOSTART_PROCESSES(&red,&green, &blue);
 
 //------------------------ PROCESS' THREAD ------------------------
 
@@ -70,27 +70,6 @@ AUTOSTART_PROCESSES(&red, &green, &blue);
 	 * Set timers
 	 */
 
-    PROCESS_THREAD(red, ev, data) {
-
-        PROCESS_BEGIN();
-        etimer_set(&timerRed, CLOCK_SECOND);
-        etimer_set(&twoSecond, 2*CLOCK_SECOND);
-        printf("Timers set!\r\n ");
-
-        while(1) {
-            PROCESS_WAIT_EVENT();
-            if(etimer_expired(&timerRed)) {
-                printf("Timer expired for RED...\r\n");
-                leds_toggle(LEDS_RED);
-                etimer_reset(&timerRed);
-            }
-            if(etimer_expired(&twoSecond)) {
-                printf("Killing Process Red\n");
-                PROCESS_EXIT();
-            }
-        }
-        PROCESS_END();
-    }
 
     PROCESS_THREAD(green, ev, data) {
 

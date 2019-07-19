@@ -60,8 +60,8 @@ extern struct etimer et_broadCastOver;
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
 /*---------------------------------------------------------------------------*/
-
-PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
+// The process is defined in another file
+PROCESS_NAME(broadcastSendProcess);
 PROCESS(mainThread, "Main Thread");
 AUTOSTART_PROCESSES(&mainThread, &broadcastSendProcess);
 

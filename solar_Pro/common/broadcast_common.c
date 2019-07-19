@@ -7,9 +7,10 @@
 #include "contiki.h"
 #include "sys/etimer.h"
 #include "broadcast_common.h"
+#include "routing.h"
 
 #define BROADCASTRETRANSMITS    3
-
+PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
 PROCESS_THREAD (broadcastSendProcess, ev, data)
 {
     static struct etimer bcnow;
@@ -29,7 +30,7 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
         {
             if (etimer_expired(&bcnow) )
             {
-                printf("Timer expired going to broadcast %d now\n",i+2);
+                printf("Timer expired going broadcasting try:(%d)\n",i+1);
                 if (i<BROADCASTRETRANSMITS)
                 {
                     doBroadCast();
