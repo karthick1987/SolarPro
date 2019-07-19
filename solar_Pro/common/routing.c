@@ -51,6 +51,8 @@ static void printRTable2(r_table_t r, const char *text);
 static void printRTable(const char *);
 static void printFromRTable(payload_t , const char *);
 
+static bool inPrepMode = false;
+
 extern const nodeID_t nodes[];
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(stateMachineThread);
@@ -81,7 +83,7 @@ void initNetworkDisc(void)
     printf("Network Discovery Initiated\n");
     // reset routing table
     broadcastCount = 0;
-
+    inPrepMode = false;
     setUpRtable();
 
     // Copy information to payload
@@ -101,7 +103,7 @@ void prepNetworkDisc(void)
     printf("Preparing Network Discovery\n");
     // reset routing table
     broadcastCount = 0;
-
+    inPrepMode = false;
     setUpRtable();
 
     // Copy information to payload
@@ -183,7 +185,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     {
         case EMERGENCY:
             // TODO trigger emergency
-            //rebroadcast it
+            // rebroadcast it
             process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
             break;
 
@@ -221,8 +223,13 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
             printRTable("=======My Table After PREPDISC=======");
             // Set up Prepare Network DISCOVERY
             payload_transmit.b.bpkt = PREPDISC;
-            //rebroadcast it
-            process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *) PREPDISC);
+
+            if (!inPrepMode)
+            {
+                //rebroadcast it
+                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *) PREPDISC);
+                inPrepMode = true;
+            }
             break;
 
         default:
