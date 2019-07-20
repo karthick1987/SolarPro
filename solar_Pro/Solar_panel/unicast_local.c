@@ -22,6 +22,7 @@ contributors:
 #include "servoControl.h"
 #include "projSensors.h"
 #include "unicast_local.h"
+#include "dev/leds.h"		// Use LEDs.
 
 #define RESETADDR   0xFFFF
 
@@ -126,6 +127,7 @@ static void addSelfToHist(payload_t *payload)
 
 int doUniCastMode(node_num_t dest, payload_t *rx_packet)
 {
+    leds_on(LEDS_YELLOW);
     // dest is not used here for the solar Panel
     //check if destination byte 2
     (void) dest;
@@ -173,5 +175,6 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
             break;
 
     }
+    leds_off(LEDS_YELLOW);
     return 0;
 }
