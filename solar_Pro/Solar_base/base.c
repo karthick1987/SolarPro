@@ -43,12 +43,12 @@ contributors:
 #include "base.h"
 
 // Common headers
-#include "unicast_local.h"
 #include "broadcast_common.h"
 #include "helpers.h"
 #include "nodeID.h"
 #include "routing.h"
 #include "anemometer.h"
+#include "unicast_local.h"
 
 /*---------------------------------------------------------------------------*/
 #define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
@@ -72,11 +72,12 @@ extern struct etimer et_broadCastOver;
 /*---------------------------------------------------------------------------*/
 
 PROCESS_NAME(broadcastSendProcess);
+PROCESS_NAME(unicastSendProcess);
 
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-AUTOSTART_PROCESSES(&broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
+AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -158,6 +159,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, CHANNEL);
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
     openBroadcast();
+    openUnicast();
     setUpRtable();
     printf("This is the BASE STATION\n");
     printf("BASE STATION ID is %x Node ID is %d\n", getMyRIMEID()->u16, getMyNodeID());
@@ -166,12 +168,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
     static enum state_t state = IDLE;
 
-    payload_t p; // For setting up payload for ackmode and Unicast modes
-
-    static struct etimer et_unicastTransmit, et_pathModeTransmit;
-    static int status = 0;
-    static node_num_t node = 1;
-    static int ackCount = 1;
     process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)IDLE);
 
 
@@ -189,36 +185,10 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PREPNETDISC);
                 }
             }
-        }//end if(ev == sensors_event)
+        }
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            if ((etimer_expired(&et_broadCastOver)) && (state == INITNETWORKDISC))
-            {
-                //process_post(&uniCastThread, PROCESS_EVENT_MSG, PATHMODE);//(((i)%7)+1));
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PATHMODE);
-                printf("NETWORKDISC expires in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
-                node = 1;
-                ackCount = 0;
-                etimer_stop(&et_broadCastOver);
-            }
-            if (etimer_expired(&et_unicastTransmit) && (state == UNICASTMODE))
-            {
-                etimer_reset(&et_unicastTransmit);
-                printf("Restarted Unicast Timer\n");
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
-                leds_toggle(LEDS_BLUE);
-                //print_active_procs();
-            }
-            if (etimer_expired(&et_pathModeTransmit) && (state == PATHMODE))
-            {
-                etimer_reset(&et_pathModeTransmit);
-                printf("Restarted ackMode Timer\n");
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PATHMODE);
-                // Start polling the devices one by one
-                leds_toggle(LEDS_RED);
-                //print_active_procs();
-            }
         }
 
         else if (ev == PROCESS_EVENT_MSG)
@@ -232,73 +202,77 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     break;
 
                 case PREPNETDISC:
+                    // kill unicast process
+                    process_exit(&unicastSendProcess);
                     prepNetworkDisc();
                     break;
 
                 case INITNETWORKDISC:
+                    // kill unicast process
+                    process_exit(&unicastSendProcess);
                     initNetworkDisc();
                     break;
 
                 case PATHMODE:
-                    if (node == getMyNodeID())
-                    {
-                        node++;
-                        if (node > TOTAL_NODES)
-                            node = 1;
-                    }
-                    // Send unicast and expect payload as hop history
-                    status = doPathMode(node,&p);
 
-                    // Count the number of Ack Msgs sent
-                    ackCount++;
-                    printf("Here in PATHMODE to node %d, Status is %d AckCount is %d\n",node,status, ackCount);
+                    // start unicast_process
+                    process_start(&unicastSendProcess,NULL);
+                    initPathMode();
+                    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
 
-                    // Set up the PATHMODE Packet and send data in round robin fashion
-                    node++;
 
-                    // Set the etimer to expire again
-                    etimer_set(&et_pathModeTransmit, ACKMODETRASMITINTERVAL);
-                    if ( ackCount >= TOTAL_NODES-1 )
-                    {
-                        // Stop the AckMode timer
-                        etimer_stop(&et_pathModeTransmit);
-                        // Move into Unicast mode
-                        process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
-                        // Set the node count to 1
-                        node = 1;
-                        // Set the timer for Unicast interval
-                        etimer_set(&et_unicastTransmit, UNICASTTRASMITINTERVAL);
-                    }
+                    //// Send unicast and expect payload as hop history
+                    //status = doPathMode(node,&p);
+
+                    //// Count the number of Ack Msgs sent
+                    //ackCount++;
+                    //printf("Here in PATHMODE to node %d, Status is %d AckCount is %d\n",node,status, ackCount);
+
+                    //// Set up the PATHMODE Packet and send data in round robin fashion
+                    //// Set the etimer to expire again
+                    //if ( ackCount >= TOTAL_NODES-1 )
+                    //{
+                    //    // Stop the AckMode timer
+                    //    etimer_stop(&et_pathModeTransmit);
+                    //    // Move into Unicast mode
+                    //    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
+                    //    // Set the node count to 1
+                    //    node = 1;
+                    //    // Set the timer for Unicast interval
+                    //    etimer_set(&et_unicastTransmit, UNICASTTRASMITINTERVAL);
+                    //}
 
                     break;
                 case UNICASTMODE:
-                    if (node == getMyNodeID())
-                    {
-                        node++;
-                        if (node > TOTAL_NODES)
-                            node = 1;
-                    }
+                    initUnicastMode();
+                    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
+                   // if (node == getMyNodeID())
+                   // {
+                   //     node++;
+                   //     if (node > TOTAL_NODES)
+                   //         node = 1;
+                   // }
 
-                    // Collect data from the motes
-                    status = doUniCastMode(node, &p);
+                   // // Collect data from the motes
+                   // status = doUniCastMode(node, &p);
 
-                    printf("Here in UNICASTMODE to node %d, Status is %d\n",node,status);
+                   // printf("Here in UNICASTMODE to node %d, Status is %d\n",node,status);
 
-                    // Go to the next mote
-                    node++;
+                   // // Go to the next mote
+                   // node++;
 
-                    // start unicast polling one by one
-                    if ( status == 0 )
-                    {
-                        // start again from Node 1 in a round robin manner
-                        node = 1;
-                        //etimer_reset(&et_unicastTransmit);
-                    }
+                   // // start unicast polling one by one
+                   // if ( status == 0 )
+                   // {
+                   //     // start again from Node 1 in a round robin manner
+                   //     node = 1;
+                   //     //etimer_reset(&et_unicastTransmit);
+                   // }
                     break;
                 case EMERGENCYSTATE:
                     break;
                 default:
-                    printf("In Default???\n");
+                    printf("[Base.c]: In Default???\n");
                     break;
             }
         }
@@ -306,35 +280,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
     PROCESS_END();
 }
-
-/*
-PROCESS_THREAD (broadcastSendProcess, ev, data)
-{
-    static struct etimer bcnow;
-    PROCESS_BEGIN();
-    while(1) {
-        PROCESS_WAIT_EVENT();
-        if (ev == PROCESS_EVENT_MSG)
-        {
-            etimer_set(&bcnow, CLOCK_SECOND);
-            printf("Setting timer to broadcast\n");
-
-        }
-
-        else if (ev == PROCESS_EVENT_TIMER)
-        {
-            if (etimer_expired(&bcnow) )
-            {
-                printf("Timer expired going to broadcast now\n");
-                doBroadCast();
-            }
-        }
-    }
-
-    PROCESS_END();
-}
-
-*/
 
 // Listens for data coming from the USB connection (UART0)
 // and prints it.

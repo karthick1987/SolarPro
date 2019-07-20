@@ -27,6 +27,8 @@
 #ifndef ROUTING_H
 #define ROUTING_H
 
+#include<stdbool.h>
+
 #include "core/net/linkaddr.h"
 #include "sys/process.h"
 
@@ -38,6 +40,7 @@
 #define UNINITCOST  0xFF
 
 void setUpRtable(void);
+bool isValidNextHop(node_num_t node);
 void initNetworkDisc(void);
 void prepNetworkDisc(void);
 void openBroadcast(void);

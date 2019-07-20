@@ -17,12 +17,17 @@ contributors:
  This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef UNICASTPANEL_H
-#define UNICASTPANEL_H
+#ifndef UNICASTCOMMON_H
+#define UNICASTCOMMON_H
 
-#include "nodeID.h"
 #include "routing.h"
+#include "payload.h"
 
-int doUniCastMode(node_num_t dest, payload_t *);
+#define RESETADDR   UNINIT
+
+void printPacket(payload_t *p);
+void zeroOut(payload_t *p, pkttype_t type);
+void addSelfToHist(payload_t *payload);
 
 #endif
+

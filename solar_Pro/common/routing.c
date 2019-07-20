@@ -11,6 +11,7 @@
 #include "payload.h"
 #include "nodeID.h"
 #include "broadcast_common.h"
+#include "unicast_common.h"
 
 // Private local includes
 #include "unicast_local.h"
@@ -43,9 +44,6 @@ static r_table_t myrTable;
 
 // Global payload to transmit
 static payload_t payload_receive, payload_transmit;
-
-// eTimer to signal End of broadcast
-struct etimer et_broadCastOver;
 
 // Unicast Receive Packet
 static payload_t unicast_rx_packet;
@@ -80,6 +78,22 @@ void setUpRtable(void)
         }
     }
     return;
+}
+
+bool isValidNextHop(node_num_t node)
+{
+    // Precondition node should not be greater than TOTAL_NODES
+    // if ( node > TOTAL_NODES)
+    //     return false;
+
+    // If no entry for next hop then send false
+    if(myrTable.next_hop[node-1].u16 == UNINIT)
+    {
+        return false;
+    }
+    // else send true
+    else
+        return true;
 }
 
 void initNetworkDisc(void)
@@ -271,13 +285,16 @@ void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 // Defines the behavior of a connection upon receiving data.
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
 {
+    leds_on(LEDS_YELLOW);
     packetbuf_copyto(&unicast_rx_packet);
-    doUniCastMode(0, &unicast_rx_packet);
-    // For Debug purposes
+    printPacket(&unicast_rx_packet);
     printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
+            // For Debug purposes
             from->u8[0], from->u8[1],
             (char *)packetbuf_dataptr(),
             (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
+    doUniCastMode(0, &unicast_rx_packet);
+    leds_off(LEDS_YELLOW);
 }
 
 static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
@@ -302,6 +319,9 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
 
 void unict_send(payload_t *tx_packet)
 {
+    packetbuf_clear();
+    printf("Send Unicast message from %d: '%s'\n",getMyNodeID(), (char *)(tx_packet));
+    printPacket(tx_packet);
     packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
     unicast_send(&unicast, getNextHopRIMEID(*tx_packet));
 }

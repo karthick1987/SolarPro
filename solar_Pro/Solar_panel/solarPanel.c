@@ -52,10 +52,7 @@ contributors:
 #define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
 #define ACKMODETRASMITINTERVAL 1*CLOCK_SECOND
 
-extern struct etimer et_broadCastOver;
 static uint16_t myNodeID;
-
-extern struct etimer et_broadCastOver;
 
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
@@ -103,11 +100,11 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            if ((etimer_expired(&et_broadCastOver)))
-            {
-                printf("NETWORKDISC expired in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
-                etimer_stop(&et_broadCastOver);
-            }
+            //if ((etimer_expired(&et_broadCastOver)))
+            //{
+            //    printf("NETWORKDISC expired in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
+            //    etimer_stop(&et_broadCastOver);
+            //}
             // Wake up from the emergency task and go to normal polling
         }
     }

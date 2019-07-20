@@ -17,13 +17,18 @@ contributors:
  This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef UNICASTLOCAL_H
-#define UNICASTLOCAL_H
+#ifndef UNICASTLOC_H
+#define UNICASTLOC_H
 
 #include "nodeID.h"
-#include "routing.h"
+#include "payload.h"
 
-int doPathMode(node_num_t dest, payload_t *);
-int doUniCastMode(node_num_t dest, payload_t *);
+#define UNICASTINTERVAL         2*CLOCK_SECOND
+#define UNICASTMAXRETRANSMIT    3
+
+int doUniCastMode(node_num_t dest, payload_t *rx_packet);
+void initUnicastMode(void);
+void initPathMode(void);
+
 
 #endif
