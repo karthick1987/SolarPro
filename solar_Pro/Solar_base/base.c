@@ -230,15 +230,15 @@ PROCESS_THREAD (stateMachineThread, ev, data)
             {
                 case IDLE:
                     break;
+
                 case PREPNETDISC:
                     prepNetworkDisc();
-                    // TODO Timer for 20 and we should send it 3 times
-                    // Signal that Network Disc has been inited
-                    // process_post(&stateMachineThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
                     break;
+
                 case INITNETWORKDISC:
                     initNetworkDisc();
                     break;
+
                 case PATHMODE:
                     if (node == getMyNodeID())
                     {

@@ -25,6 +25,7 @@ contributors:
 
 #define RESETADDR   0xFFFF
 
+// Local global variable static to this file
 static payload_t tx_packet;
 static void printPacket(payload_t *p);
 static void zeroOut(payload_t *p, pkttype_t type)
@@ -48,21 +49,34 @@ static void zeroOut(payload_t *p, pkttype_t type)
             break;
     }
 }
-static void setupPacket(payload_t *p, pkttype_t type, node_num_t dest)
+static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t dest)
 {
-    switch(type)
+    //tx_packet is a static global here
+    payload_t *p = &tx_packet;
+
+    switch(rx_packet->a.apkt)
     {
         case PATH:
-            (p->a).apkt = PATH;
-            (p->a).dest.u16 = getRIMEID(dest);
-            zeroOut(p, type);
+            (p->a).apkt = ACK;
+            (p->a).dest.u16 = (rx_packet->a).hopHist[0].u16;
+            int i = 0;
+            for(i=0;i<TOTAL_NODES;i++)
+            {
+                p->a.hopHist[i] = rx_packet->a.hopHist[i];
+            }
             printPacket(p);
             break;
         case UNICAST:
-            (p->u).upkt = UNICAST;
-            (p->u).originNode = getMyNodeID(); // Base Station
-            (p->u).destNode = dest; // The destination Node
-            zeroOut(p, type);
+            zeroOut(p, UNICAST);
+            (p->u).upkt = ACK;
+            (p->u).originNode = getMyNodeID(); // My Node ID
+            (p->u).destNode = rx_packet->u.originNode; // The destination Node
+
+            // Set up the return packet
+            p->u.temp_mC = getInternalTemperature();
+            p->u.battVolt_mV = getBatteryVoltage();
+            p->u.lightSensor = getLightSensorValue();
+            p->u.servoPos_degs = getServoPosition();
             printPacket(p);
             break;
         default:
@@ -95,58 +109,46 @@ static void printPacket(payload_t *p)
     }
 }
 
-int doPathMode(node_num_t dest, payload_t *p)
-{
-    setupPacket(p,PATH,dest);
-    return (dest == TOTAL_NODES?0:-1);
-}
-
-static void addSelfToHist(payload_t *rx_packet)
+static void addSelfToHist(payload_t *payload)
 {
     int i = 0;
     for (i=0;i<TOTAL_NODES;i++)
     {
-        if(rx_packet->a.hopHist[i].u16 == RESETADDR)
+        if(payload->a.hopHist[i].u16 == RESETADDR)
             break;
     }
     if(i >= 8)
         return;
     else
-        rx_packet->a.hopHist[i].u16 = getMyRIMEID()->u16;
+        payload->a.hopHist[i].u16 = getMyRIMEID()->u16;
     return;
 }
 
-
 int doUniCastMode(node_num_t dest, payload_t *rx_packet)
 {
-    // dest is not used here
-    (void) dest;
+    // dest is not used here for the solar Panel
     //check if destination byte 2
+    (void) dest;
     //read out byte 1 if PATH or UNICAST
     switch(rx_packet->a.apkt)
     {
         case ACK:
-            // always forward to basestation
-            unict_send(*rx_packet);
+            // always forward to destination(BASE STATION)
+            unict_send(rx_packet);
             break;
 
         case UNICAST:
             //check if Destination
             if(rx_packet->u.destNode == getMyNodeID()){
                 // setup packet with sensor values and new destination (basestation)
-                tx_packet.u.upkt = ACK;
-                tx_packet.u.destNode = rx_packet->u.originNode;
-                tx_packet.u.temp_mC = getInternalTemperature();
-                tx_packet.u.battVolt_mV = getBatteryVoltage();
-                tx_packet.u.lightSensor = getLightSensorValue();
-                tx_packet.u.servoPos_degs = getServoPosition();
-
+                setupPacket(rx_packet);
                 // send back unicast back to basestation
-                unict_send(tx_packet);
+                unict_send(&tx_packet);
             }
             else
             {
-                unict_send(*rx_packet);
+                // If not at destination then forward
+                unict_send(rx_packet);
             }
             break;
 
@@ -154,20 +156,16 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
             //check if Destination
             if(rx_packet->a.dest.u16 == getMyRIMEID()->u16){
                 // send unicast with PATH header and hophistory back to base station
-                setupPacket(&tx_packet, PATH, returnIDIndex(&(rx_packet->a.dest)) );
-                tx_packet.a.apkt = PATH;
-                tx_packet.a.dest.u16 = rx_packet->a.hopHist[0].u16;
-                tx_packet.a.hopHist[0].u16 = getMyRIMEID()->u16;
-                // Lets Keep it Simple
-                // What happends here is that if the destination has been reached
-                // a new transmit packet is created and it zeroed out
-                // with the 1st entry of the hopHist as the nodes RIMEID and send it across
+                setupPacket(rx_packet);
+                // Send packet
+                unict_send(&tx_packet);
             }
             else{
+                memcpy(&tx_packet,rx_packet,sizeof(payload_t));
                 //add own Node ID to the first entry of hophistory with 0xFFFF
-                addSelfToHist(rx_packet);
+                addSelfToHist(&tx_packet);
                 //forward message to destination
-                unict_send(*rx_packet);
+                unict_send(&tx_packet);
             }
             break;
 
@@ -175,6 +173,5 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
             break;
 
     }
-    //return (n == TOTAL_NODES?0:-1);
     return 0;
 }

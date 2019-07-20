@@ -47,6 +47,10 @@ static payload_t payload_receive, payload_transmit;
 // eTimer to signal End of broadcast
 struct etimer et_broadCastOver;
 
+// Unicast Receive Packet
+static payload_t unicast_rx_packet;
+
+
 static void printRTable2(r_table_t r, const char *text);
 static void printRTable(const char *);
 static void printFromRTable(payload_t , const char *);
@@ -91,7 +95,6 @@ void initNetworkDisc(void)
     payload_transmit.b.bpkt = DISCOVERY;
     payload_transmit.b.rTable = myrTable;
 
-    // TODO set up enum/defines for different broadcast functions
     // initiate controlled flooding
     process_post(&broadcastSendProcess, PROCESS_EVENT_MSG,(void *) DISCOVERY);
 
@@ -123,6 +126,11 @@ void openBroadcast(void)
     broadcast_open(&broadcast, 129, &broadcast_call);
 }
 
+void openUnicast(void)
+{
+    //open the connection, if necessary
+    unicast_open(&unicast, 146, &unicast_call);
+}
 /**
  * @param message - message to be broadcasted
  */
@@ -263,10 +271,8 @@ void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 // Defines the behavior of a connection upon receiving data.
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
 {
-    payload_t rx_packet;
-
-    packetbuf_copyto(&rx_packet);
-    doUniCastMode(0, &rx_packet);
+    packetbuf_copyto(&unicast_rx_packet);
+    doUniCastMode(0, &unicast_rx_packet);
     // For Debug purposes
     printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
             from->u8[0], from->u8[1],
@@ -279,11 +285,12 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
     node_num_t destination;
     switch(tx_packet.a.apkt)
     {
-        case PATH:
-            destination = returnIDIndex(&(tx_packet.a.dest));
-            break;
         case UNICAST:
             destination = tx_packet.u.destNode;
+            break;
+        case ACK:
+        case PATH:
+            destination = returnIDIndex(&(tx_packet.a.dest));
             break;
         default:
             destination = 0;
@@ -293,10 +300,10 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
     return &(myrTable.next_hop[destination]);
 }
 
-void unict_send(payload_t tx_packet)
+void unict_send(payload_t *tx_packet)
 {
     packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
-    unicast_send(&unicast, getNextHopRIMEID(tx_packet));
+    unicast_send(&unicast, getNextHopRIMEID(*tx_packet));
 }
 
 // ---------------------------- DEBUG PRINTS ---------------------------

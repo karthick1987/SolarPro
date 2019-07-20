@@ -41,10 +41,11 @@ void setUpRtable(void);
 void initNetworkDisc(void);
 void prepNetworkDisc(void);
 void openBroadcast(void);
+void openUnicast(void);
 void doBroadCast(void);
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from);
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *to);
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from);
-void unict_send(payload_t tx_packet);
+void unict_send(payload_t *tx_packet);
 
 #endif /* ROUTING_H */

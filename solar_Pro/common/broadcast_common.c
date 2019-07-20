@@ -11,7 +11,8 @@
 #include "base.h"
 #include "payload.h"
 
-#define BROADCASTRETRANSMITS    3
+#define DISCOVERYRETRANSMITS    3
+#define PREPDISCRETRANSMITS    5
 
 PROCESS_NAME(stateMachineThread);
 PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
@@ -33,9 +34,10 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
             pkt_type = (int) data;
             if(pkt_type == DISCOVERY)
             {
-                i = 0;
+                i = PREPDISCRETRANSMITS - DISCOVERYRETRANSMITS;
                 etimer_set(&bcinterval, BROADCASTINTERVAL);
                 bcinterval_flag = true;
+                //transition_flag = false;
                 printf("Setting timer to BROADCAST\n");
             }
             else if (pkt_type == EMERGENCY)
@@ -54,7 +56,7 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
         {
             if (etimer_expired(&bcinterval) && bcinterval_flag)
             {
-                if (i<BROADCASTRETRANSMITS)
+                if (i<PREPDISCRETRANSMITS)
                 {
                     doBroadCast();
                     etimer_reset(&bcinterval);
@@ -65,8 +67,8 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
                 {
                     etimer_stop(&bcinterval);
                     bcinterval_flag = false;
-                    etimer_set(&transitiontimer, BROADCASTTIMEOUT);
                     transition_flag = true;
+                    etimer_set(&transitiontimer, BROADCASTTIMEOUT);
                 }
             }
             if (etimer_expired(&transitiontimer) && transition_flag)

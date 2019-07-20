@@ -73,6 +73,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_CHANNEL, CHANNEL);
     NETSTACK_CONF_RADIO.set_value(RADIO_PARAM_TXPOWER, TX_POWER); //Set up Tx Power
     openBroadcast();
+    openUnicast();
     setUpRtable();
     myNodeID = getMyNodeID();
     printf("This is the Mote\n");
