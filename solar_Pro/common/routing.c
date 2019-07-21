@@ -59,6 +59,21 @@ extern const nodeID_t nodes[];
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(stateMachineThread);
 
+
+void setUpRtableBase(void)
+{
+    printf("WARNING: Test routing table setup in Base Station!!\n");
+    myrTable.next_hop[0].u16 = nodes[0].rimeID;
+    myrTable.cost[0] = 1;
+}
+
+void setUpRtableNode(void)
+{
+    printf("WARNING: Test routing table setup in Node!!\n");
+    myrTable.next_hop[1].u16 = nodes[1].rimeID;
+    myrTable.cost[1] = 1;
+}
+
 void setUpRtable(void)
 {
     int i;
@@ -286,8 +301,11 @@ void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
 {
     leds_on(LEDS_YELLOW);
-    packetbuf_copyto(&unicast_rx_packet);
-    printPacket(&unicast_rx_packet);
+    memset(&unicast_rx_packet, 0, sizeof(unicast_rx_packet));
+    payload_t debug_local;
+    int copiedBytes = packetbuf_copyto(&debug_local);
+    printPacket(&debug_local);
+    printf("Copied bytes: %d\n",copiedBytes);
     printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
             // For Debug purposes
             from->u8[0], from->u8[1],

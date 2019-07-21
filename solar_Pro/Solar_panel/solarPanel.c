@@ -49,8 +49,6 @@ contributors:
 #include "routing.h"
 
 /*---------------------------------------------------------------------------*/
-#define UNICASTTRASMITINTERVAL 2*CLOCK_SECOND
-#define ACKMODETRASMITINTERVAL 1*CLOCK_SECOND
 
 static uint16_t myNodeID;
 
@@ -72,6 +70,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     openBroadcast();
     openUnicast();
     setUpRtable();
+    setUpRtableNode();
     myNodeID = getMyNodeID();
     printf("This is the Mote\n");
     printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, myNodeID);
@@ -100,12 +99,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
         else if (ev == PROCESS_EVENT_TIMER)
         {
-            //if ((etimer_expired(&et_broadCastOver)))
-            //{
-            //    printf("NETWORKDISC expired in: %d\n",BROADCASTTIMEOUT/CLOCK_SECOND);
-            //    etimer_stop(&et_broadCastOver);
-            //}
-            // Wake up from the emergency task and go to normal polling
         }
     }
 
