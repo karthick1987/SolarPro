@@ -208,8 +208,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     break;
 
                 case INITNETWORKDISC:
-                    // kill unicast process
-                    process_exit(&unicastSendProcess);
                     initNetworkDisc();
                     break;
 

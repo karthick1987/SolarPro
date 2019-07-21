@@ -24,4 +24,6 @@ contributors:
 #define BROADCASTINTERVAL       CLOCK_SECOND/2
 #define BROADCASTCHANNEL        129
 
+void stopAllBroadCastTimer(void);
+
 #endif

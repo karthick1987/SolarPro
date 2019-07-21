@@ -25,26 +25,28 @@ static payload_t tx_packet;
 
 // Ctimer for receiving ack
 static struct ctimer ackPathTimer;
-static struct ctimer ackSensorTimer;
+static struct ctimer ackSensorTimer, ucInt;
 
 static int transmissionCount = 1;
 static bool isPathModeComplete = false;
+static bool isPathMode = true;
 
 static void doPathMode(void);
 static void doUniCastMode(void);
 
 PROCESS_NAME(stateMachineThread);
+PROCESS(unicastSendProcess, "Unicast msg Send Thread");
 
 static void callbackResendPath(void *ptr)
 {
     printf("PATH Ctimer callback entered\n");
     printf("Transmission count is :%d\n",transmissionCount);
-    doPathMode();
+    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *) PATH);
 
-    if (transmissionCount >= UNICASTMAXRETRANSMIT)
+    if (transmissionCount > UNICASTMAXRETRANSMIT)
     {
         ctimer_stop(&ackPathTimer);
-        printf("Ctimer CB: stopped\n");
+        printf("[PATH] Ctimer CB: stopped\n");
         process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *) PREPNETDISC);
     }
 }
@@ -53,23 +55,41 @@ static void callbackResendSensor(void *ptr)
 {
   printf("SENSOR UNICAST Ctimer callback entered\n");
   printf("Transmission count is :%d\n",transmissionCount);
-  doUniCastMode();
+  process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *) UNICAST);
 
-  if (transmissionCount >= UNICASTMAXRETRANSMIT)
+  if (transmissionCount > UNICASTMAXRETRANSMIT)
   {
       ctimer_stop(&ackSensorTimer);
-      printf("Ctimer CB: stopped\n");
+      printf("[UNI] Ctimer CB: stopped\n");
       process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *) PREPNETDISC);
   }
 }
 
-PROCESS(unicastSendProcess, "Unicast msg Send Thread");
+static void callbackUCInt(void *ptr)
+{
+    switch((int)ptr)
+    {
+        case PATH:
+            printf("In UCInt Callback of Type PATH\n");
+            process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
+            break;
+        case UNICAST:
+            printf("In UCInt Callback of Type UNICAST\n");
+            process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
+            break;
+        default:
+            break;
+    }
+    ctimer_stop(&ucInt);
+}
+
 PROCESS_THREAD (unicastSendProcess, ev, data)
 {
     static pkttype_t pkt_type;
 
     PROCESS_EXITHANDLER(
-            printf("%s Killed\n", PROCESS_CURRENT()->name);
+            printf("%s Killed and Unicast Connection Closed\n", PROCESS_CURRENT()->name);
+            // closeUnicast();
             )
 
     PROCESS_BEGIN();
@@ -105,7 +125,9 @@ PROCESS_THREAD (unicastSendProcess, ev, data)
 void initUnicastMode(void)
 {
     next_node = 1;
+    transmissionCount = 1;
     isTransSuccess = false;
+    stopAllBroadCastTimer();
 }
 
 void initPathMode()
@@ -114,6 +136,7 @@ void initPathMode()
     transmissionCount = 1;
     isPathModeComplete = false;
     isTransSuccess = false;
+    stopAllBroadCastTimer();
 }
 
 static node_num_t nextNode(node_num_t current_node)
@@ -144,7 +167,7 @@ static void setupPacket(pkttype_t type)
 {
     //tx_packet is a static global here
     payload_t *p = &tx_packet;
-    printf("[Base/Unicast_Local]: Setting up packet now");
+    printf("[Base/Unicast_Local]: Setting up packet now\n");
 
     switch(type)
     {
@@ -212,6 +235,7 @@ static void doPathMode(void)
     {
         if(isPathModeComplete)
         {
+            ctimer_stop(&ackPathTimer);
             printf("PATH MODE COMPLETE\n");
             process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
         }
@@ -237,6 +261,7 @@ static void doUniCastMode(void)
     next_node = nextNode(next_node);
 
     printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+    printf("isTransSuccess Flag is %d\n", isTransSuccess);
 
     // setupPacket can be in dopathMode
     setupPacket(UNICAST);
@@ -245,8 +270,8 @@ static void doUniCastMode(void)
     if (isTransSuccess)
     {
         ctimer_stop(&ackSensorTimer);
-        printf("dPM: ctimer stopped\n");
-        printf("dPM: Transmission count is :%d\n",transmissionCount);
+        printf("dUM: ctimer stopped\n");
+        printf("dUM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
 
         // TODO send GUI the rx_data
@@ -299,7 +324,8 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
                     printf("Setting isTransSuccess to TRUE\n");
                     isTransSuccess = true;
                     ctimer_stop(&ackPathTimer);
-                    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
+                    // start timer to Post msg to thread
+                    ctimer_set(&ucInt, UNICASTINTERVAL, &callbackUCInt, (void *)PATH);
 
                 }
             }
@@ -312,7 +338,7 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
                     printf("Setting isTransSuccess to TRUE\n");
                     isTransSuccess = true;
                     ctimer_stop(&ackSensorTimer);
-                    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
+                    ctimer_set(&ucInt, UNICASTINTERVAL, &callbackUCInt, (void *)UNICAST);
                 }
             }
             break;

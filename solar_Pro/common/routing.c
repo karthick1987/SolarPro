@@ -142,8 +142,14 @@ void openBroadcast(void)
 
 void openUnicast(void)
 {
-    //open the connection, if necessary
+    // open the connection, if necessary
     unicast_open(&unicast, UNICASTCHANNEL, &unicast_call);
+}
+
+void closeUnicast(void)
+{
+    // close unicast connection
+    unicast_close(&unicast);
 }
 /**
  * @param message - message to be broadcasted
@@ -305,12 +311,26 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
     switch(tx_packet.a.apkt)
     {
         case UNICAST:
-            printf("Uni: getting Next Hop\n");
+            printf("UNI: getting Next Hop\n");
             destination = tx_packet.u.destNode;
+            destination = destination - 1;
             break;
         case ACK:
+            printf("ACK Mode ");
+            if (tx_packet.u.destNode > TOTAL_NODES)
+            {
+                printf("PATH\n");
+                destination = returnIDIndex(&(tx_packet.a.dest));
+            }
+            else
+            {
+                printf("UNICAST\n");
+                destination = tx_packet.u.destNode;
+                destination = destination - 1;
+            }
+            break;
         case PATH:
-            printf("PATH/ACK: getting Next Hop\n");
+            printf("PATH: getting Next Hop\n");
             destination = returnIDIndex(&(tx_packet.a.dest));
             break;
         default:
@@ -326,7 +346,6 @@ void unict_send(payload_t *tx_packet)
 {
     packetbuf_clear();
     printf("Send Unicast message from %d: '%s'\n",getMyNodeID(), (char *)(tx_packet));
-    //printPacket(tx_packet);
     packetbuf_copyfrom(tx_packet, sizeof(payload_t));
     unicast_send(&unicast, getNextHopRIMEID(*tx_packet));
 }
