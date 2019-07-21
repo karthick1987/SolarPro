@@ -214,7 +214,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     break;
 
                 case PATHMODE:
-
                     // start unicast_process
                     process_start(&unicastSendProcess,NULL);
                     initPathMode();

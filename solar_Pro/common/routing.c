@@ -295,7 +295,7 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
             from->u8[0], from->u8[1],
             (char *)packetbuf_dataptr(),
             (int16_t)packetbuf_attr(PACKETBUF_ATTR_RSSI));
-    doUniCastMode(0, &unicast_rx_packet);
+    processUniCast(0, &unicast_rx_packet);
     leds_off(LEDS_YELLOW);
 }
 

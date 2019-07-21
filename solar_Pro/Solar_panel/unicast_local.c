@@ -61,7 +61,7 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
     printPacket(p);
 }
 
-int doUniCastMode(node_num_t dest, payload_t *rx_packet)
+int processUniCast(node_num_t dest, payload_t *rx_packet)
 {
     // dest is not used here for the solar Panel
     //check if destination byte 2

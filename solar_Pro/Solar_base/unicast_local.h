@@ -26,7 +26,7 @@ contributors:
 #define UNICASTINTERVAL         2*CLOCK_SECOND
 #define UNICASTMAXRETRANSMIT    3
 
-int doUniCastMode(node_num_t dest, payload_t *rx_packet);
+int processUniCast(node_num_t dest, payload_t *rx_packet);
 void initUnicastMode(void);
 void initPathMode(void);
 

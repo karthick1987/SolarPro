@@ -24,27 +24,43 @@ bool isTransSuccess = false;
 static payload_t tx_packet;
 
 // Ctimer for receiving ack
-static struct ctimer ackTimer;
+static struct ctimer ackPathTimer;
+static struct ctimer ackSensorTimer;
 
 static int transmissionCount = 1;
 static bool isPathModeComplete = false;
 
 static void doPathMode(void);
+static void doUniCastMode(void);
 
 PROCESS_NAME(stateMachineThread);
 
 static void callbackResendPath(void *ptr)
 {
-    printf("Ctimer callback entered\n");
+    printf("PATH Ctimer callback entered\n");
     printf("Transmission count is :%d\n",transmissionCount);
     doPathMode();
 
     if (transmissionCount >= UNICASTMAXRETRANSMIT)
     {
-        ctimer_stop(&ackTimer);
+        ctimer_stop(&ackPathTimer);
         printf("Ctimer CB: stopped\n");
         process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *) PREPNETDISC);
     }
+}
+
+static void callbackResendSensor(void *ptr)
+{
+  printf("SENSOR UNICAST Ctimer callback entered\n");
+  printf("Transmission count is :%d\n",transmissionCount);
+  doUniCastMode();
+
+  if (transmissionCount >= UNICASTMAXRETRANSMIT)
+  {
+      ctimer_stop(&ackSensorTimer);
+      printf("Ctimer CB: stopped\n");
+      process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *) PREPNETDISC);
+  }
 }
 
 PROCESS(unicastSendProcess, "Unicast msg Send Thread");
@@ -70,8 +86,7 @@ PROCESS_THREAD (unicastSendProcess, ev, data)
                     doPathMode();
                     break;
                 case UNICAST:
-                    //doUnicastMode();
-                    printf("Setting timer for UNICAST\n");
+                    doUniCastMode();
                     break;
                 default:
                     // Cancel all unicast msgs
@@ -169,7 +184,7 @@ static void doPathMode(void)
     // check transflag==true then stop timer and increment the pathCounter variable
     if (isTransSuccess)
     {
-        ctimer_stop(&ackTimer);
+        ctimer_stop(&ackPathTimer);
         printf("dPM: ctimer stopped\n");
         printf("dPM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
@@ -182,7 +197,7 @@ static void doPathMode(void)
         // If all nodes are done
         if (isPathModeComplete)
         {
-            printf("PATH MODE COMPLETER\n");
+            printf("PATH MODE COMPLETE\n");
             process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
         }
         else
@@ -197,7 +212,7 @@ static void doPathMode(void)
     {
         if(isPathModeComplete)
         {
-            printf("PATH MODE COMPLETER\n");
+            printf("PATH MODE COMPLETE\n");
             process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
         }
         else
@@ -206,15 +221,61 @@ static void doPathMode(void)
             unict_send(&tx_packet);
 
             // Set acknowledge timer
-            ctimer_set(&ackTimer, UNICASTINTERVAL, &callbackResendPath, NULL);
+            ctimer_set(&ackPathTimer, UNICASTINTERVAL, &callbackResendPath, NULL);
             printf("Callback Timer set to expire in a little while\n");
             transmissionCount++;
         }
     }
 }
 
-int doUniCastMode(node_num_t dest, payload_t *rx_packet)
+static void doUniCastMode(void)
 {
+    printf("Now starting to collect sensor values....\n");
+    printf("Before: Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+
+    // Determine next node
+    next_node = nextNode(next_node);
+
+    printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+
+    // setupPacket can be in dopathMode
+    setupPacket(UNICAST);
+
+    // check transflag==true then stop timer and increment the pathCounter variable
+    if (isTransSuccess)
+    {
+        ctimer_stop(&ackSensorTimer);
+        printf("dPM: ctimer stopped\n");
+        printf("dPM: Transmission count is :%d\n",transmissionCount);
+        transmissionCount = 1;
+
+        // TODO send GUI the rx_data
+        isTransSuccess = false;
+
+        printf("Next node is %d\n",next_node);
+
+        printf("Going to next Node\n");
+        // go to next_node
+        next_node++;
+        process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
+
+    }
+    else
+    {
+        // Send packet
+        unict_send(&tx_packet);
+
+        // Set acknowledge timer
+        ctimer_set(&ackSensorTimer, UNICASTINTERVAL, &callbackResendSensor, NULL);
+        printf("Callback Timer set to expire in a little while\n");
+        transmissionCount++;
+    }
+}
+
+int processUniCast(node_num_t dest, payload_t *rx_packet)
+{
+    printf("Doing Unicast Mode now!");
+
     //read out byte 1 if PATH or UNICAST
     switch(rx_packet->a.apkt)
     {
@@ -229,7 +290,7 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
                 {
                     if(rx_packet->a.hopHist[i].u16 == RESETADDR)
                     {
-                        printf("i values is %d\n",i);
+                        printf("i value is %d\n",i);
                         break;
                     }
                 }
@@ -237,7 +298,7 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
                 {
                     printf("Setting isTransSuccess to TRUE\n");
                     isTransSuccess = true;
-                    ctimer_stop(&ackTimer);
+                    ctimer_stop(&ackPathTimer);
                     process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
 
                 }
@@ -246,6 +307,13 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
             else
             {
                 printf("Base processing ACK UNICAST SENSOR MODE PKT\n");
+                if ( next_node == rx_packet->u.originNode )
+                {
+                    printf("Setting isTransSuccess to TRUE\n");
+                    isTransSuccess = true;
+                    ctimer_stop(&ackSensorTimer);
+                    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
+                }
             }
             break;
 
@@ -263,4 +331,3 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
     }
     return 0;
 }
-
