@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "graphwidget.h"
+#include "edge.h"
 #include <QDebug>
 #include <QDateTime>
 
@@ -8,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     m_record = false;
     ui->setupUi(this);
+
     //Get available COM Ports
     this->uart = new Uart(this);
     QList<QextPortInfo> ports = uart->getUSBPorts();
@@ -31,8 +33,24 @@ MainWindow::~MainWindow()
 void MainWindow::systemTime()
 {
    QTime time = QTime::currentTime();
+   static int i = 0;
    QString time_text = time.toString("hh : mm : ss");
    ui->label_systemTime->setText(time_text);
+   i++;
+   if(i == 1)
+   {
+        ui->NetworkGraph->addNodes();
+        ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->centerNode, ui->NetworkGraph->n[1]));
+   }
+   if(i == 5)
+   {
+        ui->NetworkGraph->scene()->clear();
+   }
+   if(i == 7)
+   {
+        ui->NetworkGraph->addNodes();
+        ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->centerNode, ui->NetworkGraph->n[2]));
+   }
 }
 
 void MainWindow::changeEvent(QEvent *e) {
@@ -137,7 +155,7 @@ void MainWindow::packet_received(QByteArray str) {
 void MainWindow::on_button_NetDiscover_clicked(){
     qDebug() << "NetDiscover clicked";
     QByteArray data = QByteArray((int) 1, (char) 0);
-    data[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
+    data[0] = SERIAL_PACKET_TYPE_HOP_HISTORY;
     this->send(data);
 }
 

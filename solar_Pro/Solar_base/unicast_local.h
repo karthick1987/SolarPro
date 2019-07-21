@@ -30,5 +30,4 @@ int processUniCast(node_num_t dest, payload_t *rx_packet);
 void initUnicastMode(void);
 void initPathMode(void);
 
-
 #endif

@@ -28,7 +28,6 @@
 // Tx buffer size in bytes.
 #define MAX_USB_PAYLOAD_SIZE	5
 
+void sendUART(char uartBuffer[], int buffersize);
 
-void sendUART(int uartBuffer, int buffersize);
-
-#endif UARTLOCAL_H
+#endif

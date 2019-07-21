@@ -75,10 +75,11 @@ extern struct etimer et_broadCastOver;
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(unicastSendProcess);
 
+PROCESS(txUSB_process, "Sending payload");
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
+AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &txUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -102,8 +103,7 @@ PROCESS_THREAD (windSpeedThread, ev, data)
     static uint16_t wind_speed_avg;
     static uint16_t wind_speed_avg_2m;
     static uint16_t wind_speed_max;
-    static int uartTxBuffer[MAX_USB_PAYLOAD_SIZE];
-    static int i;
+    static char uartTxBuffer[MAX_USB_PAYLOAD_SIZE];
 
     printf("Anemometer test, integration period %u\n",
             ANEMOMETER_AVG_PERIOD);
@@ -140,12 +140,6 @@ PROCESS_THREAD (windSpeedThread, ev, data)
         uartTxBuffer[4] = threshold;
 
         sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
-        /*uart_write_byte(0,START_CHAR);
-        for (i = 0; i < 6; i++)
-        {
-            uart_write_byte(0,uartTxBuffer[i]);
-        }
-        uart_write_byte(0,END_CHAR);*/
 
         etimer_reset(&et);
     }
@@ -232,6 +226,31 @@ PROCESS_THREAD (stateMachineThread, ev, data)
         }
     }
 
+    PROCESS_END();
+}
+
+PROCESS_THREAD(txUSB_process, ev, data) 
+{
+    PROCESS_BEGIN();
+    static struct etimer secTimer;
+    etimer_set(&secTimer,CLOCK_SECOND);
+    char c[] = "hello WORLD";
+    while(1)
+    {
+        PROCESS_WAIT_EVENT();
+        if (ev == PROCESS_EVENT_MSG)
+        {
+            // Send msg to GUI
+        }
+        else if (ev == PROCESS_EVENT_TIMER)
+        {
+            if(etimer_expired(&secTimer))
+            {
+                etimer_reset(&secTimer);
+                sendUART(c,sizeof(c));
+            }
+        }
+    }
     PROCESS_END();
 }
 

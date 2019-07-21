@@ -10,8 +10,13 @@ class GraphWidget : public QGraphicsView
     Q_OBJECT
 
 public:
+    QGraphicsScene *scene1;
+    Node *centerNode;
+    Node *n[7];
+
     GraphWidget(QWidget *parent = 0);
     void itemMoved();
+    void addNodes();
 
 public slots:
     void shuffle();
@@ -30,7 +35,6 @@ protected:
 
 private:
     int timerId;
-    Node *centerNode;
 };
 
 #endif // GRAPHWIDGET_H

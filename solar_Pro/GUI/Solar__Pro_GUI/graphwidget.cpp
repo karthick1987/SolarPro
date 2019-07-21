@@ -10,10 +10,10 @@
 GraphWidget::GraphWidget(QWidget *parent)
     : QGraphicsView(parent), timerId(0)
 {
-    QGraphicsScene *scene = new QGraphicsScene(this);
-    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    scene->setSceneRect(-240, -255, 490, 520);
-    setScene(scene);
+    scene1 = new QGraphicsScene(this);
+    scene1->setItemIndexMethod(QGraphicsScene::NoIndex);
+    scene1->setSceneRect(-240, -255, 490, 520);
+    setScene(scene1);
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
@@ -22,24 +22,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     setMinimumSize(400, 400);
     setWindowTitle(tr(""));
 
-    Node *node1 = new Node(this,'1');
-    Node *node2 = new Node(this,'2');
-    Node *node3 = new Node(this,'3');
-    Node *node4 = new Node(this,'4');
-    centerNode = new Node(this,'0');
-    Node *node5 = new Node(this,'5');
-    Node *node6 = new Node(this,'6');
-    Node *node7 = new Node(this,'7');
-    Node *node8 = new Node(this,'8');
-    scene->addItem(node1);
-    scene->addItem(node2);
-    scene->addItem(node3);
-    scene->addItem(node4);
-    scene->addItem(centerNode);
-    scene->addItem(node5);
-    scene->addItem(node6);
-    scene->addItem(node7);
-    scene->addItem(node8);
+/*
     scene->addItem(new Edge(centerNode, node1));
     scene->addItem(new Edge(centerNode, node2));
     scene->addItem(new Edge(node2, node3));
@@ -48,20 +31,48 @@ GraphWidget::GraphWidget(QWidget *parent)
     scene->addItem(new Edge(node6, node7));
     scene->addItem(new Edge(centerNode, node6));
     scene->addItem(new Edge(node7, node8));
+*/
+
     //scene->addItem(new Edge(node6, node7));
     //scene->addItem(new Edge(node6, node8));
     //scene->addItem(new Edge(node7, node9));
     //scene->addItem(new Edge(node9, node8));
 
-    node1->setPos(0, -50);
-    node2->setPos(-50, 0);
-    node3->setPos(-100, 50);
-    node4->setPos(50, 50);
+
+}
+
+void GraphWidget::addNodes()
+{
+    //char c[] = "1234567";
+    for (int i=0;i<7;i++)
+    {
+        n[i] = new Node(this,'1'+1);
+        scene1->addItem(n[i]);
+    }
+    centerNode = new Node(this,'0');
+
+    /*
+    //QGraphicsScene *scene1 = new QGraphicsScene(this);
+    n1 = new Node(this,'1');
+    n2 = new Node(this,'2');
+    n3 = new Node(this,'3');
+    n4 = new Node(this,'4');
+    n5 = new Node(this,'5');
+    n6 = new Node(this,'6');
+    n7 = new Node(this,'7');
+    */
+
+    scene1->addItem(centerNode);
+
+
+    n[0]->setPos(0, -50);
+    n[1]->setPos(-50, 0);
+    n[2]->setPos(-100, 50);
+    n[3]->setPos(50, 50);
     centerNode->setPos(0, 0);
-    node5->setPos(100, 100);
-    node6->setPos(50, 0);
-    node7->setPos(100, -50);
-    node8->setPos(150, -100);
+    n[4]->setPos(100, 100);
+    n[5]->setPos(50, 0);
+    n[6]->setPos(100, -50);
 }
 
 void GraphWidget::itemMoved()
