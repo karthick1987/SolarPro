@@ -198,6 +198,7 @@ static void doPathMode(void)
         if (isPathModeComplete)
         {
             printf("PATH MODE COMPLETE\n");
+            ctimer_stop(&ackPathTimer);
             process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
         }
         else
