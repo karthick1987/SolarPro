@@ -22,7 +22,7 @@ contributors:
 #include "contiki.h"
 #include "core/net/linkaddr.h"
 
-#define TOTAL_NODES 8
+#define TOTAL_NODES 9
 
 //extern const uint32_t TOTAL_NODES; // To make calculated Network size available to all files
 

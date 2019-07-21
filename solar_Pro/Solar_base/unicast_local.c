@@ -160,6 +160,7 @@ static node_num_t nextNode(node_num_t current_node)
             break;
         }
     }
+    printf("Current Node is %d\n",current_node);
 	return current_node;
 }
 
@@ -193,13 +194,13 @@ static void setupPacket(pkttype_t type)
 
 static void doPathMode(void)
 {
-    printf("Before: Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+    // printf("Before: Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
 
     // Determine next node
     next_node = nextNode(next_node);
 
-    printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
-    printf("isPathModeComplete Flag is %d\n", isPathModeComplete);
+    // printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+    // printf("isPathModeComplete Flag is %d\n", isPathModeComplete);
 
     // setupPacket can be in dopathMode
     setupPacket(PATH);
@@ -208,14 +209,14 @@ static void doPathMode(void)
     if (isTransSuccess)
     {
         ctimer_stop(&ackPathTimer);
-        printf("dPM: ctimer stopped\n");
+        //printf("dPM: ctimer stopped\n");
         printf("dPM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
 
         // TODO send GUI the rx_data
         isTransSuccess = false;
 
-        printf("Next node is %d\n",next_node);
+        //printf("Next node is %d\n",next_node);
 
         // If all nodes are done
         if (isPathModeComplete)
@@ -225,7 +226,7 @@ static void doPathMode(void)
         }
         else
         {
-            printf("Going to next Node\n");
+            printf("Node [%d] SUCCESS Going to next Node\n",next_node);
             // go to next_node
             next_node++;
             process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
@@ -246,7 +247,7 @@ static void doPathMode(void)
 
             // Set acknowledge timer
             ctimer_set(&ackPathTimer, UNICASTINTERVAL, &callbackResendPath, NULL);
-            printf("Callback Timer set to expire in a little while\n");
+            //printf("Callback Timer set to expire in a little while\n");
             transmissionCount++;
         }
     }
@@ -299,8 +300,6 @@ static void doUniCastMode(void)
 
 int processUniCast(node_num_t dest, payload_t *rx_packet)
 {
-    printf("Doing Unicast Mode now!");
-
     //read out byte 1 if PATH or UNICAST
     switch(rx_packet->a.apkt)
     {
@@ -309,19 +308,19 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
             // ACK with hop history
             if (rx_packet->u.destNode > TOTAL_NODES)
             {
-                printf("Base processing ACK PATH MODE PKT\n");
+                //printf("Base processing ACK PATH MODE PKT\n");
                 int i = 0;
                 for (i=0;i<TOTAL_NODES;i++)
                 {
                     if(rx_packet->a.hopHist[i].u16 == RESETADDR)
                     {
-                        printf("i value is %d\n",i);
+                        //printf("i value is %d\n",i);
                         break;
                     }
                 }
                 if ( getRIMEID(next_node) == rx_packet->a.hopHist[i-1].u16 )
                 {
-                    printf("Setting isTransSuccess to TRUE\n");
+                    printf("REACHED DESTINATION\n");
                     isTransSuccess = true;
                     ctimer_stop(&ackPathTimer);
                     // start timer to Post msg to thread

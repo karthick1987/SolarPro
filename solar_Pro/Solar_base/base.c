@@ -77,7 +77,7 @@ PROCESS_NAME(unicastSendProcess);
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
+AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process); //, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void

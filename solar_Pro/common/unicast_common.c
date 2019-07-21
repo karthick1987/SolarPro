@@ -12,6 +12,7 @@
 
 void printPacket(payload_t *p)
 {
+    return;
     int i;
     printf("Packet type is %d\n",p->a.apkt);
     switch(p->a.apkt)

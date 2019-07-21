@@ -19,6 +19,11 @@ contributors:
 
 // Contiki-specific includes:
 #include <stdio.h>
+
+
+#include "sys/clock.h"
+#include "dev/leds.h"          // Use LEDs.
+
 #include "servoControl.h"
 #include "projSensors.h"
 #include "unicast_local.h"
@@ -68,7 +73,7 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
 {
     // Stop all broadcast timers!
     stopAllBroadCastTimer();
-    printf("Stopping all broadcast timers!\n");
+    // printf("Stopping all broadcast timers!\n");
 
     // dest is not used here for the solar Panel
     // check if destination byte 2

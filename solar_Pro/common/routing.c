@@ -338,14 +338,14 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
             printf("Shouldnt be here!!!\n");
             break;
     }
-    printf("My destination is %d and Dest RIME ID: %x\n",destination, myrTable.next_hop[destination].u16);
+    printf("My destination is %d and Dest RIME ID: %x\n",destination+1, myrTable.next_hop[destination].u16);
     return &(myrTable.next_hop[destination]);
 }
 
 void unict_send(payload_t *tx_packet)
 {
     packetbuf_clear();
-    printf("Send Unicast message from %d: '%s'\n",getMyNodeID(), (char *)(tx_packet));
+    printf("Send Unicast message from %d: to: %x '%s'\n",getMyNodeID(), getNextHopRIMEID(*tx_packet)->u16, (char *)(tx_packet));
     packetbuf_copyfrom(tx_packet, sizeof(payload_t));
     unicast_send(&unicast, getNextHopRIMEID(*tx_packet));
 }
