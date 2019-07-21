@@ -41,6 +41,7 @@ contributors:
 
 // Project headers
 #include "base.h"
+#include "uart_local.h"
 
 // Common headers
 #include "broadcast_common.h"
@@ -77,7 +78,7 @@ PROCESS_NAME(unicastSendProcess);
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process); //, &windSpeedThread);
+AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -138,12 +139,13 @@ PROCESS_THREAD (windSpeedThread, ev, data)
         uartTxBuffer[3] = wind_speed_max/1000;
         uartTxBuffer[4] = threshold;
 
-        uart_write_byte(0,START_CHAR);
+        sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
+        /*uart_write_byte(0,START_CHAR);
         for (i = 0; i < 6; i++)
         {
             uart_write_byte(0,uartTxBuffer[i]);
         }
-        uart_write_byte(0,END_CHAR);
+        uart_write_byte(0,END_CHAR);*/
 
         etimer_reset(&et);
     }
