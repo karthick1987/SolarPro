@@ -59,21 +59,6 @@ extern const nodeID_t nodes[];
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(stateMachineThread);
 
-
-void setUpRtableBase(void)
-{
-    printf("WARNING: Test routing table setup in Base Station!!\n");
-    myrTable.next_hop[0].u16 = nodes[0].rimeID;
-    myrTable.cost[0] = 1;
-}
-
-void setUpRtableNode(void)
-{
-    printf("WARNING: Test routing table setup in Node!!\n");
-    myrTable.next_hop[1].u16 = nodes[1].rimeID;
-    myrTable.cost[1] = 1;
-}
-
 void setUpRtable(void)
 {
     int i;
@@ -152,13 +137,13 @@ void prepNetworkDisc(void)
 void openBroadcast(void)
 {
     //open the connection, if necessary
-    broadcast_open(&broadcast, 129, &broadcast_call);
+    broadcast_open(&broadcast, BROADCASTCHANNEL, &broadcast_call);
 }
 
 void openUnicast(void)
 {
     //open the connection, if necessary
-    unicast_open(&unicast, 146, &unicast_call);
+    unicast_open(&unicast, UNICASTCHANNEL, &unicast_call);
 }
 /**
  * @param message - message to be broadcasted
@@ -302,9 +287,8 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
 {
     leds_on(LEDS_YELLOW);
     memset(&unicast_rx_packet, 0, sizeof(unicast_rx_packet));
-    payload_t debug_local;
-    int copiedBytes = packetbuf_copyto(&debug_local);
-    printPacket(&debug_local);
+
+    int copiedBytes = packetbuf_copyto(&unicast_rx_packet);
     printf("Copied bytes: %d\n",copiedBytes);
     printf("Unicast message received from 0x%x%x: '%s' [RSSI %d]\n",
             // For Debug purposes
@@ -321,10 +305,12 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
     switch(tx_packet.a.apkt)
     {
         case UNICAST:
+            printf("Uni: getting Next Hop\n");
             destination = tx_packet.u.destNode;
             break;
         case ACK:
         case PATH:
+            printf("PATH/ACK: getting Next Hop\n");
             destination = returnIDIndex(&(tx_packet.a.dest));
             break;
         default:
@@ -332,6 +318,7 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
             printf("Shouldnt be here!!!\n");
             break;
     }
+    printf("My destination is %d and Dest RIME ID: %x\n",destination, myrTable.next_hop[destination].u16);
     return &(myrTable.next_hop[destination]);
 }
 
@@ -339,8 +326,8 @@ void unict_send(payload_t *tx_packet)
 {
     packetbuf_clear();
     printf("Send Unicast message from %d: '%s'\n",getMyNodeID(), (char *)(tx_packet));
-    printPacket(tx_packet);
-    packetbuf_copyfrom(&tx_packet, sizeof(tx_packet));
+    //printPacket(tx_packet);
+    packetbuf_copyfrom(tx_packet, sizeof(payload_t));
     unicast_send(&unicast, getNextHopRIMEID(*tx_packet));
 }
 

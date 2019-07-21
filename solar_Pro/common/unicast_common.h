@@ -24,6 +24,7 @@ contributors:
 #include "payload.h"
 
 #define RESETADDR   UNINIT
+#define UNICASTCHANNEL          146
 
 void printPacket(payload_t *p);
 void zeroOut(payload_t *p, pkttype_t type);

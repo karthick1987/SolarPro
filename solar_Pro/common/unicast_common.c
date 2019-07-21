@@ -32,6 +32,26 @@ void printPacket(payload_t *p)
             printf("servoPos_Degs: %d\n",p->u.servoPos_degs);
             break;
 
+        case ACK:
+            if (p->u.destNode > TOTAL_NODES)
+            {
+                printf("---ACK PATH MODE PKT---\n");
+                for(i=0;i<TOTAL_NODES;i++)
+                {
+                    printf("%d:%d\n",i,(p->a).hopHist[i].u16);
+                }
+            }
+            else
+            {
+                printf("---ACK UNICAST MODE PKT---\n");
+                printf("Origin: %d, Destination: %d\n",p->u.originNode,p->u.destNode);
+                printf("Temp_mC: %d\n",p->u.temp_mC);
+                printf("Batt_mV: %d\n",p->u.battVolt_mV);
+                printf("LightSensor: %d\n",p->u.lightSensor);
+                printf("servoPos_Degs: %d\n",p->u.servoPos_degs);
+            }
+            break;
+
         default:
             printf("[UnicastCommon]: Random Packet!\n");
             printf("---Default packet---\nPacket Type is %d\nDestination Node is %x\n",(p->a).apkt, (p->a).dest.u16);
@@ -68,10 +88,14 @@ void zeroOut(payload_t *p, pkttype_t type)
 void addSelfToHist(payload_t *payload)
 {
     int i = 0;
+    printf("Adding self to history\n");
     for (i=0;i<TOTAL_NODES;i++)
     {
         if(payload->a.hopHist[i].u16 == RESETADDR)
+        {
+            printf("i values is %d\n",i);
             break;
+        }
     }
     if(i >= 8)
         return;

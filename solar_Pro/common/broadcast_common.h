@@ -17,10 +17,11 @@ contributors:
  This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef BROADCASTLOCAL_H
-#define BROADCASTLOCAL_H
+#ifndef BROADCASTCOMMON_H
+#define BROADCASTCOMMON_H
 
-#define BROADCASTTIMEOUT    10*CLOCK_SECOND
-#define BROADCASTINTERVAL    CLOCK_SECOND/2
+#define BROADCASTTIMEOUT        10*CLOCK_SECOND
+#define BROADCASTINTERVAL       CLOCK_SECOND/2
+#define BROADCASTCHANNEL        129
 
 #endif

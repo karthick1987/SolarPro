@@ -39,11 +39,6 @@
 #define UNINIT      0xFFFF
 #define UNINITCOST  0xFF
 
-// DEBUG ONLY
-void setUpRtableBase(void);
-void setUpRtableNode(void);
-
-
 void setUpRtable(void);
 bool isValidNextHop(node_num_t node);
 void initNetworkDisc(void);

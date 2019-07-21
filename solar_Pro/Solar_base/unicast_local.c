@@ -27,7 +27,7 @@ static payload_t tx_packet;
 static struct ctimer ackTimer;
 
 static int transmissionCount = 1;
-static int pathCounter = 1;
+static bool isPathModeComplete = false;
 
 static void doPathMode(void);
 
@@ -35,15 +35,15 @@ PROCESS_NAME(stateMachineThread);
 
 static void callbackResendPath(void *ptr)
 {
+    printf("Ctimer callback entered\n");
+    printf("Transmission count is :%d\n",transmissionCount);
     doPathMode();
-    if (transmissionCount == UNICASTMAXRETRANSMIT)
+
+    if (transmissionCount >= UNICASTMAXRETRANSMIT)
     {
         ctimer_stop(&ackTimer);
+        printf("Ctimer CB: stopped\n");
         process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *) PREPNETDISC);
-    }
-    else
-    {
-        transmissionCount++;
     }
 }
 
@@ -90,15 +90,14 @@ PROCESS_THREAD (unicastSendProcess, ev, data)
 void initUnicastMode(void)
 {
     next_node = 1;
-    pathCounter = 1;
     isTransSuccess = false;
 }
 
 void initPathMode()
 {
     next_node = 1;
-    pathCounter = 1;
     transmissionCount = 1;
+    isPathModeComplete = false;
     isTransSuccess = false;
 }
 
@@ -113,7 +112,10 @@ static node_num_t nextNode(node_num_t current_node)
             printf("Skipped node %d as its either me or is not in Network\n",i+1);
             current_node++;
             if (current_node > TOTAL_NODES)
+            {
                 current_node = 1;
+                isPathModeComplete = true;
+            }
         }
         else
         {
@@ -123,10 +125,11 @@ static node_num_t nextNode(node_num_t current_node)
 	return current_node;
 }
 
-static void setupPacket(pkttype_t type) // , pkttype_t type, node_num_t dest)
+static void setupPacket(pkttype_t type)
 {
     //tx_packet is a static global here
     payload_t *p = &tx_packet;
+    printf("[Base/Unicast_Local]: Setting up packet now");
 
     switch(type)
     {
@@ -135,7 +138,6 @@ static void setupPacket(pkttype_t type) // , pkttype_t type, node_num_t dest)
             (p->a).apkt = PATH;
             (p->a).dest.u16 = getRIMEID(next_node);
             addSelfToHist(p);
-            printPacket(p);
             break;
         case UNICAST:
             zeroOut(p, UNICAST);
@@ -143,22 +145,23 @@ static void setupPacket(pkttype_t type) // , pkttype_t type, node_num_t dest)
             (p->u).originNode = getMyNodeID(); // My Node ID
             (p->u).destNode = next_node; // The destination Node
             // TODO Add Servo Angle manually
-            printPacket(p);
             break;
         default:
             printf("[base/unicast_local]: in Default\n");
-            printPacket(p);
             break;
     }
+    printPacket(p);
 }
 
 static void doPathMode(void)
 {
-
-    printf("Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+    printf("Before: Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
 
     // Determine next node
     next_node = nextNode(next_node);
+
+    printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
+    printf("isPathModeComplete Flag is %d\n", isPathModeComplete);
 
     // setupPacket can be in dopathMode
     setupPacket(PATH);
@@ -167,85 +170,91 @@ static void doPathMode(void)
     if (isTransSuccess)
     {
         ctimer_stop(&ackTimer);
+        printf("dPM: ctimer stopped\n");
+        printf("dPM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
-        pathCounter++;
 
         // TODO send GUI the rx_data
         isTransSuccess = false;
 
+        printf("Next node is %d\n",next_node);
+
         // If all nodes are done
-        if (next_node >= TOTAL_NODES)
+        if (isPathModeComplete)
         {
+            printf("PATH MODE COMPLETER\n");
             process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
         }
         else
         {
+            printf("Going to next Node\n");
             // go to next_node
             next_node++;
-            process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
+            process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
         }
     }
     else
     {
-        // Send packet
-        unict_send(&tx_packet);
+        if(isPathModeComplete)
+        {
+            printf("PATH MODE COMPLETER\n");
+            process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)UNICASTMODE);
+        }
+        else
+        {
+            // Send packet
+            unict_send(&tx_packet);
 
-        // Set acknowledge timer
-        ctimer_set(&ackTimer, UNICASTINTERVAL, &callbackResendPath, NULL);
-
-        printf("Callback Timer set to expire in a little while\n");
-
+            // Set acknowledge timer
+            ctimer_set(&ackTimer, UNICASTINTERVAL, &callbackResendPath, NULL);
+            printf("Callback Timer set to expire in a little while\n");
+            transmissionCount++;
+        }
     }
 }
 
 int doUniCastMode(node_num_t dest, payload_t *rx_packet)
 {
-    //check if destination byte 2
-
-    // start unicast_process
-    // node = nextNodeis(node);
-    // setupPacket can be in dopathMode
-    // Send and wait verfahren x3 MAXIMAL
-    // AckCounter++
-
     //read out byte 1 if PATH or UNICAST
     switch(rx_packet->a.apkt)
     {
         case ACK:
-            // always forward to destination(BASE STATION)
-            unict_send(rx_packet);
+            // Do the compare with the sent message and node and send Hop History to GUI
+            // ACK with hop history
+            if (rx_packet->u.destNode > TOTAL_NODES)
+            {
+                printf("Base processing ACK PATH MODE PKT\n");
+                int i = 0;
+                for (i=0;i<TOTAL_NODES;i++)
+                {
+                    if(rx_packet->a.hopHist[i].u16 == RESETADDR)
+                    {
+                        printf("i values is %d\n",i);
+                        break;
+                    }
+                }
+                if ( getRIMEID(next_node) == rx_packet->a.hopHist[i-1].u16 )
+                {
+                    printf("Setting isTransSuccess to TRUE\n");
+                    isTransSuccess = true;
+                    ctimer_stop(&ackTimer);
+                    process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
+
+                }
+            }
+            // ACK Unicast with sensor values
+            else
+            {
+                printf("Base processing ACK UNICAST SENSOR MODE PKT\n");
+            }
             break;
 
         case UNICAST:
-            //check if Destination
-            if(rx_packet->u.destNode == getMyNodeID()){
-                // setup packet with sensor values and new destination (basestation)
-                setupPacket(UNICAST);
-                // send back unicast back to basestation
-                unict_send(&tx_packet);
-            }
-            else
-            {
-                // If not at destination then forward
-                unict_send(rx_packet);
-            }
+            printf("Received packet is UNICAST type Shouldnt be here!!!\n");
             break;
 
         case PATH:
-            //check if Destination
-            if(rx_packet->a.dest.u16 == getMyRIMEID()->u16){
-                // send unicast with PATH header and hophistory back to base station
-                setupPacket(PATH);
-                // Send packet
-                unict_send(&tx_packet);
-            }
-            else{
-                memcpy(&tx_packet,rx_packet,sizeof(payload_t));
-                //add own Node ID to the first entry of hophistory with 0xFFFF
-                addSelfToHist(&tx_packet);
-                //forward message to destination
-                unict_send(&tx_packet);
-            }
+            printf("Received packet is PATH type Shouldnt be here!!!\n");
             break;
 
         default:

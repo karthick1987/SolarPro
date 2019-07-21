@@ -51,19 +51,19 @@ typedef struct {
     uint16_t battVolt_mV;
     uint16_t lightSensor;
     uint16_t servoPos_degs;
-} unicastMsg_t;
+}__attribute__ ((packed))  unicastMsg_t;
 
 typedef struct {
     pkttype_t bpkt;
     char msg[BROADCASTMSGSIZE_BYTES];
     r_table_t rTable;
-} broadcastMsg_t;
+}__attribute__ ((packed))  broadcastMsg_t;
 
 typedef struct {
     pkttype_t apkt;
     linkaddr_t dest;
     linkaddr_t hopHist[TOTAL_NODES];
-} ackModeMsg_t;
+}__attribute__ ((packed))  ackModeMsg_t;
 
 typedef union {
     unicastMsg_t u;

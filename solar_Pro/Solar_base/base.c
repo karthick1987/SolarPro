@@ -161,7 +161,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     openBroadcast();
     openUnicast();
     setUpRtable();
-    setUpRtableBase();
     printf("This is the BASE STATION\n");
     printf("BASE STATION ID is %x Node ID is %d\n", getMyRIMEID()->u16, getMyNodeID());
 
@@ -183,11 +182,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                         BUTTON_SENSOR_PRESSED_LEVEL )
                 {
                     // Signal that Network Disc has been inited
-                    // process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PREPNETDISC);
-                    
-
-                    // DEBUG ONLY!!!
-                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PATHMODE);
+                    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)PREPNETDISC);
                 }
             }
         }

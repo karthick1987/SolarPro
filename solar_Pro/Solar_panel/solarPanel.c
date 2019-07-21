@@ -70,7 +70,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     openBroadcast();
     openUnicast();
     setUpRtable();
-    setUpRtableNode();
     myNodeID = getMyNodeID();
     printf("This is the Mote\n");
     printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, myNodeID);

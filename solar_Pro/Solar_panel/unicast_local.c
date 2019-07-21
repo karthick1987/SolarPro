@@ -42,7 +42,6 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
             {
                 p->a.hopHist[i] = rx_packet->a.hopHist[i];
             }
-            printPacket(p);
             break;
         case UNICAST:
             zeroOut(p, UNICAST);
@@ -55,11 +54,11 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
             p->u.battVolt_mV = getBatteryVoltage();
             p->u.lightSensor = getLightSensorValue();
             p->u.servoPos_degs = getServoPosition();
-            printPacket(p);
             break;
         default:
             break;
     }
+    printPacket(p);
 }
 
 int doUniCastMode(node_num_t dest, payload_t *rx_packet)
@@ -96,6 +95,8 @@ int doUniCastMode(node_num_t dest, payload_t *rx_packet)
             printf("Received packet is PATH type\n");
             //check if Destination
             if(rx_packet->a.dest.u16 == getMyRIMEID()->u16){
+                //add own Node ID to the first entry of hophistory with 0xFFFF
+                addSelfToHist(rx_packet);
                 // send unicast with PATH header and hophistory back to base station
                 setupPacket(rx_packet);
                 // Send packet
