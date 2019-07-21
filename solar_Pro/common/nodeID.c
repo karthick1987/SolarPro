@@ -35,7 +35,8 @@ const nodeID_t nodes[] =
     {5,1982,0xDCF3},
     {6,2053,0xDDED},
     {7,2207,0xB0EE},
-    {8,2071,0x0CF4}
+    {8,2071,0x0CF4},
+    {9,2999,0x12E4}
 };
 
 // static uint32_t TOTAL_NODES = (sizeof(nodes))/(sizeof(nodeID_t));

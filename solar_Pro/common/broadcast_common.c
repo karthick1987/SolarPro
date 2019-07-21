@@ -14,11 +14,12 @@
 #define DISCOVERYRETRANSMITS    3
 #define PREPDISCRETRANSMITS    5
 
+static struct etimer bcinterval, transitiontimer;
+
 PROCESS_NAME(stateMachineThread);
 PROCESS(broadcastSendProcess, "Broadcast msg Send Thread");
 PROCESS_THREAD (broadcastSendProcess, ev, data)
 {
-    static struct etimer bcinterval, transitiontimer;
     static int i = 0;
     static pkttype_t pkt_type;
     static bool bcinterval_flag = false, transition_flag = false;
@@ -93,4 +94,10 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
     }
 
     PROCESS_END();
+}
+
+void stopAllBroadCastTimer(void)
+{
+    etimer_stop(&transitiontimer);
+    etimer_stop(&bcinterval);
 }

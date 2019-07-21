@@ -20,8 +20,10 @@ contributors:
 #ifndef BROADCASTCOMMON_H
 #define BROADCASTCOMMON_H
 
-#define BROADCASTTIMEOUT        10*CLOCK_SECOND
+#define BROADCASTTIMEOUT        5*CLOCK_SECOND
 #define BROADCASTINTERVAL       CLOCK_SECOND/2
 #define BROADCASTCHANNEL        129
+
+void stopAllBroadCastTimer(void);
 
 #endif

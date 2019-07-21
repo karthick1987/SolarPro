@@ -24,7 +24,7 @@ contributors:
 #include "payload.h"
 
 #define UNICASTINTERVAL         2*CLOCK_SECOND
-#define UNICASTMAXRETRANSMIT    3
+#define UNICASTMAXRETRANSMIT    5
 
 int processUniCast(node_num_t dest, payload_t *rx_packet);
 void initUnicastMode(void);

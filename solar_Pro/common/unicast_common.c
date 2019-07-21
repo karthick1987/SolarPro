@@ -12,6 +12,7 @@
 
 void printPacket(payload_t *p)
 {
+    return;
     int i;
     printf("Packet type is %d\n",p->a.apkt);
     switch(p->a.apkt)
@@ -75,10 +76,10 @@ void zeroOut(payload_t *p, pkttype_t type)
             }
             break;
         case UNICAST:
-            p->u.temp_mC = 0;
-            p->u.battVolt_mV = 0;
-            p->u.lightSensor = 0;
-            p->u.servoPos_degs = 0;
+            p->u.temp_mC = 1;
+            p->u.battVolt_mV = 1;
+            p->u.lightSensor = 1;
+            p->u.servoPos_degs = 1;
             break;
         default:
             break;

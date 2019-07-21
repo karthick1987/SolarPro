@@ -19,10 +19,16 @@ contributors:
 
 // Contiki-specific includes:
 #include <stdio.h>
+
+
+#include "sys/clock.h"
+#include "dev/leds.h"          // Use LEDs.
+
 #include "servoControl.h"
 #include "projSensors.h"
 #include "unicast_local.h"
 #include "unicast_common.h"
+#include "broadcast_common.h"
 
 // Local global variable static to this file
 static payload_t tx_packet;
@@ -52,8 +58,10 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
             // Set up the return packet
             p->u.temp_mC = getInternalTemperature();
             p->u.battVolt_mV = getBatteryVoltage();
-            p->u.lightSensor = getLightSensorValue();
-            p->u.servoPos_degs = getServoPosition();
+            p->u.lightSensor = 55;
+            p->u.servoPos_degs = 77;
+            //p->u.lightSensor = getLightSensorValue();
+            //p->u.servoPos_degs = getServoPosition();
             break;
         default:
             break;
@@ -63,8 +71,12 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
 
 int processUniCast(node_num_t dest, payload_t *rx_packet)
 {
+    // Stop all broadcast timers!
+    stopAllBroadCastTimer();
+    // printf("Stopping all broadcast timers!\n");
+
     // dest is not used here for the solar Panel
-    //check if destination byte 2
+    // check if destination byte 2
     (void) dest;
     //read out byte 1 if PATH or UNICAST
     switch(rx_packet->a.apkt)
