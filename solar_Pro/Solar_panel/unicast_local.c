@@ -58,10 +58,8 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
             // Set up the return packet
             p->u.temp_mC = getInternalTemperature();
             p->u.battVolt_mV = getBatteryVoltage();
-            p->u.lightSensor = 55;
-            p->u.servoPos_degs = 77;
-            //p->u.lightSensor = getLightSensorValue();
-            //p->u.servoPos_degs = getServoPosition();
+            p->u.lightSensor = getLightSensorValue();
+            p->u.servoPos_degs = getServoPosition();
             break;
         default:
             break;

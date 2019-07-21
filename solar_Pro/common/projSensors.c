@@ -30,7 +30,7 @@ contributors:
 /*** LIGHT SENSOR FUNCTION ***/
 //function for outputting the lux value read from sensor
 //@param adc_input: phidget input value. Use ZOUL_SENSORS_ADC1 or ZOUL_SENSORS_ADC3 depending on where the sensor is connected to.
-//@return uint16_t : lux value with a max of 1000.
+//@return uint16_t : qualitative luminosity value of the sensor (not calculated into lux).
 uint16_t getLightSensorValue(void){
 	//Configure the ADC ports
 	adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC1 );
@@ -39,17 +39,17 @@ uint16_t getLightSensorValue(void){
 	uint16_t adc_value = adc_zoul.value(ZOUL_SENSORS_ADC1) >> 4;
 
 	//Read voltage from the phidget interface
-	double sensorValue = adc_value*3.3/4.096;
-	double luxRaw = 1.4761 * sensorValue + 39.416;
+	uint16_t sensorValue = adc_value*3.3/4.096;
+	//double luxRaw = 1.4761 * sensorValue + 39.416;
 
 	//Return the value of the light with maximum value equal to 1000
-	uint16_t lux = luxRaw;
+	//uint16_t lux = luxRaw;
 
     // Saturation value
-	if (lux > 1000){
-		lux = 1000;
-	}
-	return lux;
+	//if (lux > 1000){
+	//	lux = 1000;
+	//}
+	return sensorValue;
 }
 
 
@@ -100,6 +100,3 @@ uint16_t getBatteryVoltage(void){
 
 	return vdd3_sensor.value(CC2538_SENSORS_VALUE_TYPE_CONVERTED);
 }
-
-
-
