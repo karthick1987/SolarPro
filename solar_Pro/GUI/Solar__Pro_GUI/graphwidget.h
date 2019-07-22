@@ -12,7 +12,7 @@ class GraphWidget : public QGraphicsView
 public:
     QGraphicsScene *scene1;
     Node *centerNode;
-    Node *n[7];
+    Node *n[8];
 
     GraphWidget(QWidget *parent = 0);
     void itemMoved();

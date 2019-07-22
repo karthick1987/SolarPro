@@ -641,7 +641,8 @@ mainwindow.o: ../Solar__Pro_GUI/mainwindow.cpp ../Solar__Pro_GUI/mainwindow.h \
 		../qextserialport/src/qextserialport_global.h \
 		../qextserialport/src/qextserialenumerator.h \
 		ui_mainwindow.h \
-		../Solar__Pro_GUI/graphwidget.h
+		../Solar__Pro_GUI/graphwidget.h \
+		../Solar__Pro_GUI/edge.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Solar__Pro_GUI/mainwindow.cpp
 
 uart.o: ../Solar__Pro_GUI/uart.cpp ../Solar__Pro_GUI/uart.h \

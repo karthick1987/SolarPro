@@ -22,6 +22,7 @@ contributors:
 
 #include "nodeID.h"
 #include "payload.h"
+#include "uart_local.h"
 
 #define UNICASTINTERVAL         2*CLOCK_SECOND
 #define UNICASTMAXRETRANSMIT    5

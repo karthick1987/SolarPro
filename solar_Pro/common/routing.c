@@ -13,6 +13,7 @@
 #include "nodeID.h"
 #include "broadcast_common.h"
 #include "unicast_common.h"
+#include "servoControl.h"
 
 // Private local includes
 #include "unicast_local.h"
@@ -65,10 +66,10 @@ PROCESS_NAME(stateMachineThread);
 
 
 static void callbackEmergency(void *ptr)
- {
-   ctimer_reset(&timer);
-   leds_toggle(LEDS_RED);
- }
+{
+    ctimer_reset(&ct_emergency);
+    leds_toggle(LEDS_RED);
+}
 
 void setUpRtable(void)
 {
@@ -128,6 +129,7 @@ void initNetworkDisc(void)
 
 void prepNetworkDisc(void)
 {
+    ctimer_stop(&ct_emergency);
     printf("Preparing Network Discovery\n");
     // reset routing table
     broadcastCount = 0;
@@ -147,13 +149,15 @@ void prepNetworkDisc(void)
 
 void initEmergency(void)
 {
-  printf("Emergency initiated\n");
+    printf("Emergency initiated\n");
+    strncpy(payload_transmit.b.msg,"EMGNCY",BROADCASTMSGSIZE_BYTES);
+    stopAllBroadCastTimer();
+    payload_transmit.b.bpkt = EMERGENCY;
+    broadcastCount = 0;
+    inPrepMode = false;
 
-  broadcastCount = 0;
-
-  // initiate controlled flooding
-  process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
-
+    // initiate controlled flooding
+    process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
 }
 
 void openBroadcast(void)
@@ -217,7 +221,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
 
     // If the RSSI value is less than a threshold value drop the packet
-    if ( rssi <= RCVTHRESHOLD )
+    if ( rssi <= RCVTHRESHOLD && payload_receive.b.bpkt == DISCOVERY )
     {
         leds_on(LEDS_GREEN);
         printf("Dropping message as %d rssi < %d Threshold\n",rssi, RCVTHRESHOLD);
@@ -234,7 +238,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     switch(payload_receive.b.bpkt)
     {
         case EMERGENCY:
-            // set servo angle out of reach for emergency angle defined in common/routing.h
+            // TODO set servo angle out of reach for emergency angle defined in common/routing.h
             setServoPosition(255);
             // set callback timer to toggle red leds
             ctimer_set(&ct_emergency, CLOCK_SECOND, callbackEmergency, NULL);
@@ -377,7 +381,6 @@ void unict_send(payload_t *tx_packet)
 }
 
 // ---------------------------- DEBUG PRINTS ---------------------------
-
 
 static void printRTable(const char *text)
 {

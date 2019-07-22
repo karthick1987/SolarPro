@@ -37,19 +37,19 @@ void MainWindow::systemTime()
    QString time_text = time.toString("hh : mm : ss");
    ui->label_systemTime->setText(time_text);
    i++;
+
+   //
+
    if(i == 1)
    {
         ui->NetworkGraph->addNodes();
-        ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->centerNode, ui->NetworkGraph->n[1]));
+        ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->n[1], ui->NetworkGraph->n[0]));
    }
    if(i == 5)
    {
         ui->NetworkGraph->scene()->clear();
-   }
-   if(i == 7)
-   {
         ui->NetworkGraph->addNodes();
-        ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->centerNode, ui->NetworkGraph->n[2]));
+        ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->n[1], ui->NetworkGraph->n[2]));
    }
 }
 
@@ -125,13 +125,14 @@ void MainWindow::packet_received(QByteArray str) {
 
     case SERIAL_PACKET_TYPE_NODE_SENSORS:
         SensorValue sensorvalues[AMOUNT_OF_MOTES];
-        int index = str.at(1);
-        sensorvalues[index].destNode = str.at(1);
-        sensorvalues[index].originNode = str.at(2);
-        sensorvalues[index].temp_mC = str.at(3);
-        sensorvalues[index].battVolt_mV = str.at(4);
-        sensorvalues[index].lightSensor = str.at(5);
-        sensorvalues[index].servoPos_degs = str.at(6);
+        int index = str.at(3);
+        sensorvalues[index].destNode = static_cast<uint16_t>(str.at(3));
+        sensorvalues[index].originNode = static_cast<uint16_t>(str.at(1));
+        sensorvalues[index].temp_mC = static_cast<int>( (str.at(5)+(256*str.at(6))) );
+        sensorvalues[index].battVolt_mV = static_cast<uint16_t>( (str.at(7)+(256*str.at(8))) );
+
+        sensorvalues[index].lightSensor = static_cast<unsigned char> (str.at(9));
+        sensorvalues[index].servoPos_degs = static_cast<unsigned char> (str.at(11));
 
         ui->lcdNumber_NodeID->setPalette(Qt::black);
         ui->lcdNumber_NodeID->display(sensorvalues[index].destNode);
@@ -155,7 +156,7 @@ void MainWindow::packet_received(QByteArray str) {
 void MainWindow::on_button_NetDiscover_clicked(){
     qDebug() << "NetDiscover clicked";
     QByteArray data = QByteArray((int) 1, (char) 0);
-    data[0] = SERIAL_PACKET_TYPE_HOP_HISTORY;
+    data[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
     this->send(data);
 }
 

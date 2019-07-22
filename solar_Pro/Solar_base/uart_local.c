@@ -4,6 +4,10 @@
 #include "dev/serial-line.h"
 #include "uart_local.h"
 
+#include<stdio.h>
+
+static uartBuf_t uartBuf[UART_BUFFER_SIZE];
+
 void sendUART(char uartBuffer[], int buffersize)
 {
     int i;
@@ -15,3 +19,15 @@ void sendUART(char uartBuffer[], int buffersize)
     uart_write_byte(0,END_CHAR);
     return;
 }
+
+void clearHopHistClear(void)
+{
+    memset(uartBuf,0,UART_BUFFER_SIZE);
+    uartBuf[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
+}
+
+uint8_t * getBuf(void)
+{
+    return uartBuf;
+}
+
