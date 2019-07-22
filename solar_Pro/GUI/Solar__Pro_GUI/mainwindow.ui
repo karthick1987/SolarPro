@@ -258,12 +258,12 @@
         <rect>
          <x>10</x>
          <y>60</y>
-         <width>81</width>
+         <width>121</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>Temperature</string>
+        <string>Temperature(mC)</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_Voltage">
@@ -276,7 +276,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Voltage</string>
+        <string>Voltage(mV)</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_Light">
@@ -367,6 +367,9 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="smallDecimalPoint">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLCDNumber" name="lcdNumber_Voltage">
        <property name="geometry">
@@ -383,6 +386,9 @@
          <weight>50</weight>
          <bold>false</bold>
         </font>
+       </property>
+       <property name="smallDecimalPoint">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLCDNumber" name="lcdNumber_Luminosity">

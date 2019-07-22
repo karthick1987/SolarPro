@@ -380,7 +380,6 @@ void unict_send(payload_t *tx_packet)
 
 // ---------------------------- DEBUG PRINTS ---------------------------
 
-
 static void printRTable(const char *text)
 {
     int j;

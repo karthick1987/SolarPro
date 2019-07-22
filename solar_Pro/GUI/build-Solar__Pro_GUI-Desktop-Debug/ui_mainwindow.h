@@ -143,7 +143,7 @@ public:
         label_NodeID->setGeometry(QRect(10, 30, 58, 16));
         label_Temperature = new QLabel(groupBox_2);
         label_Temperature->setObjectName(QString::fromUtf8("label_Temperature"));
-        label_Temperature->setGeometry(QRect(10, 60, 81, 16));
+        label_Temperature->setGeometry(QRect(10, 60, 121, 16));
         label_Voltage = new QLabel(groupBox_2);
         label_Voltage->setObjectName(QString::fromUtf8("label_Voltage"));
         label_Voltage->setGeometry(QRect(10, 90, 81, 16));
@@ -168,10 +168,12 @@ public:
         lcdNumber_Temperature->setObjectName(QString::fromUtf8("lcdNumber_Temperature"));
         lcdNumber_Temperature->setGeometry(QRect(160, 60, 64, 23));
         lcdNumber_Temperature->setFont(font);
+        lcdNumber_Temperature->setSmallDecimalPoint(true);
         lcdNumber_Voltage = new QLCDNumber(groupBox_2);
         lcdNumber_Voltage->setObjectName(QString::fromUtf8("lcdNumber_Voltage"));
         lcdNumber_Voltage->setGeometry(QRect(160, 90, 64, 23));
         lcdNumber_Voltage->setFont(font);
+        lcdNumber_Voltage->setSmallDecimalPoint(true);
         lcdNumber_Luminosity = new QLCDNumber(groupBox_2);
         lcdNumber_Luminosity->setObjectName(QString::fromUtf8("lcdNumber_Luminosity"));
         lcdNumber_Luminosity->setGeometry(QRect(160, 120, 64, 23));
@@ -242,8 +244,8 @@ public:
         pushButton_SetWindSpeedThreshold->setText(QApplication::translate("MainWindow", "Set", nullptr));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "Node Info", nullptr));
         label_NodeID->setText(QApplication::translate("MainWindow", "Node ID", nullptr));
-        label_Temperature->setText(QApplication::translate("MainWindow", "Temperature", nullptr));
-        label_Voltage->setText(QApplication::translate("MainWindow", "Voltage", nullptr));
+        label_Temperature->setText(QApplication::translate("MainWindow", "Temperature(C)", nullptr));
+        label_Voltage->setText(QApplication::translate("MainWindow", "Voltage(V)", nullptr));
         label_Light->setText(QApplication::translate("MainWindow", "Luminosity", nullptr));
         label_Angle->setText(QApplication::translate("MainWindow", "Panel Angle", nullptr));
         radioButton_AngleAuto->setText(QApplication::translate("MainWindow", "Automatic", nullptr));

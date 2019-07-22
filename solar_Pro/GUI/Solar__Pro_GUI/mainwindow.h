@@ -11,7 +11,7 @@
 // Packet type flags used in UART/serial transmission.
 #define SERIAL_PACKET_TYPE_ANEMOMETER         	0
 #define SERIAL_PACKET_TYPE_NODE_SENSORS       	1
-#define SERIAL_PACKET_TYPE_HOP_HISTORY      	2
+#define SERIAL_PACKET_TYPE_NETWORK_DISCOVERY    2
 #define SERIAL_PACKET_TYPE_EMERGENCY			3
 #define SERIAL_PACKET_TYPE_SERVO_MANUAL			4
 #define SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS  5
@@ -25,9 +25,9 @@ class MainWindow;
 }
 
 typedef struct {
-    int destNode, originNode;
-    signed char temp_mC;
-    unsigned char battVolt_mV;
+    uint16_t destNode, originNode;
+    int temp_mC;
+    uint16_t battVolt_mV;
     unsigned char lightSensor;
     unsigned char servoPos_degs;
 } SensorValue;
@@ -38,6 +38,10 @@ typedef struct {
     unsigned char windspeedMax;
     unsigned char windspeedThreshold;
 }Anemometer;
+
+typedef struct {
+    int hopHist[8];
+}Network;
 
 class MainWindow : public QMainWindow
 {

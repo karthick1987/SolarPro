@@ -75,11 +75,11 @@ extern struct etimer et_broadCastOver;
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(unicastSendProcess);
 
-PROCESS(txUSB_process, "Sending payload");
+//PROCESS(txUSB_process, "Sending payload");
 PROCESS(windSpeedThread, "Wind Speed Sensor Thread");
 PROCESS(stateMachineThread, "State Machine Thread");
 PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
-AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &txUSB_process, &windSpeedThread);
+AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
     static void
@@ -232,31 +232,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
         }
     }
 
-    PROCESS_END();
-}
-
-PROCESS_THREAD(txUSB_process, ev, data)
-{
-    PROCESS_BEGIN();
-    static struct etimer secTimer;
-    etimer_set(&secTimer,CLOCK_SECOND);
-    char c[] = "hello WORLD";
-    while(1)
-    {
-        PROCESS_WAIT_EVENT();
-        if (ev == PROCESS_EVENT_MSG)
-        {
-            // Send msg to GUI
-        }
-        else if (ev == PROCESS_EVENT_TIMER)
-        {
-            if(etimer_expired(&secTimer))
-            {
-                etimer_reset(&secTimer);
-                sendUART(c,sizeof(c));
-            }
-        }
-    }
     PROCESS_END();
 }
 

@@ -7,7 +7,6 @@
 //#include "cpu/cc2538/usb/usb-serial.h"	// For UART-like I/O over USB.
 #include "dev/serial-line.h"
 
-
 /*---------------------------------------------------------------------------*/
 // Definition of UART special characters.
 // 	Note:	Contiki seems to have its own definitions.
@@ -28,6 +27,14 @@
 // Tx buffer size in bytes.
 #define MAX_USB_PAYLOAD_SIZE	5
 
+#define UART_BUFFER_SIZE        100
+#define SENSORCOPYBYTES         11
+#define HOPHISTORYBYTES         10
+
+typedef uint8_t uartBuf_t;
+
 void sendUART(char uartBuffer[], int buffersize);
+void clearHopHistClear(void);
+uartBuf_t * getBuf(void);
 
 #endif

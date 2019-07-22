@@ -43,14 +43,14 @@ GraphWidget::GraphWidget(QWidget *parent)
 
 void GraphWidget::addNodes()
 {
-    //char c[] = "1234567";
+    char c[] = "1234567";
     for (int i=0;i<7;i++)
     {
-        n[i] = new Node(this,'1'+i);
+        n[i] = new Node(this,c[i]);
         scene1->addItem(n[i]);
     }
-    centerNode = new Node(this,'0');
-
+    centerNode = new Node(this,'B');
+    scene1->addItem(centerNode);
     /*
     //QGraphicsScene *scene1 = new QGraphicsScene(this);
     n1 = new Node(this,'1');
@@ -62,14 +62,11 @@ void GraphWidget::addNodes()
     n7 = new Node(this,'7');
     */
 
-    scene1->addItem(centerNode);
-
-
     n[0]->setPos(0, -50);
     n[1]->setPos(-50, 0);
-    n[2]->setPos(-100, 50);
+    //n[7]->setPos(-100, 50);
     n[3]->setPos(50, 50);
-    centerNode->setPos(0, 0);
+    n[2]->setPos(0, 0);
     n[4]->setPos(100, 100);
     n[5]->setPos(50, 0);
     n[6]->setPos(100, -50);

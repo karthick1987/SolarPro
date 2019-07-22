@@ -82,6 +82,9 @@ static void callbackUCInt(void *ptr)
     ctimer_stop(&ucInt);
 }
 
+static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf);
+static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf);
+
 PROCESS_THREAD (unicastSendProcess, ev, data)
 {
     static pkttype_t pkt_type;
@@ -146,7 +149,7 @@ static node_num_t nextNode(node_num_t current_node)
     {
         if (current_node == getMyNodeID() || !(isValidNextHop(current_node)))
         {
-            printf("Skipped node %d as its either me or is not in Network\n",i+1);
+            //printf("Skipped node %d as its either me or is not in Network\n",i+1);
             current_node++;
             if (current_node > TOTAL_NODES)
             {
@@ -262,7 +265,7 @@ static void doUniCastMode(void)
     next_node = nextNode(next_node);
 
     printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
-    printf("isTransSuccess Flag is %d\n", isTransSuccess);
+    //printf("isTransSuccess Flag is %d\n", isTransSuccess);
 
     // setupPacket can be in dopathMode
     setupPacket(UNICAST);
@@ -278,9 +281,8 @@ static void doUniCastMode(void)
         // TODO send GUI the rx_data
         isTransSuccess = false;
 
-        printf("Next node is %d\n",next_node);
+        printf("Going to Next node: %d\n",next_node);
 
-        printf("Going to next Node\n");
         // go to next_node
         next_node++;
         process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
@@ -321,6 +323,14 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
                 if ( getRIMEID(next_node) == rx_packet->a.hopHist[i-1].u16 )
                 {
                     printf("REACHED DESTINATION\n");
+                    // Clear Hop History
+                    clearHopHistClear();
+
+                    // Get Hop History
+                    int bytesWritten = writeHopHistIntoUartBuf(rx_packet,getBuf());
+                    // Write to uart
+                    sendUART((char *) getBuf(),bytesWritten);
+
                     isTransSuccess = true;
                     ctimer_stop(&ackPathTimer);
                     // start timer to Post msg to thread
@@ -334,10 +344,14 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
                 printf("Base processing ACK UNICAST SENSOR MODE PKT\n");
                 if ( next_node == rx_packet->u.originNode )
                 {
-                    printf("Setting isTransSuccess to TRUE\n");
+                    //printf("Setting isTransSuccess to TRUE\n");
                     isTransSuccess = true;
                     ctimer_stop(&ackSensorTimer);
                     ctimer_set(&ucInt, UNICASTINTERVAL, &callbackUCInt, (void *)UNICAST);
+                    // Get Sensor values
+                    int bytesWritten = writeSensorValuesIntoUartBuf(rx_packet, getBuf());
+                    // Write to UART
+                    sendUART((char *) getBuf(),bytesWritten);
                 }
             }
             break;
@@ -355,4 +369,50 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
 
     }
     return 0;
+}
+
+// Return bytes written
+static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
+{
+    // Write packet type into serial
+    uartBuf[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
+
+    int i = 0;
+    for(i=0;i<TOTAL_NODES;i++)
+    {
+        printf("%x\n",rx_packet->a.hopHist[i].u16);
+        if (rx_packet->a.hopHist[i].u16 == RESETADDR)
+            break;
+    }
+    int hopCount = i - 1;
+    node_num_t dest = returnIDIndex(&(rx_packet->a.hopHist[hopCount])) + 1;
+
+    printf("Writing Hop Hist for Dest %d to UART, Hop Count is %d\n",dest,i-1);
+
+    for (i=0;(rx_packet->a.hopHist[i].u16 != RESETADDR) && (i<= TOTAL_NODES-1);i++)
+    {
+        uartBuf[i+1] = returnIDIndex(&(rx_packet->a.hopHist[i]))+1;
+        printf("Hop Count: %d, Destination: %d\n",i,uartBuf[i+1]+1);
+    }
+    uartBuf[i+1] = 0xFF;
+    return i+1;
+}
+
+static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
+{
+    int i = 0;
+    // Write packet type into serial
+    uartBuf[0] = SERIAL_PACKET_TYPE_NODE_SENSORS;
+    memcpy(uartBuf+1,&(rx_packet->u.destNode),SENSORCOPYBYTES);
+    payload_t *p = rx_packet;
+    printf("Origin: %d, Destination: %d\n",p->u.originNode,p->u.destNode);
+    printf("Temp_mC: %d\n",p->u.temp_mC);
+    printf("Batt_mV: %d\n",p->u.battVolt_mV);
+    printf("LightSensor: %d\n",p->u.lightSensor);
+    printf("servoPos_Degs: %d\n",p->u.servoPos_degs);
+    for(i=0;i<SENSORCOPYBYTES;i++)
+    {
+        printf("UartBuf[%d]: %d\n",i,uartBuf[i]);
+    }
+    return i;
 }
