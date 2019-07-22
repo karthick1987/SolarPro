@@ -395,7 +395,7 @@ static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
         printf("Hop Count: %d, Destination: %d\n",i,uartBuf[i+1]);
     }
     uartBuf[i+1] = 0xFF;
-    return i+1;
+    return i+2;
 }
 
 static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
