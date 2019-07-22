@@ -1,0 +1,116 @@
+\mbox{\hyperlink{class_qext_serial_port}{Qext\+Serial\+Port}} provides an interface to old fashioned serial ports for Qt-\/based applications. It currently supports Mac OS X, Windows, Linux, Free\+B\+SD.
+
+\href{http://qextserialport.github.io/}{\texttt{ http\+://qextserialport.\+github.\+io/}}
+
+\subsection*{How to use (1)}
+
+
+\begin{DoxyItemize}
+\item Download the source code.
+\item Put the source code in any directory you like. For example, 3rdparty\+:
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|-- project.pro}
+\DoxyCodeLine{|-- ....}
+\DoxyCodeLine{|-- 3rdparty\(\backslash\)}
+\DoxyCodeLine{|     |-- qextserialport\(\backslash\)}
+\DoxyCodeLine{|     |}
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Add following line to your qmake project file\+:
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{include(3rdparty/qextserialport/src/qextserialport.pri)}
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Using \mbox{\hyperlink{class_qext_serial_port}{Qext\+Serial\+Port}} in your code. Enjoy it!
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#include "qextserialport.h"}
+\DoxyCodeLine{....}
+\DoxyCodeLine{QextSerialPort * port = new QextSerialPort();}
+\DoxyCodeLine{....}
+\end{DoxyCode}
+
+
+\subsection*{How to use (2)}
+
+It\textquotesingle{}s very easy to compile \mbox{\hyperlink{class_qext_serial_port}{Qext\+Serial\+Port}} directly into your application (see above section), however, we would prefer to use it as a shared library.
+
+
+\begin{DoxyItemize}
+\item Download the source code, and put it in any location you like.
+\item Run following command to generate library.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{qmake}
+\DoxyCodeLine{make (or nmake)}
+\DoxyCodeLine{sudo make install (or nmake install)}
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Add following line to your project\textquotesingle{}s file
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{CONFIG += extserialport}
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Using \mbox{\hyperlink{class_qext_serial_port}{Qext\+Serial\+Port}} in your code. Enjoy it!
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#include "qextserialport.h"}
+\DoxyCodeLine{....}
+\DoxyCodeLine{QextSerialPort * port = new QextSerialPort();}
+\DoxyCodeLine{....}
+\end{DoxyCode}
+
+
+\subsection*{Build Documents}
+
+
+\begin{DoxyItemize}
+\item Run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{qmake}
+\DoxyCodeLine{make docs}
+\end{DoxyCode}
+
+\item Note\+: More information can be found in doc/readme.\+txt
+\end{DoxyItemize}
+
+\subsection*{Build examples}
+
+
+\begin{DoxyItemize}
+\item Goto examples directory, then run
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{qmake (or qmake -r)}
+\DoxyCodeLine{make (or nmake)}
+\end{DoxyCode}
+ 

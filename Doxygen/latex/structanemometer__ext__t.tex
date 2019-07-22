@@ -1,0 +1,61 @@
+\hypertarget{structanemometer__ext__t}{}\section{anemometer\+\_\+ext\+\_\+t Struct Reference}
+\label{structanemometer__ext__t}\index{anemometer\_ext\_t@{anemometer\_ext\_t}}
+
+
+struct \mbox{\hyperlink{structanemometer__ext__t}{anemometer\+\_\+ext\+\_\+t}} includes the values needed to store the maximum wind speed and calculate the average wind speed over lifetime and a certain amount of time (default is 120s).  
+
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structanemometer__ext__t_a9314254f1bd3f1a5b1512a52470aa8b3}{value\+\_\+max}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structanemometer__ext__t_aa1341800cb84f7a668bdea746835e910}{ticks\+\_\+avg}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structanemometer__ext__t_a4ef73c3a40c5b903c435f93ea8ef5f40}{value\+\_\+avg}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structanemometer__ext__t_ab852894a9785a6e785dc6931927337ff}{value\+\_\+buf\+\_\+xm}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structanemometer__ext__t_a14f62f52081e0c30229f16da4d998d65}{value\+\_\+avg\+\_\+xm}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+struct \mbox{\hyperlink{structanemometer__ext__t}{anemometer\+\_\+ext\+\_\+t}} includes the values needed to store the maximum wind speed and calculate the average wind speed over lifetime and a certain amount of time (default is 120s). 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structanemometer__ext__t_aa1341800cb84f7a668bdea746835e910}\label{structanemometer__ext__t_aa1341800cb84f7a668bdea746835e910}} 
+\index{anemometer\_ext\_t@{anemometer\_ext\_t}!ticks\_avg@{ticks\_avg}}
+\index{ticks\_avg@{ticks\_avg}!anemometer\_ext\_t@{anemometer\_ext\_t}}
+\subsubsection{\texorpdfstring{ticks\_avg}{ticks\_avg}}
+{\footnotesize\ttfamily uint64\+\_\+t ticks\+\_\+avg}
+
+average ticks to calculate average wind speed over lifetime. \mbox{\Hypertarget{structanemometer__ext__t_a4ef73c3a40c5b903c435f93ea8ef5f40}\label{structanemometer__ext__t_a4ef73c3a40c5b903c435f93ea8ef5f40}} 
+\index{anemometer\_ext\_t@{anemometer\_ext\_t}!value\_avg@{value\_avg}}
+\index{value\_avg@{value\_avg}!anemometer\_ext\_t@{anemometer\_ext\_t}}
+\subsubsection{\texorpdfstring{value\_avg}{value\_avg}}
+{\footnotesize\ttfamily uint64\+\_\+t value\+\_\+avg}
+
+contains the average wind speed value over lifetime. \mbox{\Hypertarget{structanemometer__ext__t_a14f62f52081e0c30229f16da4d998d65}\label{structanemometer__ext__t_a14f62f52081e0c30229f16da4d998d65}} 
+\index{anemometer\_ext\_t@{anemometer\_ext\_t}!value\_avg\_xm@{value\_avg\_xm}}
+\index{value\_avg\_xm@{value\_avg\_xm}!anemometer\_ext\_t@{anemometer\_ext\_t}}
+\subsubsection{\texorpdfstring{value\_avg\_xm}{value\_avg\_xm}}
+{\footnotesize\ttfamily uint16\+\_\+t value\+\_\+avg\+\_\+xm}
+
+average wind speed value over x minutes (2min default). \mbox{\Hypertarget{structanemometer__ext__t_ab852894a9785a6e785dc6931927337ff}\label{structanemometer__ext__t_ab852894a9785a6e785dc6931927337ff}} 
+\index{anemometer\_ext\_t@{anemometer\_ext\_t}!value\_buf\_xm@{value\_buf\_xm}}
+\index{value\_buf\_xm@{value\_buf\_xm}!anemometer\_ext\_t@{anemometer\_ext\_t}}
+\subsubsection{\texorpdfstring{value\_buf\_xm}{value\_buf\_xm}}
+{\footnotesize\ttfamily uint32\+\_\+t value\+\_\+buf\+\_\+xm}
+
+value buffer to calculate the average wind speed over x minutes (2min default). \mbox{\Hypertarget{structanemometer__ext__t_a9314254f1bd3f1a5b1512a52470aa8b3}\label{structanemometer__ext__t_a9314254f1bd3f1a5b1512a52470aa8b3}} 
+\index{anemometer\_ext\_t@{anemometer\_ext\_t}!value\_max@{value\_max}}
+\index{value\_max@{value\_max}!anemometer\_ext\_t@{anemometer\_ext\_t}}
+\subsubsection{\texorpdfstring{value\_max}{value\_max}}
+{\footnotesize\ttfamily uint16\+\_\+t value\+\_\+max}
+
+the maximum wind speed is saved here. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/\mbox{\hyperlink{anemometer_8c}{anemometer.\+c}}\end{DoxyCompactItemize}

@@ -266,7 +266,6 @@ static void doPathMode(void)
     if (isTransSuccess)
     {
         ctimer_stop(&ackPathTimer);
-        //printf("dPM: ctimer stopped\n");
         printf("dPM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
 

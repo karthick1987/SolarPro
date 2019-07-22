@@ -14,8 +14,8 @@ project: SolarPro
  * @author Karthik Sukumar & Johannes Machleid
  * @brief Contains the calibration values for light sensors.
  *
- * The calibration values of each individual sensor are needed to calculate
- * the the lux value. This file is not used in this project.
+ *      The calibration values of each individual sensor are needed to calculate
+ *      the the lux value. This file is not used in this project.
  */
 
 // Std file includes

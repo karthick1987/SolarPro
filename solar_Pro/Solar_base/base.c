@@ -20,8 +20,8 @@ contributors:
  * @author Karthik Sukumar & Johannes Machleid
  * @brief Main functions of the basestation with a state machine thread
  *
- * This file contains the main functionalities of the base station including a
- * state machine and the anemometer sensor reading.
+ *      This file contains the main functionalities of the base station including a
+ *      state machine and the anemometer sensor reading.
  */
 
 // Contiki-specific includes:
@@ -166,15 +166,15 @@ PROCESS_THREAD (windSpeedThread, ev, data)
 /**
 * @brief State machine thread of the basestation
 *
-* The state machine enables the base station to operate in different modes.
-* 1. Prepare Network Discovery: triggers all motes in the network to clear its
-*     routing table through broadcasting.
-* 2. Network Discovery: triggers all motes in the network to build their routing
-      tables by exchanging information with their neighbors.
-* 3. Unicast Mode: base station first collects the hop history to each mote and
-      then starts polling the sensor values.
-* 4. Emergency State: triggers all motes in the network to go into an emergency
-      state through broadcasting.
+*       The state machine enables the base station to operate in different modes.
+*       1. Prepare Network Discovery: triggers all motes in the network to clear its
+*          routing table through broadcasting.
+*       2. Network Discovery: triggers all motes in the network to build their routing
+*          tables by exchanging information with their neighbors.
+*       3. Unicast Mode: base station first collects the hop history to each mote and
+*          then starts polling the sensor values.
+*       4. Emergency State: triggers all motes in the network to go into an emergency
+*          state through broadcasting.
 */
 PROCESS_THREAD (stateMachineThread, ev, data)
 {

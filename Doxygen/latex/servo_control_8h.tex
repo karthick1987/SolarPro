@@ -1,0 +1,82 @@
+\hypertarget{servo_control_8h}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/servo\+Control.h File Reference}
+\label{servo_control_8h}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/servoControl.h@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/servoControl.h}}
+
+
+functions to operate the digital servo motor  
+
+
+\subsection*{Macros}
+\begin{Indent}\textbf{ define the G\+P\+IO port of the digital servo and the emergency angle}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{servo_control_8h_a0243a06e396db3b2e39bcf405429e3c1}\label{servo_control_8h_a0243a06e396db3b2e39bcf405429e3c1}} 
+\#define {\bfseries S\+E\+R\+V\+O\+P\+O\+RT}~G\+P\+I\+O\+\_\+\+A\+\_\+\+N\+UM
+\item 
+\mbox{\Hypertarget{servo_control_8h_a64a5788920049543903e587c2ca9db7d}\label{servo_control_8h_a64a5788920049543903e587c2ca9db7d}} 
+\#define {\bfseries S\+E\+R\+V\+O\+P\+IN}~2
+\item 
+\mbox{\Hypertarget{servo_control_8h_ab98bdcfad805b8a9f578b1fda381a671}\label{servo_control_8h_ab98bdcfad805b8a9f578b1fda381a671}} 
+\#define {\bfseries E\+M\+E\+R\+G\+E\+N\+C\+Y\+\_\+\+A\+N\+G\+LE}~90
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{servo_control_8h_aae99990dd632be263ba93f416bd7b3c2}{init\+Servo}} (void)
+\begin{DoxyCompactList}\small\item\em Function to initialize the G\+P\+IO port to control the servo. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{servo_control_8h_a1cc87f07c91b55652b0553030a5db8d3}{set\+Servo\+Position}} (int angle)
+\begin{DoxyCompactList}\small\item\em Function to set the servo position. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{servo_control_8h_ae0b5edf44bb0d6da56f030d6dea1a83e}{get\+Servo\+Position}} (void)
+\begin{DoxyCompactList}\small\item\em Function to get the servo position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+functions to operate the digital servo motor 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{servo_control_8h_ae0b5edf44bb0d6da56f030d6dea1a83e}\label{servo_control_8h_ae0b5edf44bb0d6da56f030d6dea1a83e}} 
+\index{servoControl.h@{servoControl.h}!getServoPosition@{getServoPosition}}
+\index{getServoPosition@{getServoPosition}!servoControl.h@{servoControl.h}}
+\subsubsection{\texorpdfstring{getServoPosition()}{getServoPosition()}}
+{\footnotesize\ttfamily int get\+Servo\+Position (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to get the servo position. 
+
+\begin{DoxyReturn}{Returns}
+pos is the position (angle) in degrees 
+\end{DoxyReturn}
+\mbox{\Hypertarget{servo_control_8h_aae99990dd632be263ba93f416bd7b3c2}\label{servo_control_8h_aae99990dd632be263ba93f416bd7b3c2}} 
+\index{servoControl.h@{servoControl.h}!initServo@{initServo}}
+\index{initServo@{initServo}!servoControl.h@{servoControl.h}}
+\subsubsection{\texorpdfstring{initServo()}{initServo()}}
+{\footnotesize\ttfamily int init\+Servo (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to initialize the G\+P\+IO port to control the servo. 
+
+\mbox{\Hypertarget{servo_control_8h_a1cc87f07c91b55652b0553030a5db8d3}\label{servo_control_8h_a1cc87f07c91b55652b0553030a5db8d3}} 
+\index{servoControl.h@{servoControl.h}!setServoPosition@{setServoPosition}}
+\index{setServoPosition@{setServoPosition}!servoControl.h@{servoControl.h}}
+\subsubsection{\texorpdfstring{setServoPosition()}{setServoPosition()}}
+{\footnotesize\ttfamily int set\+Servo\+Position (\begin{DoxyParamCaption}\item[{int}]{angle }\end{DoxyParamCaption})}
+
+
+
+Function to set the servo position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em angle} & is an integer, which defines the servo angle from 0 to 180 degrees \begin{DoxyVerb}  If the passed angle is greater than 180 (out of reach) we assume, that this is
+  and emergency call and set the angle to the specified emergency angle
+\end{DoxyVerb}
+ \\
+\hline
+\end{DoxyParams}

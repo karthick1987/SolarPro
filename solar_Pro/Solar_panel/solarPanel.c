@@ -66,8 +66,8 @@ AUTOSTART_PROCESSES(&stateMachineThread, &broadcastSendProcess);
 /**
 * @brief Thread runs the state machine of the solar panel
 *
-* The solar panel mote waits in idle until it receives messages or a
-* network discovery is initiated by pressing the USER Button on the mote.
+*       The solar panel mote waits in idle until it receives messages or a
+*       network discovery is initiated by pressing the USER Button on the mote.
 *
 */
 PROCESS_THREAD (stateMachineThread, ev, data)

@@ -1,0 +1,62 @@
+\hypertarget{class_uart}{}\section{Uart Class Reference}
+\label{class_uart}\index{Uart@{Uart}}
+Inheritance diagram for Uart\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_uart}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_uart_a012b7ca256db6538396627e0a8d136cd}\label{class_uart_a012b7ca256db6538396627e0a8d136cd}} 
+void {\bfseries open} (Q\+String path)
+\item 
+\mbox{\Hypertarget{class_uart_a5ae591df94fc66ccb85cbb6565368bca}\label{class_uart_a5ae591df94fc66ccb85cbb6565368bca}} 
+void {\bfseries close} ()
+\item 
+\mbox{\Hypertarget{class_uart_aacbb4d0054339ab78e856d60823b5900}\label{class_uart_aacbb4d0054339ab78e856d60823b5900}} 
+void {\bfseries send} (Q\+Byte\+Array data)
+\item 
+\mbox{\Hypertarget{class_uart_a6d8b9a5aece0a1419ceeef96e4401f88}\label{class_uart_a6d8b9a5aece0a1419ceeef96e4401f88}} 
+Q\+List$<$ \mbox{\hyperlink{struct_qext_port_info}{Qext\+Port\+Info}} $>$ {\bfseries get\+Ports} ()
+\item 
+\mbox{\Hypertarget{class_uart_abd5c185dbc2eee213e273cf72282e707}\label{class_uart_abd5c185dbc2eee213e273cf72282e707}} 
+Q\+List$<$ \mbox{\hyperlink{struct_qext_port_info}{Qext\+Port\+Info}} $>$ {\bfseries get\+U\+S\+B\+Ports} ()
+\end{DoxyCompactItemize}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_uart_a80e62a139ac8d5398a4622a9259db1c1}\label{class_uart_a80e62a139ac8d5398a4622a9259db1c1}} 
+void {\bfseries debug\+Received} (Q\+String str)
+\item 
+\mbox{\Hypertarget{class_uart_abbc853f2eb86a7b1c860ae866a928d50}\label{class_uart_abbc853f2eb86a7b1c860ae866a928d50}} 
+void {\bfseries packet\+Received} (Q\+Byte\+Array data)
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_uart_a6a5a57f6ead9702ae4475ad2642f68dc}{Uart}} (Q\+Object $\ast$parent=0)
+\item 
+\mbox{\Hypertarget{class_uart_a3a9ba7594ee74425dd345ecc263a5564}\label{class_uart_a3a9ba7594ee74425dd345ecc263a5564}} 
+bool {\bfseries is\+Open} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_uart_a6a5a57f6ead9702ae4475ad2642f68dc}\label{class_uart_a6a5a57f6ead9702ae4475ad2642f68dc}} 
+\index{Uart@{Uart}!Uart@{Uart}}
+\index{Uart@{Uart}!Uart@{Uart}}
+\subsubsection{\texorpdfstring{Uart()}{Uart()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_uart}{Uart}} (\begin{DoxyParamCaption}\item[{Q\+Object $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Serial U\+A\+RT interface for data packets. This class receives and sends data packets over U\+A\+RT. \begin{DoxyAuthor}{Author}
+Paul-\/Émile Arnaly 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/\+Solar\+\_\+\+\_\+\+Pro\+\_\+\+G\+U\+I/uart.\+h\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/build-\/\+Solar\+\_\+\+\_\+\+Pro\+\_\+\+G\+U\+I-\/\+Desktop-\/\+Debug/moc\+\_\+uart.\+cpp\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/\+Solar\+\_\+\+\_\+\+Pro\+\_\+\+G\+U\+I/uart.\+cpp\end{DoxyCompactItemize}

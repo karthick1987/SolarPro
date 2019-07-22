@@ -1,0 +1,52 @@
+\hypertarget{uart__local_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+Solar\+\_\+base/uart\+\_\+local.c File Reference}
+\label{uart__local_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_base/uart\_local.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_base/uart\_local.c}}
+
+
+Functions to handle U\+A\+RT communication between the base station and G\+UI.  
+
+
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}core/net/linkaddr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cpu/cc2538/dev/uart.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/serial-\/line.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}uart\+\_\+local.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{uart__local_8c_a94385db034f34b836a80dcde7b51637e}{send\+U\+A\+RT}} (char uart\+Buffer\mbox{[}$\,$\mbox{]}, int buffersize)
+\begin{DoxyCompactList}\small\item\em Function to write payload on U\+A\+RT. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{uart__local_8c_a36da9b2669d56ab067ab87ee43530bf3}\label{uart__local_8c_a36da9b2669d56ab067ab87ee43530bf3}} 
+void \mbox{\hyperlink{uart__local_8c_a36da9b2669d56ab067ab87ee43530bf3}{clear\+Hop\+Hist\+Clear}} (void)
+\begin{DoxyCompactList}\small\item\em Function sends a clearing package to G\+UI during network discovery. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{uart__local_8c_a0502fddcc34c696315ea3b45f90eb664}\label{uart__local_8c_a0502fddcc34c696315ea3b45f90eb664}} 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{uart__local_8c_a0502fddcc34c696315ea3b45f90eb664}{get\+Buf}} (void)
+\begin{DoxyCompactList}\small\item\em Function to return the U\+A\+RT Buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions to handle U\+A\+RT communication between the base station and G\+UI. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{uart__local_8c_a94385db034f34b836a80dcde7b51637e}\label{uart__local_8c_a94385db034f34b836a80dcde7b51637e}} 
+\index{uart\_local.c@{uart\_local.c}!sendUART@{sendUART}}
+\index{sendUART@{sendUART}!uart\_local.c@{uart\_local.c}}
+\subsubsection{\texorpdfstring{sendUART()}{sendUART()}}
+{\footnotesize\ttfamily void send\+U\+A\+RT (\begin{DoxyParamCaption}\item[{char}]{uart\+Buffer\mbox{[}$\,$\mbox{]},  }\item[{int}]{buffersize }\end{DoxyParamCaption})}
+
+
+
+Function to write payload on U\+A\+RT. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uart\+Buffer\mbox{[}$\,$\mbox{]}} & is an array of bytes to send over serial \\
+\hline
+{\em buffersize} & defines the amount of bytes to be sent \\
+\hline
+\end{DoxyParams}

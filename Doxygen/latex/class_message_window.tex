@@ -1,0 +1,99 @@
+\hypertarget{class_message_window}{}\section{Message\+Window Class Reference}
+\label{class_message_window}\index{MessageWindow@{MessageWindow}}
+
+
+{\ttfamily \#include $<$Message\+Window.\+h$>$}
+
+Inheritance diagram for Message\+Window\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_message_window}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_window_a2628ea8d12e8b2563c32f05dc7fff6fa}\label{class_message_window_a2628ea8d12e8b2563c32f05dc7fff6fa}} 
+enum {\bfseries Event\+Type} \{ {\bfseries Message\+Event\+Type} = Q\+Event\+::User
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_message_window_af9a36b8e14a787044984e1caa1131e2e}{Message\+Window}} (Q\+Widget $\ast$parent=0, Qt\+::\+Window\+Flags flags=0)
+\item 
+void \mbox{\hyperlink{class_message_window_aaa2d5aa4658897bb5a2e04ba9e318874}{post\+Msg\+Event}} (Qt\+Msg\+Type type, const char $\ast$msg)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_message_window_a27a0d63a6ac15a65011b5b0c796a720c}{Append\+Msg\+Wrapper}} (Qt\+Msg\+Type type, const char $\ast$msg)
+\item 
+\mbox{\Hypertarget{class_message_window_a671f013fdb8e4ca003b3002d82d9ecdd}\label{class_message_window_a671f013fdb8e4ca003b3002d82d9ecdd}} 
+static void {\bfseries Append\+Msg\+Wrapper} (Qt\+Msg\+Type type, const Q\+Message\+Log\+Context \&context, const Q\+String \&msg)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_message_window_a51bccb823537d2f7961a4578a5363aec}{custom\+Event}} (Q\+Event $\ast$event)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Message Window. Handling errors and other messages. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_message_window_af9a36b8e14a787044984e1caa1131e2e}\label{class_message_window_af9a36b8e14a787044984e1caa1131e2e}} 
+\index{MessageWindow@{MessageWindow}!MessageWindow@{MessageWindow}}
+\index{MessageWindow@{MessageWindow}!MessageWindow@{MessageWindow}}
+\subsubsection{\texorpdfstring{MessageWindow()}{MessageWindow()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_message_window}{Message\+Window}} (\begin{DoxyParamCaption}\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0},  }\item[{Qt\+::\+Window\+Flags}]{flags = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+Default constructor. 
+\begin{DoxyParams}{Parameters}
+{\em parent} & parent widget. \\
+\hline
+{\em flags} & widget flags. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_message_window_a27a0d63a6ac15a65011b5b0c796a720c}\label{class_message_window_a27a0d63a6ac15a65011b5b0c796a720c}} 
+\index{MessageWindow@{MessageWindow}!AppendMsgWrapper@{AppendMsgWrapper}}
+\index{AppendMsgWrapper@{AppendMsgWrapper}!MessageWindow@{MessageWindow}}
+\subsubsection{\texorpdfstring{AppendMsgWrapper()}{AppendMsgWrapper()}}
+{\footnotesize\ttfamily void Append\+Msg\+Wrapper (\begin{DoxyParamCaption}\item[{Qt\+Msg\+Type}]{type,  }\item[{const char $\ast$}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Append message wrapper. Since I\+SO forbids casting member functions to C functions, wrapper is needed to use this class as Qt\+Msg\+Handler. This method is thread-\/safe but not reentrant. 
+\begin{DoxyParams}{Parameters}
+{\em type} & message type. \\
+\hline
+{\em msg} & message string. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_message_window_a51bccb823537d2f7961a4578a5363aec}\label{class_message_window_a51bccb823537d2f7961a4578a5363aec}} 
+\index{MessageWindow@{MessageWindow}!customEvent@{customEvent}}
+\index{customEvent@{customEvent}!MessageWindow@{MessageWindow}}
+\subsubsection{\texorpdfstring{customEvent()}{customEvent()}}
+{\footnotesize\ttfamily void custom\+Event (\begin{DoxyParamCaption}\item[{Q\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+Handle custom events. \mbox{\hyperlink{class_message_window}{Message\+Window}} hadles custom events listed in Event\+Type enum. \mbox{\Hypertarget{class_message_window_aaa2d5aa4658897bb5a2e04ba9e318874}\label{class_message_window_aaa2d5aa4658897bb5a2e04ba9e318874}} 
+\index{MessageWindow@{MessageWindow}!postMsgEvent@{postMsgEvent}}
+\index{postMsgEvent@{postMsgEvent}!MessageWindow@{MessageWindow}}
+\subsubsection{\texorpdfstring{postMsgEvent()}{postMsgEvent()}}
+{\footnotesize\ttfamily void post\+Msg\+Event (\begin{DoxyParamCaption}\item[{Qt\+Msg\+Type}]{type,  }\item[{const char $\ast$}]{msg }\end{DoxyParamCaption})}
+
+Post message event to the main event loop. This function encapsulates message into \mbox{\hyperlink{class_message_event}{Message\+Event}} object and passes it to the main event loop. 
+\begin{DoxyParams}{Parameters}
+{\em type} & message type. \\
+\hline
+{\em msg} & message string. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/qextserialport/examples/qespta/\mbox{\hyperlink{_message_window_8h}{Message\+Window.\+h}}\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/qextserialport/examples/qespta/\mbox{\hyperlink{_message_window_8cpp}{Message\+Window.\+cpp}}\end{DoxyCompactItemize}

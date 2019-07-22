@@ -27,8 +27,8 @@ contributors:
 /**
 * @brief Function to stop all broadcast timers
 *
-* Function call is necessary to ensure proper functionality when transitioning
-* to other modes, such as unicasting
+*       Function call is necessary to ensure proper functionality when transitioning
+*       to other modes, such as unicasting
 */
 void stopAllBroadCastTimer(void);
 

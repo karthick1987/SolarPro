@@ -21,8 +21,8 @@ contributors:
  * @brief Functions and Thread to handle the broadcast communication for solar
  * panel and base station
  *
- * The broadcastSendProcess Thread handles the outgoing broadcast communication
- * of the solar panel and the base station.
+ *      The broadcastSendProcess Thread handles the outgoing broadcast communication
+ *      of the solar panel and the base station.
  */
 // Standard C includes:
 #include <stdio.h>
@@ -154,8 +154,8 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
 /**
 * @brief Function to stop all broadcast timers
 *
-* Function call is necessary to ensure proper functionality when transitioning
-* to other modes, such as unicasting
+*       Function call is necessary to ensure proper functionality when transitioning
+*       to other modes, such as unicasting
 */
 void stopAllBroadCastTimer(void)
 {

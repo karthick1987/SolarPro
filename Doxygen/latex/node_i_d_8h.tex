@@ -1,0 +1,148 @@
+\hypertarget{node_i_d_8h}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/node\+ID.h File Reference}
+\label{node_i_d_8h}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/nodeID.h@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/nodeID.h}}
+
+
+Functions to calculate the node and R\+I\+ME ID of each node.  
+
+
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}core/net/linkaddr.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structnode_i_d}{node\+ID}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{node_i_d_8h_a6572362526c5d65ca34ee66976520707}\label{node_i_d_8h_a6572362526c5d65ca34ee66976520707}} 
+\#define {\bfseries T\+O\+T\+A\+L\+\_\+\+N\+O\+D\+ES}~9
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{node_i_d_8h_a7c0dcba29ce6f35341dabdf0db559939}\label{node_i_d_8h_a7c0dcba29ce6f35341dabdf0db559939}} 
+typedef uint16\+\_\+t {\bfseries node\+\_\+num\+\_\+t}
+\item 
+\mbox{\Hypertarget{node_i_d_8h_a90528fed4b2d5dd536cfffac8443bec7}\label{node_i_d_8h_a90528fed4b2d5dd536cfffac8443bec7}} 
+typedef struct \mbox{\hyperlink{structnode_i_d}{node\+ID}} {\bfseries node\+I\+D\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{node_i_d_8h_ab46cddde2cb25c02e387feade08b62a7}{print\+\_\+node\+\_\+\+I\+Ds}} (void)
+\begin{DoxyCompactList}\small\item\em prints a table of \mbox{\hyperlink{class_node}{Node}} ID \end{DoxyCompactList}\item 
+node\+\_\+num\+\_\+t \mbox{\hyperlink{node_i_d_8h_a0a844bcee700c97b3872bf59ff353de6}{get\+My\+Node\+ID}} (void)
+\begin{DoxyCompactList}\small\item\em Gets the current \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s \mbox{\hyperlink{struct_network}{Network}} node ID. \end{DoxyCompactList}\item 
+linkaddr\+\_\+t $\ast$ \mbox{\hyperlink{node_i_d_8h_a3a5dcda22ce2e9ca7016b0d62574fce6}{get\+My\+R\+I\+M\+E\+ID}} (void)
+\begin{DoxyCompactList}\small\item\em Gets the current \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s R\+I\+ME ID. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{node_i_d_8h_ab26edc4b381160a2899613884bd62c5a}{get\+R\+I\+M\+E\+ID}} (node\+\_\+num\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em function which returns the R\+I\+ME ID of the passed node index \end{DoxyCompactList}\item 
+node\+\_\+num\+\_\+t \mbox{\hyperlink{node_i_d_8h_ac22fadf837a8dad83809b7296ffa3caa}{get\+My\+Node\+I\+D\+Index}} (void)
+\begin{DoxyCompactList}\small\item\em Compares the R\+I\+ME ID and returns the received \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Index in the Routing table. \end{DoxyCompactList}\item 
+node\+\_\+num\+\_\+t \mbox{\hyperlink{node_i_d_8h_a49e2645f82943f3be0b31fc5b78b9eee}{return\+I\+D\+Index}} (const linkaddr\+\_\+t $\ast$l)
+\begin{DoxyCompactList}\small\item\em Compares the R\+I\+ME ID and returns the received \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Nerwork \mbox{\hyperlink{class_node}{Node}} ID. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions to calculate the node and R\+I\+ME ID of each node. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{node_i_d_8h_a0a844bcee700c97b3872bf59ff353de6}\label{node_i_d_8h_a0a844bcee700c97b3872bf59ff353de6}} 
+\index{nodeID.h@{nodeID.h}!getMyNodeID@{getMyNodeID}}
+\index{getMyNodeID@{getMyNodeID}!nodeID.h@{nodeID.h}}
+\subsubsection{\texorpdfstring{getMyNodeID()}{getMyNodeID()}}
+{\footnotesize\ttfamily node\+\_\+num\+\_\+t get\+My\+Node\+ID (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Gets the current \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s \mbox{\hyperlink{struct_network}{Network}} node ID. 
+
+\begin{DoxyReturn}{Returns}
+The \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s \mbox{\hyperlink{struct_network}{Network}} ID This function prints the Nodes network ID. Its basically a translation table
+\end{DoxyReturn}
+Gets the current \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s \mbox{\hyperlink{struct_network}{Network}} node ID.
+
+This returns the \mbox{\hyperlink{class_node}{Node}} ID of the calling node \mbox{\Hypertarget{node_i_d_8h_ac22fadf837a8dad83809b7296ffa3caa}\label{node_i_d_8h_ac22fadf837a8dad83809b7296ffa3caa}} 
+\index{nodeID.h@{nodeID.h}!getMyNodeIDIndex@{getMyNodeIDIndex}}
+\index{getMyNodeIDIndex@{getMyNodeIDIndex}!nodeID.h@{nodeID.h}}
+\subsubsection{\texorpdfstring{getMyNodeIDIndex()}{getMyNodeIDIndex()}}
+{\footnotesize\ttfamily node\+\_\+num\+\_\+t get\+My\+Node\+I\+D\+Index (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Compares the R\+I\+ME ID and returns the received \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Index in the Routing table. 
+
+\begin{DoxyReturn}{Returns}
+The \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Index in the routing table This function returns the Nodes Index by taking the after comparing it in the routing table
+\end{DoxyReturn}
+Compares the R\+I\+ME ID and returns the received \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Index in the Routing table.
+
+This returns the \mbox{\hyperlink{class_node}{Node}} ID Index (-\/1) of the calling node \mbox{\Hypertarget{node_i_d_8h_a3a5dcda22ce2e9ca7016b0d62574fce6}\label{node_i_d_8h_a3a5dcda22ce2e9ca7016b0d62574fce6}} 
+\index{nodeID.h@{nodeID.h}!getMyRIMEID@{getMyRIMEID}}
+\index{getMyRIMEID@{getMyRIMEID}!nodeID.h@{nodeID.h}}
+\subsubsection{\texorpdfstring{getMyRIMEID()}{getMyRIMEID()}}
+{\footnotesize\ttfamily linkaddr\+\_\+t$\ast$ get\+My\+R\+I\+M\+E\+ID (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Gets the current \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s R\+I\+ME ID. 
+
+\begin{DoxyReturn}{Returns}
+The \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s \mbox{\hyperlink{struct_network}{Network}} ID This function prints the Nodes network ID. Its basically a translation table
+\end{DoxyReturn}
+Gets the current \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s R\+I\+ME ID.
+
+This returns the R\+I\+ME ID of the node \mbox{\Hypertarget{node_i_d_8h_ab26edc4b381160a2899613884bd62c5a}\label{node_i_d_8h_ab26edc4b381160a2899613884bd62c5a}} 
+\index{nodeID.h@{nodeID.h}!getRIMEID@{getRIMEID}}
+\index{getRIMEID@{getRIMEID}!nodeID.h@{nodeID.h}}
+\subsubsection{\texorpdfstring{getRIMEID()}{getRIMEID()}}
+{\footnotesize\ttfamily uint16\+\_\+t get\+R\+I\+M\+E\+ID (\begin{DoxyParamCaption}\item[{node\+\_\+num\+\_\+t}]{index }\end{DoxyParamCaption})}
+
+
+
+function which returns the R\+I\+ME ID of the passed node index 
+
+This returns the R\+I\+ME ID of an arbitrary node in the network \mbox{\Hypertarget{node_i_d_8h_ab46cddde2cb25c02e387feade08b62a7}\label{node_i_d_8h_ab46cddde2cb25c02e387feade08b62a7}} 
+\index{nodeID.h@{nodeID.h}!print\_node\_IDs@{print\_node\_IDs}}
+\index{print\_node\_IDs@{print\_node\_IDs}!nodeID.h@{nodeID.h}}
+\subsubsection{\texorpdfstring{print\_node\_IDs()}{print\_node\_IDs()}}
+{\footnotesize\ttfamily void print\+\_\+node\+\_\+\+I\+Ds (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+prints a table of \mbox{\hyperlink{class_node}{Node}} ID 
+
+\begin{DoxyVerb}         This function will print the table of NodeIDs present in the
+         each of the motes
+\end{DoxyVerb}
+
+
+prints a table of \mbox{\hyperlink{class_node}{Node}} ID
+
+This prints the \mbox{\hyperlink{struct_network}{Network}} I\+Ds of the nodes \mbox{\Hypertarget{node_i_d_8h_a49e2645f82943f3be0b31fc5b78b9eee}\label{node_i_d_8h_a49e2645f82943f3be0b31fc5b78b9eee}} 
+\index{nodeID.h@{nodeID.h}!returnIDIndex@{returnIDIndex}}
+\index{returnIDIndex@{returnIDIndex}!nodeID.h@{nodeID.h}}
+\subsubsection{\texorpdfstring{returnIDIndex()}{returnIDIndex()}}
+{\footnotesize\ttfamily node\+\_\+num\+\_\+t return\+I\+D\+Index (\begin{DoxyParamCaption}\item[{const linkaddr\+\_\+t $\ast$}]{l }\end{DoxyParamCaption})}
+
+
+
+Compares the R\+I\+ME ID and returns the received \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Nerwork \mbox{\hyperlink{class_node}{Node}} ID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em l} & The R\+I\+ME ID of the mote\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s \mbox{\hyperlink{struct_network}{Network}} ID This function prints the Nodes network ID by taking the R\+I\+ME ID as the input. Its basically a translation table
+\end{DoxyReturn}
+Compares the R\+I\+ME ID and returns the received \mbox{\hyperlink{class_node}{Node}}\textquotesingle{}s Nerwork \mbox{\hyperlink{class_node}{Node}} ID.
+
+This returns the \mbox{\hyperlink{class_node}{Node}} ID Index (-\/1) of the passed linkaddress 

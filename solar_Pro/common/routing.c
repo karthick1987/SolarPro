@@ -104,10 +104,10 @@ static void callbackEmergency(void *ptr)
 /**
 * @brief Function to setup the routing table
 *
-* In order to properly fill the routing table, it has to be cleared in advance.
-* The Destinations are a list of the configured nodes in nodeID.c
-* Next hop and cost fields are filled with 0xFFFF and 0xFF respectively.
-* The hopcost towards our own node is always 0.
+*       In order to properly fill the routing table, it has to be cleared in advance.
+*       The Destinations are a list of the configured nodes in nodeID.c
+*       Next hop and cost fields are filled with 0xFFFF and 0xFF respectively.
+*       The hopcost towards our own node is always 0.
 *
 */
 void setUpRtable(void)
@@ -134,8 +134,9 @@ void setUpRtable(void)
 /**
 * @brief Function to check if the next hop is valid
 * @param node NodeID to check if it is valid for next hop
-* When unicasting through the network, the base station needs to know, which
-* nodes are not connected (indicated by UNINIT = 0xFFFF) jump to the next node.
+*
+*       When unicasting through the network, the base station needs to know, which
+*       nodes are not connected (indicated by UNINIT = 0xFFFF) jump to the next node.
 */
 bool isValidNextHop(node_num_t node)
 {
@@ -152,10 +153,10 @@ bool isValidNextHop(node_num_t node)
 /**
 * @brief Function to set parameters prior to network discovery mode
 *
-* Prior to the network discovery, the routing table and broadcast counter has
-* to be reset. The payload to transmit is set to type DISCOVERY and the routing
-* table of the node is loaded into the payload. Then the sending process for
-* broadcasting is called with the DISCOVERY data pointer.
+*       Prior to the network discovery, the routing table and broadcast counter has
+*       to be reset. The payload to transmit is set to type DISCOVERY and the routing
+*       table of the node is loaded into the payload. Then the sending process for
+*       broadcasting is called with the DISCOVERY data pointer.
 */
 void initNetworkDisc(void)
 {
@@ -179,10 +180,10 @@ void initNetworkDisc(void)
 /**
 * @brief Function to set parameters prior to preparing network discovery
 *
-* If the network was already running and resumes from emergency mode, the
-* respective callback timer has to be stopped. Then the routing table and the
-* flag, that indicates an ongoing preparation mode have to be reset.
-* The payload type is setup and we shift to the broadcast sending process.
+*       If the network was already running and resumes from emergency mode, the
+*       respective callback timer has to be stopped. Then the routing table and the
+*       flag, that indicates an ongoing preparation mode have to be reset.
+*       The payload type is setup and we shift to the broadcast sending process.
 */
 void prepNetworkDisc(void)
 {
@@ -207,9 +208,9 @@ void prepNetworkDisc(void)
 /**
 * @brief Function to set parameters prior Emergency Mode
 *
-* The payload for an emergency broadcast has to be setup and the broadcast
-* counter is reset to 0, to ensure the proper amount of rebroadcasts.
-* The broadcast sending process is then called with the respective data pointer.
+*       The payload for an emergency broadcast has to be setup and the broadcast
+*       counter is reset to 0, to ensure the proper amount of rebroadcasts.
+*       The broadcast sending process is then called with the respective data pointer.
 */
 void initEmergency(void)
 {
@@ -272,9 +273,9 @@ static void forward_msg(const char * message)
 * @param p the payload (routing table) to be compared
 * @param from the linkaddress of the node, who sent the payload
 *
-* During network discovery the routing tables of neighbours are exchanged,
-* to fill possible gaps. The incoming routing table is checked for updates
-* through comparing them with the own routing table.
+*       During network discovery the routing tables of neighbours are exchanged,
+*       to fill possible gaps. The incoming routing table is checked for updates
+*       through comparing them with the own routing table.
 */
 static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
 {
@@ -299,9 +300,9 @@ static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
 /**
 * @brief Callback function called when receiving a broadcast message
 *
-* The callback function is called, whenever a broadcast message is received.
-* The payload is copied to a buffer to prevent its loss. The message is then
-* processed according to its type.
+*       The callback function is called, whenever a broadcast message is received.
+*       The payload is copied to a buffer to prevent its loss. The message is then
+*       processed according to its type.
 *
 */
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
@@ -407,8 +408,8 @@ void doBroadCast(void)
 /**
 * @brief Function to actually send the broadcast message over RF
 *
-* The message buffer is filled with payload and then forwarded to other nodes
-* which leads to a network flooding
+*       The message buffer is filled with payload and then forwarded to other nodes
+*       which leads to a network flooding
 */
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 {
@@ -426,8 +427,8 @@ void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 /**
 * @brief Callback function called when unicast message is received
 *
-* This function handles and processes incoming unicast messages according
-* to their type.
+*       This function handles and processes incoming unicast messages according
+*       to their type.
 *
 */
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
@@ -450,8 +451,8 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
 * @brief Function returns RIMED ID for next hop
 * @param tx_packet is the payload to be transmitted
 *
-* This function returns the RIMED ID for the next hop, based on the routing
-* table and according to the packet type to be transmitted.
+*       This function returns the RIMED ID for the next hop, based on the routing
+*       table and according to the packet type to be transmitted.
 *
 */
 static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
@@ -495,8 +496,8 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
 * @brief Function to send the unicast message
 * @param tx_packet is the pointer to the packet to be transmitted
 *
-* This function first clears the packet buffer and then loads the packet to
-* be transmitted into the buffer. Finally the unicast message is sent via RF.
+*       This function first clears the packet buffer and then loads the packet to
+*       be transmitted into the buffer. Finally the unicast message is sent via RF.
 */
 void unict_send(payload_t *tx_packet)
 {

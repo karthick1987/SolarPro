@@ -47,8 +47,8 @@ int initServo(void)
 * @brief Function to set the servo position
 * @param angle is an integer, which defines the servo angle from 0 to 180 degrees
 *
-* If the passed angle is greater than 180 (out of reach) we assume, that this is
-* and emergency call and set the angle to the specified emergency angle
+*       If the passed angle is greater than 180 (out of reach) we assume, that this is
+*       and emergency call and set the angle to the specified emergency angle
 */
 int setServoPosition(int angle)
 {

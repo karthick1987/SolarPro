@@ -20,14 +20,14 @@ contributors:
  * @author Karthik Sukumar & Johannes Machleid
  * @brief Functions to read out the windspeed sensor (anemometer) via GPIO.
  *
- * The anemometer function is based on the zolertia zoul example "test-weathermeter-example.c"
- * which comes with the contiki installation in contiki/examples/zolertia/zoul and the
- * "weather-meter.c" file which can be found in contiki/platform/zoul/dev.
- * The anemometer can be considered as a electrical switch opening and closing
- * at a frequency depending on the rotation speed of the anemometer. It sets the connected
- * GPIO Port to HIGH twice a rotation which is recognized by an interrupt handler.
- * These interrupts are counted over a certain amount of time to calculate the actual
- * windspeed in km/h.
+ *      The anemometer function is based on the zolertia zoul example "test-weathermeter-example.c"
+ *      which comes with the contiki installation in contiki/examples/zolertia/zoul and the
+ *      "weather-meter.c" file which can be found in contiki/platform/zoul/dev.
+ *      The anemometer can be considered as a electrical switch opening and closing
+ *      at a frequency depending on the rotation speed of the anemometer. It sets the connected
+ *      GPIO Port to HIGH twice a rotation which is recognized by an interrupt handler.
+ *      These interrupts are counted over a certain amount of time to calculate the actual
+ *      windspeed in km/h.
  */
 
 /*---------------------------------------------------------------------------*/
