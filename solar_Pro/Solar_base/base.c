@@ -190,6 +190,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
 
         else if (ev == PROCESS_EVENT_MSG)
         {
+            char uartTxBuffer[MAX_USB_PAYLOAD_SIZE];
             state = (enum state_t) (data);
             printf("STATE is %d\n",state);
             //printf("File sent this process a message %d!\n", (int) data);
@@ -201,6 +202,9 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                 case PREPNETDISC:
                     // transmit serial message to GUI
                     uartTxBuffer[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
+                    uartTxBuffer[1] = 0xFF;
+                    uartTxBuffer[2] = 0xFF;
+                    uartTxBuffer[3] = 0xFF;
                     sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
                     // kill unicast process 
                     process_exit(&unicastSendProcess);

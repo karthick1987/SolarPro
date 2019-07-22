@@ -101,12 +101,34 @@ void MainWindow::packet_received(QByteArray str) {
     if (str.length() == 0) return;
 
     switch (str.at(0)) {
+
+    case SERIAL_PACKET_TYPE_NETWORK_DISCOVERY:
+        if(static_cast<unsigned char> (str.at(1)) == 0xFF && static_cast<unsigned char> (str.at(2)) == 0xFF && static_cast<unsigned char> (str.at(3)) == 0xFF)
+        {
+            ui->NetworkGraph->scene()->clear();
+            ui->NetworkGraph->addNodes();
+        }
+        else
+        {
+            int i = 0;
+            for (i=0;i<10;i++)
+            {
+                uint8_t c = static_cast<uint8_t>(str.at(i+1));
+                if (c == 0xFF)
+                    break;
+                uint8_t c1 = static_cast<uint8_t>(str.at(i)) - 1;
+                uint8_t c2 = static_cast<uint8_t>(str.at(i+1)) - 1;
+                ui->NetworkGraph->scene()->addItem(new Edge(ui->NetworkGraph->n[c1], ui->NetworkGraph->n[c2]));
+            }
+        }
+        break;
+
     case SERIAL_PACKET_TYPE_ANEMOMETER:
         Anemometer anemometer;
-        anemometer.windspeed = str.at(1);
-        anemometer.windspeedAvg = str.at(2);
-        anemometer.windspeedMax = str.at(3);
-        anemometer.windspeedThreshold = str.at(4);
+        anemometer.windspeed = static_cast<unsigned char>(str.at(1));
+        anemometer.windspeedAvg = static_cast<unsigned char>(str.at(2));
+        anemometer.windspeedMax = static_cast<unsigned char>(str.at(3));
+        anemometer.windspeedThreshold = static_cast<unsigned char>(str.at(4));
 
 
         ui->lcdWindSpeed->setPalette(Qt::black);
@@ -120,7 +142,6 @@ void MainWindow::packet_received(QByteArray str) {
 
         ui->lcdWindSpeed_Threshold->setPalette(Qt::black);
         ui->lcdWindSpeed_Threshold->display(anemometer.windspeedThreshold);
-
         break;
 
     case SERIAL_PACKET_TYPE_NODE_SENSORS:
@@ -148,8 +169,8 @@ void MainWindow::packet_received(QByteArray str) {
 
         ui->lcdNumber_Angle->setPalette(Qt::black);
         ui->lcdNumber_Angle->display(sensorvalues[index].servoPos_degs);
-
         break;
+
     }
 }
 
