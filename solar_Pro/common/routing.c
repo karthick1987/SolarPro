@@ -17,6 +17,7 @@
 
 // Private local includes
 #include "unicast_local.h"
+#include "solarPanel.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -24,6 +25,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define RESTINGANGLE    30
 #define RCVTHRESHOLD    -60
 
 // Creates an instance of a unicast connection.
@@ -59,6 +61,7 @@ static void printRTable(const char *);
 static void printFromRTable(payload_t , const char *);
 
 static bool inPrepMode = false;
+static bool inEmergencyMode = false;
 
 extern const nodeID_t nodes[];
 PROCESS_NAME(broadcastSendProcess);
@@ -114,7 +117,9 @@ void initNetworkDisc(void)
     // reset routing table
     broadcastCount = 0;
     inPrepMode = false;
+    inEmergencyMode = false;
     setUpRtable();
+    setAngle(RESTINGANGLE);
 
     // Copy information to payload
     strncpy(payload_transmit.b.msg,"Init",BROADCASTMSGSIZE_BYTES);
@@ -134,6 +139,7 @@ void prepNetworkDisc(void)
     // reset routing table
     broadcastCount = 0;
     inPrepMode = false;
+    inEmergencyMode = false;
     setUpRtable();
 
     // Copy information to payload
@@ -155,6 +161,7 @@ void initEmergency(void)
     payload_transmit.b.bpkt = EMERGENCY;
     broadcastCount = 0;
     inPrepMode = false;
+    inEmergencyMode = true;
 
     // initiate controlled flooding
     process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
@@ -185,6 +192,10 @@ static void forward_msg(const char * message)
     //send the message
     printf("Size of payload is %d\n",sizeof(payload_t));
     packetbuf_copyfrom(message,sizeof(payload_t) ); // WARNING: Make sure that the size of message is equal to size of payload_t
+
+    payload_t *p = (payload_t *) message;
+    printf("Packet type is %d\n",p->b.bpkt);
+    printf("Packet string is %s\n",p->b.msg);
     broadcast_send(&broadcast);
     broadcastCount++;
 }
@@ -239,10 +250,19 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     {
         case EMERGENCY:
             // TODO set servo angle out of reach for emergency angle defined in common/routing.h
+
+            payload_transmit.b.bpkt = EMERGENCY;
+            strncpy(payload_transmit.b.msg, "EMERGY",BROADCASTMSGSIZE_BYTES);
             setServoPosition(255);
             // set callback timer to toggle red leds
             ctimer_set(&ct_emergency, CLOCK_SECOND, callbackEmergency, NULL);
-            process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
+            if (!inEmergencyMode)
+            {
+                //rebroadcast it
+                process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
+                inEmergencyMode = true;
+            }
+
             break;
 
         case DISCOVERY:

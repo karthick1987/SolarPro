@@ -22,6 +22,33 @@ GraphWidget::GraphWidget(QWidget *parent)
     setMinimumSize(400, 400);
     setWindowTitle(tr(""));
 
+//    n[0]->setPos(0, -50);
+//    n[1]->setPos(0, 0);
+//    n[2]->setPos(-50, 0);
+//    n[3]->setPos(50, 50);
+//    n[4]->setPos(100, 100);
+//    n[5]->setPos(50, 0);
+//    n[6]->setPos(100, -50);
+//    n[7]->setPos(-100, 50);
+
+    x[0] = -25;
+    x[1] = 0;
+    x[2] = 25;
+    x[3] = 75;
+    x[4] = 25;
+    x[5] = -25;
+    x[6] = -75;
+    x[7] = -100;
+
+    y[0] = 50;
+    y[1] = 0;
+    y[2] = 50;
+    y[3] = 0;
+    y[4] = -50;
+    y[5] = -50;
+    y[6] = 0;
+    y[7] = -50;
+
 /*
     scene->addItem(new Edge(centerNode, node1));
     scene->addItem(new Edge(centerNode, node2));
@@ -43,33 +70,29 @@ GraphWidget::GraphWidget(QWidget *parent)
 
 void GraphWidget::addNodes()
 {
-    char c[] = "12345678";
-    for (int i=0;i<7;i++)
+    nodeCount = 1;
+    baseStation = 1;    // The one with node 2
+    int i;
+    for (i=0;i<8;i++)
     {
-        n[i] = new Node(this,c[i]);
-        scene1->addItem(n[i]);
+        n[i] = nullptr;
     }
-    //centerNode = new Node(this,'B');
-    //scene1->addItem(centerNode);
-    /*
-    //QGraphicsScene *scene1 = new QGraphicsScene(this);
-    n1 = new Node(this,'1');
-    n2 = new Node(this,'2');
-    n3 = new Node(this,'3');
-    n4 = new Node(this,'4');
-    n5 = new Node(this,'5');
-    n6 = new Node(this,'6');
-    n7 = new Node(this,'7');
-    */
+    n[baseStation] = new Node(this,'2');
+    scene1->addItem(n[baseStation]);
+    n[baseStation]->setPos(x[baseStation],y[baseStation]);
+}
 
-    n[0]->setPos(0, -50);
-    n[1]->setPos(-50, 0);
-    n[7]->setPos(-100, 50);
-    n[3]->setPos(50, 50);
-    n[2]->setPos(0, 0);
-    n[4]->setPos(100, 100);
-    n[5]->setPos(50, 0);
-    n[6]->setPos(100, -50);
+void GraphWidget::addNode(int nodeIndex)
+{
+    n[nodeIndex] = new Node(this,nodeName[nodeIndex]);
+    scene1->addItem(n[nodeIndex]);
+    n[nodeIndex]->setPos(x[nodeIndex],y[nodeIndex]);
+    nodeCount++;
+}
+
+void *GraphWidget::getNodePtr(int nodeIndex)
+{
+    return n[nodeIndex];
 }
 
 void GraphWidget::itemMoved()
@@ -188,6 +211,16 @@ void GraphWidget::scaleView(qreal scaleFactor)
         return;
 
     scale(scaleFactor, scaleFactor);
+}
+
+bool GraphWidget::getBsColourSet() const
+{
+    return bsColourSet;
+}
+
+void GraphWidget::setBsColourSet(bool value)
+{
+    bsColourSet = value;
 }
 
 

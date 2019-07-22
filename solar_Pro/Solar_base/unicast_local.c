@@ -36,6 +36,13 @@ static void doUniCastMode(void);
 PROCESS_NAME(stateMachineThread);
 PROCESS(unicastSendProcess, "Unicast msg Send Thread");
 
+void stopAllUnicastTimers(void)
+{
+    ctimer_stop(&ackPathTimer);
+    ctimer_stop(&ackSensorTimer);
+    ctimer_stop(&ucInt);
+}
+
 static void callbackResendPath(void *ptr)
 {
     printf("PATH Ctimer callback entered\n");
@@ -417,13 +424,13 @@ static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf
 
     if(p->u.lightSensor == 0)
     {
-        uartBuf[9] = 0xFF;
-        uartBuf[10] = 0xFF;
+        //uartBuf[9] = 0xFF;
+        //uartBuf[10] = 0xFF;
     }
     if(p->u.servoPos_degs == 0)
     {
-        uartBuf[11] = 0xFF;
-        uartBuf[12] = 0xFF;
+        //uartBuf[11] = 0xFF;
+        //uartBuf[12] = 0xFF;
     }
     return i;
 }

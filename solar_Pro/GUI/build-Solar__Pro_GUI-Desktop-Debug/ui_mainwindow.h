@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLCDNumber>
@@ -64,6 +65,7 @@ public:
     QSpinBox *spinBox_ManualAngle;
     GraphWidget *NetworkGraph;
     QLabel *label_systemTime;
+    QCheckBox *checkBox;
     QWidget *tab_2;
     QTextEdit *textEdit_Status;
     QComboBox *comboBox_Interface;
@@ -92,7 +94,7 @@ public:
         button_Emergency->setGeometry(QRect(150, 470, 112, 32));
         label_NetGraph = new QLabel(tab);
         label_NetGraph->setObjectName(QString::fromUtf8("label_NetGraph"));
-        label_NetGraph->setGeometry(QRect(160, 10, 101, 16));
+        label_NetGraph->setGeometry(QRect(160, 10, 111, 16));
         groupBox = new QGroupBox(tab);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
         groupBox->setGeometry(QRect(430, 10, 231, 241));
@@ -197,6 +199,9 @@ public:
         label_systemTime = new QLabel(tab);
         label_systemTime->setObjectName(QString::fromUtf8("label_systemTime"));
         label_systemTime->setGeometry(QRect(10, 10, 81, 18));
+        checkBox = new QCheckBox(tab);
+        checkBox->setObjectName(QString::fromUtf8("checkBox"));
+        checkBox->setGeometry(QRect(290, 470, 121, 25));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
@@ -252,6 +257,7 @@ public:
         radioButton_AngleManual->setText(QApplication::translate("MainWindow", "&Manual", nullptr));
         pushButton_SetManualAngle->setText(QApplication::translate("MainWindow", "Set", nullptr));
         label_systemTime->setText(QApplication::translate("MainWindow", "Systemtime", nullptr));
+        checkBox->setText(QApplication::translate("MainWindow", "Rolling Values", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "General", nullptr));
         label_Port->setText(QApplication::translate("MainWindow", "Port:", nullptr));
         pushButton_open->setText(QApplication::translate("MainWindow", "Open", nullptr));

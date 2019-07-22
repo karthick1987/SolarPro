@@ -1,4 +1,5 @@
 
+
 /*
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
@@ -17,19 +18,10 @@ contributors:
  This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
  */
 
-#ifndef UNICASTLOC_H
-#define UNICASTLOC_H
+#ifndef SOLARPANEL_H
+#define SOLARPANEL_H
 
-#include "nodeID.h"
-#include "payload.h"
-#include "uart_local.h"
-
-#define UNICASTINTERVAL         2*CLOCK_SECOND
-#define UNICASTMAXRETRANSMIT    5
-
-int processUniCast(node_num_t dest, payload_t *rx_packet);
-void initUnicastMode(void);
-void initPathMode(void);
-void stopAllUnicastTimers(void);
+void setAngle(int ang);
 
 #endif
+

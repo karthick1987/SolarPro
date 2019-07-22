@@ -19,6 +19,7 @@ contributors:
 // Contiki-specific includes:
 #include "contiki.h"
 #include "cpu.h"
+#include "sys/ctimer.h"
 #include "sys/etimer.h"
 #include "net/rime/rime.h"	// Establish connections.
 #include "net/netstack.h"	// Wireless-stack definitions
@@ -61,12 +62,19 @@ contributors:
 /*---------------------------------------------------------------------------*/
 #define READ_SENSOR_PERIOD          CLOCK_SECOND
 #define ANEMOMETER_THRESHOLD_TICK   13  /**< (value*1.2) = 16 Km/h */
-int threshold_tick = 13;
-int threshold = 16;
+uint8_t threshold_tick = 13;
+uint8_t threshold = 16;
 /*---------------------------------------------------------------------------*/
 
 static struct etimer et;
 extern struct etimer et_broadCastOver;
+static struct ctimer ct_EmergencyLockout;
+bool startedEmergency = false;
+
+void callBackLockOut(void *ptr)
+{
+    startedEmergency = false;
+}
 
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
@@ -92,7 +100,8 @@ wind_speed_callback(uint16_t value)
      * ticks
      */
     printf("*** Wind speed over threshold of %d km/h (%u ticks)\n", threshold, value);
-    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)EMERGENCY);
+    if (!startedEmergency)
+        process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)EMERGENCYSTATE);
 }
 
 /*** Wind Speed Sensor THREAD ***/
@@ -135,10 +144,10 @@ PROCESS_THREAD (windSpeedThread, ev, data)
         wind_speed_max = anemometer.value(ANEMOMETER_MAX);
 
         uartTxBuffer[0] = SERIAL_PACKET_TYPE_ANEMOMETER;
-        uartTxBuffer[1] = wind_speed/1000;
-        uartTxBuffer[2] = wind_speed_avg_2m/1000;
-        uartTxBuffer[3] = wind_speed_max/1000;
-        uartTxBuffer[4] = threshold;
+        uartTxBuffer[1] = (uint8_t)(wind_speed/1000);
+        uartTxBuffer[2] = (uint8_t)(wind_speed_avg_2m/1000);
+        uartTxBuffer[3] = (uint8_t)(wind_speed_max/1000);
+        uartTxBuffer[4] = (uint8_t)(threshold);
 
         sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
 
@@ -208,11 +217,13 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
                     // kill unicast process 
                     process_exit(&unicastSendProcess);
-                    prepNetworkDisc();
+                    if(!startedEmergency)
+                        prepNetworkDisc();
                     break;
 
                 case INITNETWORKDISC:
-                    initNetworkDisc();
+                    if(!startedEmergency)
+                        initNetworkDisc();
                     break;
 
                 case PATHMODE:
@@ -228,7 +239,12 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     break;
 
                 case EMERGENCYSTATE:
+                    stopAllUnicastTimers();
                     process_exit(&unicastSendProcess);
+                    process_exit(&broadcastSendProcess);
+                    process_start(&broadcastSendProcess, NULL);
+                    startedEmergency = true;
+                    ctimer_set(&ct_EmergencyLockout, 20*CLOCK_SECOND, callBackLockOut, NULL);
                     initEmergency();
                     break;
 
@@ -289,8 +305,8 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
                 break;
 
               case SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS:
-                threshold = uartRxBuffer[1];
-                threshold_tick = threshold/1.2;
+                threshold = (uint8_t) uartRxBuffer[1];
+                threshold_tick = (uint8_t) threshold/1.2;
                 printf("Set Windspeed Threshold to %d km/h",uartRxBuffer[1]);
                 break;
 

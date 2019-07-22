@@ -47,10 +47,34 @@ contributors:
 #include "helpers.h"
 #include "nodeID.h"
 #include "routing.h"
-
+#include "servoControl.h"
+#include "solarPanel.h"
 /*---------------------------------------------------------------------------*/
 
 static uint16_t myNodeID;
+
+static struct ctimer ctServo;
+static int angle = 0;
+
+void setAngle(int ang)
+{
+    angle = ang;
+}
+
+#define SERVO_REFRESH 2*CLOCK_SECOND
+
+static void callback_Servo(void *ptr)
+{
+    setServoPosition(angle);
+    angle+=3;
+    if(angle > 170)
+    {
+        angle = 0;
+    }
+    ctimer_reset(&ctServo);
+}
+
+void setAngle(int angle);
 
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
@@ -70,6 +94,11 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     openBroadcast();
     openUnicast();
     setUpRtable();
+    initServo();
+    angle = 0;
+
+    ctimer_set(&ctServo, SERVO_REFRESH, callback_Servo, NULL);
+
     myNodeID = getMyNodeID();
     printf("This is the Mote\n");
     printf("RIME ID is %x Node ID is %d\n", getMyRIMEID()->u16, myNodeID);

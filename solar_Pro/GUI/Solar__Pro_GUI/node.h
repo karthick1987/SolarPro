@@ -29,6 +29,9 @@ public:
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    char getID() const;
+    void setID(char value);
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 

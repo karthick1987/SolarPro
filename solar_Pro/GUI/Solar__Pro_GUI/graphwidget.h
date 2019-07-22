@@ -2,6 +2,7 @@
 #define GRAPHWIDGET_H
 
 #include <QGraphicsView>
+#include <QGraphicsItem>
 
 class Node;
 
@@ -13,10 +14,20 @@ public:
     QGraphicsScene *scene1;
     Node *centerNode;
     Node *n[8];
+    int16_t x[8],y[8];
+    uint8_t baseStation;
+    const char nodeName[9] = "12345678";
 
-    GraphWidget(QWidget *parent = 0);
+
+    GraphWidget(QWidget *parent = nullptr);
     void itemMoved();
     void addNodes();
+
+    bool getBsColourSet() const;
+    void setBsColourSet(bool value);
+
+    void addNode(int nodeNum);
+    void *getNodePtr(int nodeIndex);
 
 public slots:
     void shuffle();
@@ -35,6 +46,8 @@ protected:
 
 private:
     int timerId;
+    bool bsColourSet = false;
+    int nodeCount;
 };
 
 #endif // GRAPHWIDGET_H

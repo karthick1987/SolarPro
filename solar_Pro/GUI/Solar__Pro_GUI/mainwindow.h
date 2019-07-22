@@ -28,15 +28,15 @@ typedef struct {
     uint16_t destNode, originNode;
     int temp_mC;
     uint16_t battVolt_mV;
-    unsigned char lightSensor;
-    unsigned char servoPos_degs;
+    uint16_t lightSensor;
+    uint16_t servoPos_degs;
 } SensorValue;
 
 typedef struct {
-    unsigned char windspeed;
-    unsigned char windspeedAvg;
-    unsigned char windspeedMax;
-    unsigned char windspeedThreshold;
+    uint8_t windspeed;
+    uint8_t windspeedAvg;
+    uint8_t windspeedMax;
+    uint8_t windspeedThreshold;
 }Anemometer;
 
 typedef struct {
