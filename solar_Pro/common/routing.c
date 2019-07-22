@@ -151,8 +151,10 @@ void initEmergency(void)
 {
     printf("Emergency initiated\n");
     strncpy(payload_transmit.b.msg,"EMGNCY",BROADCASTMSGSIZE_BYTES);
+    stopAllBroadCastTimer();
     payload_transmit.b.bpkt = EMERGENCY;
     broadcastCount = 0;
+    inPrepMode = false;
 
     // initiate controlled flooding
     process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
@@ -219,7 +221,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
 
     // If the RSSI value is less than a threshold value drop the packet
-    if ( rssi <= RCVTHRESHOLD )
+    if ( rssi <= RCVTHRESHOLD && payload_receive.b.bpkt == DISCOVERY )
     {
         leds_on(LEDS_GREEN);
         printf("Dropping message as %d rssi < %d Threshold\n",rssi, RCVTHRESHOLD);

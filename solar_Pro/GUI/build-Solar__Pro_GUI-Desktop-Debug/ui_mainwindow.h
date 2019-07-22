@@ -146,7 +146,7 @@ public:
         label_Temperature->setGeometry(QRect(10, 60, 121, 16));
         label_Voltage = new QLabel(groupBox_2);
         label_Voltage->setObjectName(QString::fromUtf8("label_Voltage"));
-        label_Voltage->setGeometry(QRect(10, 90, 81, 16));
+        label_Voltage->setGeometry(QRect(10, 90, 91, 16));
         label_Light = new QLabel(groupBox_2);
         label_Light->setObjectName(QString::fromUtf8("label_Light"));
         label_Light->setGeometry(QRect(10, 120, 81, 16));
@@ -244,8 +244,8 @@ public:
         pushButton_SetWindSpeedThreshold->setText(QApplication::translate("MainWindow", "Set", nullptr));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "Node Info", nullptr));
         label_NodeID->setText(QApplication::translate("MainWindow", "Node ID", nullptr));
-        label_Temperature->setText(QApplication::translate("MainWindow", "Temperature(C)", nullptr));
-        label_Voltage->setText(QApplication::translate("MainWindow", "Voltage(V)", nullptr));
+        label_Temperature->setText(QApplication::translate("MainWindow", "Temperature(mC)", nullptr));
+        label_Voltage->setText(QApplication::translate("MainWindow", "Voltage(mV)", nullptr));
         label_Light->setText(QApplication::translate("MainWindow", "Luminosity", nullptr));
         label_Angle->setText(QApplication::translate("MainWindow", "Panel Angle", nullptr));
         radioButton_AngleAuto->setText(QApplication::translate("MainWindow", "Automatic", nullptr));

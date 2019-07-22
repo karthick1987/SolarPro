@@ -125,13 +125,14 @@ void MainWindow::packet_received(QByteArray str) {
 
     case SERIAL_PACKET_TYPE_NODE_SENSORS:
         SensorValue sensorvalues[AMOUNT_OF_MOTES];
-        int index = str.at(1);
+        int index = str.at(3);
         sensorvalues[index].destNode = static_cast<uint16_t>(str.at(3));
         sensorvalues[index].originNode = static_cast<uint16_t>(str.at(1));
         sensorvalues[index].temp_mC = static_cast<int>( (str.at(5)+(256*str.at(6))) );
         sensorvalues[index].battVolt_mV = static_cast<uint16_t>( (str.at(7)+(256*str.at(8))) );
-        sensorvalues[index].lightSensor = str.at(9);
-        sensorvalues[index].servoPos_degs = str.at(9);
+
+        sensorvalues[index].lightSensor = static_cast<unsigned char> (str.at(9));
+        sensorvalues[index].servoPos_degs = static_cast<unsigned char> (str.at(11));
 
         ui->lcdNumber_NodeID->setPalette(Qt::black);
         ui->lcdNumber_NodeID->display(sensorvalues[index].destNode);

@@ -392,7 +392,7 @@ static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
     for (i=0;(rx_packet->a.hopHist[i].u16 != RESETADDR) && (i<= TOTAL_NODES-1);i++)
     {
         uartBuf[i+1] = returnIDIndex(&(rx_packet->a.hopHist[i]))+1;
-        printf("Hop Count: %d, Destination: %d\n",i,uartBuf[i+1]+1);
+        printf("Hop Count: %d, Destination: %d\n",i,uartBuf[i+1]);
     }
     uartBuf[i+1] = 0xFF;
     return i+1;
@@ -413,6 +413,17 @@ static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf
     for(i=0;i<SENSORCOPYBYTES;i++)
     {
         printf("UartBuf[%d]: %d\n",i,uartBuf[i]);
+    }
+
+    if(p->u.lightSensor == 0)
+    {
+        uartBuf[9] = 0xFF;
+        uartBuf[10] = 0xFF;
+    }
+    if(p->u.servoPos_degs == 0)
+    {
+        uartBuf[11] = 0xFF;
+        uartBuf[12] = 0xFF;
     }
     return i;
 }

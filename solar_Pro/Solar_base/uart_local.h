@@ -28,7 +28,7 @@
 #define MAX_USB_PAYLOAD_SIZE	5
 
 #define UART_BUFFER_SIZE        100
-#define SENSORCOPYBYTES         11
+#define SENSORCOPYBYTES         15
 #define HOPHISTORYBYTES         10
 
 typedef uint8_t uartBuf_t;

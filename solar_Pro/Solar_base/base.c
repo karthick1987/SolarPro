@@ -277,7 +277,8 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
 
               case SERIAL_PACKET_TYPE_EMERGENCY:
                 //run emergency mode
-                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)EMERGENCY);
+                printf("Received EMERGENCY cmd\n");
+                process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)EMERGENCYSTATE);
                 break;
 
               case SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS:
