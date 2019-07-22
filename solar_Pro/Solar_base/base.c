@@ -214,14 +214,17 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     initPathMode();
                     process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)PATH);
                     break;
+
                 case UNICASTMODE:
                     initUnicastMode();
                     process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
                     break;
+
                 case EMERGENCYSTATE:
                     process_exit(&unicastSendProcess);
                     initEmergency();
                     break;
+
                 default:
                     printf("[Base.c]: In Default???\n");
                     break;

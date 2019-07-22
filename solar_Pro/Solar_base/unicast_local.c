@@ -29,7 +29,6 @@ static struct ctimer ackSensorTimer, ucInt;
 
 static int transmissionCount = 1;
 static bool isPathModeComplete = false;
-static bool isPathMode = true;
 
 static void doPathMode(void);
 static void doUniCastMode(void);

@@ -46,7 +46,7 @@ void GraphWidget::addNodes()
     //char c[] = "1234567";
     for (int i=0;i<7;i++)
     {
-        n[i] = new Node(this,'1'+1);
+        n[i] = new Node(this,'1'+i);
         scene1->addItem(n[i]);
     }
     centerNode = new Node(this,'0');

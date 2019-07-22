@@ -47,7 +47,6 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
               etimer_set(&bcinterval,BROADCASTINTERVAL);
               bcinterval_flag = true;
               printf("Setting timer for EMERGENCY\n");
-
             }
             else if(pkt_type == PREPDISC)
             {
@@ -64,6 +63,7 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
             {
                 if (i<PREPDISCRETRANSMITS)
                 {
+                    // TODO setup packet
                     doBroadCast();
                     etimer_reset(&bcinterval);
                     i++;
