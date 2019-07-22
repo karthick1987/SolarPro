@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is designed for all nodes to set specific Node IDs depending on the RIME ID.
+ *****************************************************************************/
+
+ /**
+ * @file nodeID.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Functions to calculate the node and RIME ID of each node.
+ *
  */
 
 
@@ -26,6 +32,10 @@ contributors:
 // Private includes
 #include "nodeID.h"
 
+/**
+* @brief struct nodeID_t includes the nodeID, SerialNumber and RIME ID
+*
+*/
 const nodeID_t nodes[] =
 {
     {1,2048,0xBFED},
@@ -55,22 +65,30 @@ void print_node_IDs( void )
     printf("=========================================\n");
 }
 
+/** This returns the RIME ID of the node
+* @brief function which returns the RIME ID of the calling node
+*/
 linkaddr_t * getMyRIMEID( void )
 {
 	return &linkaddr_node_addr;
 }
 
+/** This returns the RIME ID of an arbitrary node in the network
+* @brief function which returns the RIME ID of the passed node index
+*/
 uint16_t getRIMEID(node_num_t index)
 {
     return nodes[index-1].rimeID;
 }
 
+/** This returns the Node ID of the calling node
+* @brief function which returns the Node ID of the calling node
+*/
 node_num_t getMyNodeID( void )
 {
     int i=0;
     for (i=0;i<TOTAL_NODES;i++)
     {
-        // printf("Mine is %x   Node ID is %x\n", linkaddr_node_addr.u16, nodes[i].rimeID);
         if ( linkaddr_node_addr.u16 == nodes[i].rimeID )
         {
             return nodes[i].nodeID;
@@ -79,6 +97,9 @@ node_num_t getMyNodeID( void )
     return -1;
 }
 
+/** This returns the Node ID Index (-1) of the calling node
+* @brief function which returns the Node ID Index (-1) of the calling node
+*/
 node_num_t getMyNodeIDIndex( void )
 {
     int i=0;
@@ -92,6 +113,9 @@ node_num_t getMyNodeIDIndex( void )
     return -1;
 }
 
+/** This returns the Node ID Index (-1) of the passed linkaddress
+* @brief function which returns the Node ID of the passed linkaddress
+*/
 node_num_t returnIDIndex( const linkaddr_t *l)
 {
     int i=0;

@@ -24,6 +24,12 @@ contributors:
 #define BROADCASTINTERVAL       CLOCK_SECOND/2
 #define BROADCASTCHANNEL        129
 
+/**
+* @brief Function to stop all broadcast timers
+*
+* Function call is necessary to ensure proper functionality when transitioning
+* to other modes, such as unicasting
+*/
 void stopAllBroadCastTimer(void);
 
 #endif

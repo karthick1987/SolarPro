@@ -9,11 +9,11 @@ copyright (c) 2019 Chair of Communication Networks, TUM
 
 project: SolarPro
 
-contributors:
- * Karthik Sukumar
- * Johannes Machleid
-
- This header file is designed for all nodes to read out wind speed sensor values.
+ /**
+ * @file anemometer.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Header file with defines to read out the windspeed sensor (anemometer) via GPIO.
+ *
  */
 
 #ifndef ANEMOMETER_H

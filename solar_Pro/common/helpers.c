@@ -28,7 +28,6 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-   LESSON 5: Routing
 */
 
 // turns an LED on and increases the number of packets of this color
@@ -149,7 +148,6 @@ void toggle_GPIO(uint32_t port, uint8_t pins)
 /*
  * \brief   Function to print the processes running currently
  */
-
 void print_active_procs(void)
 {
     uint8_t ps=process_nevents();

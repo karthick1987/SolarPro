@@ -149,7 +149,10 @@ static void ct_callback(void *ptr)
 
 }
 
-
+/**
+* @brief Anemometer interrupt Thread which calls a callback function when
+* the wind speed threshold is passed
+*/
 /*---------------------------------------------------------------------------*/
 PROCESS(anemometer_int_process, "Anemometer interrupt process handler");
 /*---------------------------------------------------------------------------*/
