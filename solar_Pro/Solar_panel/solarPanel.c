@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,9 +13,15 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is specifically designed for the base node.
- */
+ *****************************************************************************/
 
+ /**
+ * @file solarPanel.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Setting up the solar panel motes with RF connection and running a
+ * state machine thread for the solar panel
+ *
+ */
 // Contiki-specific includes:
 #include "contiki.h"
 #include "cpu.h"
@@ -29,10 +35,6 @@ contributors:
 #include "dev/adc-zoul.h"      // ADC
 #include "dev/zoul-sensors.h"  // Sensor functions
 #include "dev/sys-ctrl.h"
-#include "cpu/cc2538/dev/uart.h"
-//#include "cpu/cc2538/usb/usb-serial.h"	// For UART-like I/O over USB.
-#include "dev/serial-line.h"			// For UART-like I/O over USB.
-
 
 // Standard C includes:
 #include <stdio.h>
@@ -57,9 +59,17 @@ static uint16_t myNodeID;
 /*---------------------------------------------------------------------------*/
 // The process is defined in another file
 PROCESS_NAME(broadcastSendProcess);
+
 PROCESS(stateMachineThread, "Main Thread");
 AUTOSTART_PROCESSES(&stateMachineThread, &broadcastSendProcess);
 
+/**
+* @brief Thread runs the state machine of the solar panel
+*
+* The solar panel mote waits in idle until it receives messages or a
+* network discovery is initiated by pressing the USER Button on the mote.
+*
+*/
 PROCESS_THREAD (stateMachineThread, ev, data)
 {
     PROCESS_BEGIN();
@@ -77,8 +87,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     /* Configure the user button */
     button_sensor.configure(BUTTON_SENSOR_CONFIG_TYPE_INTERVAL, CLOCK_SECOND);
 
-    //payload_t p; // For setting up payload for ackmode and Unicast modes
-
     while(1) {
         PROCESS_WAIT_EVENT();
         // check if button was pressed
@@ -90,7 +98,6 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                         BUTTON_SENSOR_PRESSED_LEVEL )
                 {
                     // Signal that Network Disc has been inited
-                    // process_post(&mainThread, PROCESS_EVENT_MSG, INITNETWORKDISC);
                     prepNetworkDisc();
                 }
             }

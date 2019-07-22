@@ -1,3 +1,20 @@
+/*
+   Wireless Sensor Networks Laboratory 2019 -- Group 1
+
+   Technische Universität München
+   Lehrstuhl für Kommunikationsnetze
+http://www.lkn.ei.tum.de
+
+copyright (c) 2019 Chair of Communication Networks, TUM
+
+project: SolarPro
+
+ /**
+ * @file proj-config.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Header file with defines of the MAC Layer, Channel and Transmission power
+ *
+ */
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
@@ -13,10 +30,6 @@
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 256 	// 	x^2 (8,16,32,...)
 //
 //
-//// MEASUREMENT PARAMETERS
-//#define INTER_PACKET_TIME	32		//  Inter-Packet Arrival Time 128 Ticks = 1 second.
-//#define MAX_MESSAGE_LENGTH 	12		//  Message length (values btw 8-100)
-//#define TOTAL_TX_PACKETS	10		//  Number of total transmit packets.
-//
+
 
 #endif /* PROJECT_CONF_H_ */

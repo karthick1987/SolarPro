@@ -1,3 +1,26 @@
+/******************************************************************************
+   Wireless Sensor Networks Laboratory 2019 -- Group 1
+
+   Technische Universität München
+   Lehrstuhl für Kommunikationsnetze
+http://www.lkn.ei.tum.de
+
+copyright (c) 2019 Chair of Communication Networks, TUM
+
+project: SolarPro
+
+contributors:
+ * Karthik Sukumar
+ * Johannes Machleid
+
+ *****************************************************************************/
+
+ /**
+ * @file uart_local.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Definition of UART connection
+ *
+ */
 #ifndef UARTLOCAL_H
 #define UARTLOCAL_H
 

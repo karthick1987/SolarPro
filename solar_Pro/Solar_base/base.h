@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is specifically designed for the base node.
+ *****************************************************************************/
+
+ /**
+ * @file base.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Main functions of the basestation with a state machine thread
+ *
  */
 
 #ifndef BASE_H
@@ -22,6 +28,10 @@ contributors:
 #include "contiki.h"
 #include "core/net/linkaddr.h"
 
+/**
+ * \name definition of the base station state machine operation modes
+ * @{
+ */
 enum state_t {
 PREPNETDISC = 45,
 IDLE        = 46,
@@ -30,4 +40,5 @@ PATHMODE         ,
 UNICASTMODE     ,
 EMERGENCYSTATE  ,
 };
+/** @} */
 #endif

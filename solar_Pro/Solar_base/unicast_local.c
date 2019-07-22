@@ -1,4 +1,26 @@
+/******************************************************************************
+   Wireless Sensor Networks Laboratory 2019 -- Group 1
 
+   Technische Universität München
+   Lehrstuhl für Kommunikationsnetze
+http://www.lkn.ei.tum.de
+
+copyright (c) 2019 Chair of Communication Networks, TUM
+
+project: SolarPro
+
+contributors:
+ * Karthik Sukumar
+ * Johannes Machleid
+
+ *****************************************************************************/
+
+ /**
+ * @file unicast_local.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Functions to handle unicast messages specifically in base station
+ *
+ */
 // Standard C includes:
 #include <stdio.h>
 #include <stdint.h>
@@ -33,9 +55,19 @@ static bool isPathModeComplete = false;
 static void doPathMode(void);
 static void doUniCastMode(void);
 
+// Functions to write Hop History and Sensor values to UART
+static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf);
+static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf);
+
+// external thread
 PROCESS_NAME(stateMachineThread);
+
 PROCESS(unicastSendProcess, "Unicast msg Send Thread");
 
+/**
+* @brief Callback function after c_timer expired to resend the unicast message in
+*   path mode, when transmission failed
+*/
 static void callbackResendPath(void *ptr)
 {
     printf("PATH Ctimer callback entered\n");
@@ -50,6 +82,10 @@ static void callbackResendPath(void *ptr)
     }
 }
 
+/**
+* @brief Callback function after c_timer expired to resend the unicast message in
+*   sensor data collecting mode, when transmission failed
+*/
 static void callbackResendSensor(void *ptr)
 {
   printf("SENSOR UNICAST Ctimer callback entered\n");
@@ -64,6 +100,10 @@ static void callbackResendSensor(void *ptr)
   }
 }
 
+/**
+* @brief Callback function to wait between each new unicast send attempt of
+* the base station
+*/
 static void callbackUCInt(void *ptr)
 {
     switch((int)ptr)
@@ -82,9 +122,10 @@ static void callbackUCInt(void *ptr)
     ctimer_stop(&ucInt);
 }
 
-static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf);
-static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf);
-
+/**
+* @brief Anemometer interrupt Thread which calls a callback function when
+* the wind speed threshold is passed
+*/
 PROCESS_THREAD (unicastSendProcess, ev, data)
 {
     static pkttype_t pkt_type;
@@ -124,6 +165,9 @@ PROCESS_THREAD (unicastSendProcess, ev, data)
     PROCESS_END();
 }
 
+/**
+* @brief Function to set parameters prior to unicasting mode
+*/
 void initUnicastMode(void)
 {
     next_node = 1;
@@ -132,6 +176,9 @@ void initUnicastMode(void)
     stopAllBroadCastTimer();
 }
 
+/**
+* @brief Function to set parameters prior to path mode
+*/
 void initPathMode()
 {
     next_node = 1;
@@ -141,6 +188,10 @@ void initPathMode()
     stopAllBroadCastTimer();
 }
 
+/**
+* @brief Function to cycle through the nodes to poll Hop history or sensor data
+* @param current_node is the Node ID of the current node used to calculate next node
+*/
 static node_num_t nextNode(node_num_t current_node)
 {
 
@@ -166,6 +217,10 @@ static node_num_t nextNode(node_num_t current_node)
 	return current_node;
 }
 
+/**
+* @brief This function sets up the unicast packet based on its type
+* @param type is the type of the message to be sent
+*/
 static void setupPacket(pkttype_t type)
 {
     //tx_packet is a static global here
@@ -194,15 +249,15 @@ static void setupPacket(pkttype_t type)
     printPacket(p);
 }
 
+
+/**
+* @brief This function executes the path mode to collect the hop history to
+*   each node
+*/
 static void doPathMode(void)
 {
-    // printf("Before: Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
-
     // Determine next node
     next_node = nextNode(next_node);
-
-    // printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
-    // printf("isPathModeComplete Flag is %d\n", isPathModeComplete);
 
     // setupPacket can be in dopathMode
     setupPacket(PATH);
@@ -215,10 +270,7 @@ static void doPathMode(void)
         printf("dPM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
 
-        // TODO send GUI the rx_data
         isTransSuccess = false;
-
-        //printf("Next node is %d\n",next_node);
 
         // If all nodes are done
         if (isPathModeComplete)
@@ -250,12 +302,15 @@ static void doPathMode(void)
 
             // Set acknowledge timer
             ctimer_set(&ackPathTimer, UNICASTINTERVAL, &callbackResendPath, NULL);
-            //printf("Callback Timer set to expire in a little while\n");
             transmissionCount++;
         }
     }
 }
 
+/**
+* @brief This function executes the unicast mode to collect the sensor data of
+*   eacht node
+*/
 static void doUniCastMode(void)
 {
     printf("Now starting to collect sensor values....\n");
@@ -265,7 +320,6 @@ static void doUniCastMode(void)
     next_node = nextNode(next_node);
 
     printf("After:  Sending to NextNode: %d Attempt: %d\n",next_node, transmissionCount);
-    //printf("isTransSuccess Flag is %d\n", isTransSuccess);
 
     // setupPacket can be in dopathMode
     setupPacket(UNICAST);
@@ -278,7 +332,6 @@ static void doUniCastMode(void)
         printf("dUM: Transmission count is :%d\n",transmissionCount);
         transmissionCount = 1;
 
-        // TODO send GUI the rx_data
         isTransSuccess = false;
 
         printf("Going to Next node: %d\n",next_node);
@@ -300,6 +353,9 @@ static void doUniCastMode(void)
     }
 }
 
+/**
+* @brief This function processes the received unicast message according to its type
+*/
 int processUniCast(node_num_t dest, payload_t *rx_packet)
 {
     //read out byte 1 if PATH or UNICAST
@@ -371,7 +427,11 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
     return 0;
 }
 
-// Return bytes written
+/**
+* @brief This function sends to collected hop history via UART to the GUI
+* @param rx_packet is a pointer to the received unicast message
+* @param uartBuf is a pointer to the UART Buffer
+*/
 static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
 {
     // Write packet type into serial
@@ -398,6 +458,11 @@ static int writeHopHistIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
     return i+2;
 }
 
+/**
+* @brief This function sends to collected sensor data of the specific node to the GUI
+* @param rx_packet is a pointer to the received unicast message
+* @param uartBuf is a pointer to the UART Buffer
+*/
 static int writeSensorValuesIntoUartBuf(payload_t *rx_packet, uartBuf_t *uartBuf)
 {
     int i = 0;

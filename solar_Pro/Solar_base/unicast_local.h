@@ -1,5 +1,4 @@
-
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -14,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
+ *****************************************************************************/
+
+ /**
+ * @file unicast_local.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Sets the unicast transmission interval and maximum amounts of retransmissions
+ *
  */
 
 #ifndef UNICASTLOC_H

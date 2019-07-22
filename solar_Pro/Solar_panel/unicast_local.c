@@ -1,5 +1,4 @@
-
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -14,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is specifically designed for the base node.
+ *****************************************************************************/
+
+ /**
+ * @file unicast_local.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Functions to handle unicast messages specifically in solar Panel
+ *
  */
 
 // Contiki-specific includes:
@@ -33,6 +38,10 @@ contributors:
 // Local global variable static to this file
 static payload_t tx_packet;
 
+/**
+* @brief This function sets up the unicast packet based on its type
+* @param type is the type of the message to be sent
+*/
 static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t dest)
 {
     //tx_packet is a static global here
@@ -67,6 +76,9 @@ static void setupPacket(payload_t *rx_packet) // , pkttype_t type, node_num_t de
     printPacket(p);
 }
 
+/**
+* @brief This function processes the received unicast message according to its type
+*/
 int processUniCast(node_num_t dest, payload_t *rx_packet)
 {
     // Stop all broadcast timers!
@@ -129,5 +141,3 @@ int processUniCast(node_num_t dest, payload_t *rx_packet)
     }
     return 0;
 }
-
-
