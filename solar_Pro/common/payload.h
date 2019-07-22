@@ -1,5 +1,4 @@
-
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -14,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
+ *****************************************************************************/
+
+ /**
+ * @file payload.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Structure defines of the payload for different communication modes
+ *
  */
 
 #ifndef PAYLOAD_H

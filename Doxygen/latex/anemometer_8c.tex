@@ -1,0 +1,58 @@
+\hypertarget{anemometer_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/anemometer.c File Reference}
+\label{anemometer_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/anemometer.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/anemometer.c}}
+
+
+Functions to read out the windspeed sensor (anemometer) via G\+P\+IO.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/adc-\/zoul.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}anemometer.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structanemometer__sensors__t}{anemometer\+\_\+sensors\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em struct \mbox{\hyperlink{structanemometer__sensors__t}{anemometer\+\_\+sensors\+\_\+t}} includes the values needed for the actual wind speed calculations \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structanemometer__ext__t}{anemometer\+\_\+ext\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em struct \mbox{\hyperlink{structanemometer__ext__t}{anemometer\+\_\+ext\+\_\+t}} includes the values needed to store the maximum wind speed and calculate the average wind speed over lifetime and a certain amount of time (default is 120s). \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structanemometer__sensors}{anemometer\+\_\+sensors}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{anemometer_8c_ac648ee4008095a32715b45fa9f2f9c58}\label{anemometer_8c_ac648ee4008095a32715b45fa9f2f9c58}} 
+\mbox{\hyperlink{anemometer_8c_ac648ee4008095a32715b45fa9f2f9c58}{P\+R\+O\+C\+E\+SS}} (anemometer\+\_\+int\+\_\+process, \char`\"{}Anemometer interrupt process handler\char`\"{})
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{struct_anemometer}{Anemometer}} interrupt Thread which calls a callback function when the wind speed threshold is passed. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{anemometer_8c_a95ae227e1ee1dcf4aca103de4f4bd325}\label{anemometer_8c_a95ae227e1ee1dcf4aca103de4f4bd325}} 
+{\bfseries P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD} (anemometer\+\_\+int\+\_\+process, ev, data)
+\item 
+\mbox{\Hypertarget{anemometer_8c_a98573bf35f352e158c5f9095d48e98f1}\label{anemometer_8c_a98573bf35f352e158c5f9095d48e98f1}} 
+{\bfseries S\+E\+N\+S\+O\+R\+S\+\_\+\+S\+E\+N\+S\+OR} (anemometer, A\+N\+E\+M\+O\+M\+E\+T\+E\+R\+\_\+\+S\+E\+N\+S\+OR, value, configure, N\+U\+LL)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{anemometer_8c_a078cd883c419c1efe50476b2c063fa4a}\label{anemometer_8c_a078cd883c419c1efe50476b2c063fa4a}} 
+void($\ast$ {\bfseries anemometer\+\_\+int\+\_\+callback} )(uint16\+\_\+t value)
+\item 
+\mbox{\Hypertarget{anemometer_8c_a81dac6d508089152db8750f679139ec1}\label{anemometer_8c_a81dac6d508089152db8750f679139ec1}} 
+process\+\_\+event\+\_\+t {\bfseries anemometer\+\_\+int\+\_\+event}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions to read out the windspeed sensor (anemometer) via G\+P\+IO. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid \begin{DoxyVerb} The anemometer function is based on the zolertia zoul example "test-weathermeter-example.c"
+ which comes with the contiki installation in contiki/examples/zolertia/zoul and the
+ "weather-meter.c" file which can be found in contiki/platform/zoul/dev.
+ The anemometer can be considered as a electrical switch opening and closing
+ at a frequency depending on the rotation speed of the anemometer. It sets the connected
+ GPIO Port to HIGH twice a rotation which is recognized by an interrupt handler.
+ These interrupts are counted over a certain amount of time to calculate the actual
+ windspeed in km/h.
+\end{DoxyVerb}
+ 
+\end{DoxyAuthor}

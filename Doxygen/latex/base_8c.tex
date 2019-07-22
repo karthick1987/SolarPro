@@ -1,0 +1,148 @@
+\hypertarget{base_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+Solar\+\_\+base/base.c File Reference}
+\label{base_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_base/base.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_base/base.c}}
+
+
+Main functions of the basestation with a state machine thread.  
+
+
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cpu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sys/etimer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}net/rime/rime.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}net/netstack.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lib/random.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/leds.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}core/net/linkaddr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/button-\/sensor.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/adc-\/zoul.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/zoul-\/sensors.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/sys-\/ctrl.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cpu/cc2538/dev/uart.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/serial-\/line.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}base.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}uart\+\_\+local.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}broadcast\+\_\+common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}helpers.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}node\+I\+D.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}routing.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}anemometer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}unicast\+\_\+local.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{base_8c_ac362dc662dc5ee3460e3217785685d3d}\label{base_8c_ac362dc662dc5ee3460e3217785685d3d}} 
+\#define {\bfseries U\+N\+I\+C\+A\+S\+T\+T\+R\+A\+S\+M\+I\+T\+I\+N\+T\+E\+R\+V\+AL}~2$\ast$C\+L\+O\+C\+K\+\_\+\+S\+E\+C\+O\+ND
+\item 
+\mbox{\Hypertarget{base_8c_aa14953ec17a3e6a84e41c01846773be1}\label{base_8c_aa14953ec17a3e6a84e41c01846773be1}} 
+\#define {\bfseries A\+C\+K\+M\+O\+D\+E\+T\+R\+A\+S\+M\+I\+T\+I\+N\+T\+E\+R\+V\+AL}~1$\ast$C\+L\+O\+C\+K\+\_\+\+S\+E\+C\+O\+ND
+\item 
+\mbox{\Hypertarget{base_8c_a6e639188fe481b0d0c850cfc09d20f5a}\label{base_8c_a6e639188fe481b0d0c850cfc09d20f5a}} 
+\#define {\bfseries R\+E\+A\+D\+\_\+\+S\+E\+N\+S\+O\+R\+\_\+\+P\+E\+R\+I\+OD}~C\+L\+O\+C\+K\+\_\+\+S\+E\+C\+O\+ND
+\item 
+\#define \mbox{\hyperlink{base_8c_a8688fd3e6a9d1b2c83f238f8da656bc1}{A\+N\+E\+M\+O\+M\+E\+T\+E\+R\+\_\+\+T\+H\+R\+E\+S\+H\+O\+L\+D\+\_\+\+T\+I\+CK}}~13
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{base_8c_ab171a4cecaed72cfeef05dcc359c41ff}\label{base_8c_ab171a4cecaed72cfeef05dcc359c41ff}} 
+{\bfseries P\+R\+O\+C\+E\+S\+S\+\_\+\+N\+A\+ME} (broadcast\+Send\+Process)
+\item 
+\mbox{\Hypertarget{base_8c_af3ab6d10db384a4ca84ffe939dedcec5}\label{base_8c_af3ab6d10db384a4ca84ffe939dedcec5}} 
+{\bfseries P\+R\+O\+C\+E\+S\+S\+\_\+\+N\+A\+ME} (unicast\+Send\+Process)
+\item 
+\mbox{\Hypertarget{base_8c_a921f1329fa634ec0eeeb3348a325a09f}\label{base_8c_a921f1329fa634ec0eeeb3348a325a09f}} 
+{\bfseries P\+R\+O\+C\+E\+SS} (wind\+Speed\+Thread, \char`\"{}Wind Speed Sensor Thread\char`\"{})
+\item 
+\mbox{\Hypertarget{base_8c_a786c4a020625bbba574ec6d35ccfe1f5}\label{base_8c_a786c4a020625bbba574ec6d35ccfe1f5}} 
+{\bfseries P\+R\+O\+C\+E\+SS} (state\+Machine\+Thread, \char`\"{}State Machine Thread\char`\"{})
+\item 
+\mbox{\Hypertarget{base_8c_a4e8912584450e91ec2ddd3a45eb87a12}\label{base_8c_a4e8912584450e91ec2ddd3a45eb87a12}} 
+{\bfseries P\+R\+O\+C\+E\+SS} (rx\+U\+S\+B\+\_\+process, \char`\"{}Receives data from U\+A\+RT/serial (U\+SB).\char`\"{})
+\item 
+\mbox{\hyperlink{base_8c_a3592e1571c8a4b5576f562bd4e94ba2c}{P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD}} (wind\+Speed\+Thread, ev, data)
+\begin{DoxyCompactList}\small\item\em Thread to read out the wind speed sensor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{base_8c_af9779c26cdee7f246e93013b8b6821d0}{P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD}} (state\+Machine\+Thread, ev, data)
+\begin{DoxyCompactList}\small\item\em State machine thread of the basestation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{base_8c_aa5a3e1f165b300335f9ca6e80ef185c5}{P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD}} (rx\+U\+S\+B\+\_\+process, ev, data)
+\begin{DoxyCompactList}\small\item\em Listens for data coming from the U\+SB connection (U\+A\+R\+T0) and processes it according to its type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{base_8c_ae680a089615b9d9e5bdd7a648654783a}\label{base_8c_ae680a089615b9d9e5bdd7a648654783a}} 
+int {\bfseries threshold\+\_\+tick} = 13
+\item 
+\mbox{\Hypertarget{base_8c_a686599473d8ce395e95619896d88d539}\label{base_8c_a686599473d8ce395e95619896d88d539}} 
+int {\bfseries threshold} = 16
+\item 
+\mbox{\Hypertarget{base_8c_a7be5e66cebaa16dce718168d5c45527c}\label{base_8c_a7be5e66cebaa16dce718168d5c45527c}} 
+struct etimer {\bfseries et\+\_\+broad\+Cast\+Over}
+\item 
+\mbox{\Hypertarget{base_8c_a7fbef470e099f1d18eff2a195ff6ad4e}\label{base_8c_a7fbef470e099f1d18eff2a195ff6ad4e}} 
+A\+U\+T\+O\+S\+T\+A\+R\+T\+\_\+\+P\+R\+O\+C\+E\+S\+S\+ES \& {\bfseries unicast\+Send\+Process}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Main functions of the basestation with a state machine thread. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid \begin{DoxyVerb} This file contains the main functionalities of the base station including a
+ state machine and the anemometer sensor reading.
+\end{DoxyVerb}
+ 
+\end{DoxyAuthor}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{base_8c_a8688fd3e6a9d1b2c83f238f8da656bc1}\label{base_8c_a8688fd3e6a9d1b2c83f238f8da656bc1}} 
+\index{base.c@{base.c}!ANEMOMETER\_THRESHOLD\_TICK@{ANEMOMETER\_THRESHOLD\_TICK}}
+\index{ANEMOMETER\_THRESHOLD\_TICK@{ANEMOMETER\_THRESHOLD\_TICK}!base.c@{base.c}}
+\subsubsection{\texorpdfstring{ANEMOMETER\_THRESHOLD\_TICK}{ANEMOMETER\_THRESHOLD\_TICK}}
+{\footnotesize\ttfamily \#define A\+N\+E\+M\+O\+M\+E\+T\+E\+R\+\_\+\+T\+H\+R\+E\+S\+H\+O\+L\+D\+\_\+\+T\+I\+CK~13}
+
+(value$\ast$1.2) = 16 Km/h 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{base_8c_a3592e1571c8a4b5576f562bd4e94ba2c}\label{base_8c_a3592e1571c8a4b5576f562bd4e94ba2c}} 
+\index{base.c@{base.c}!PROCESS\_THREAD@{PROCESS\_THREAD}}
+\index{PROCESS\_THREAD@{PROCESS\_THREAD}!base.c@{base.c}}
+\subsubsection{\texorpdfstring{PROCESS\_THREAD()}{PROCESS\_THREAD()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD (\begin{DoxyParamCaption}\item[{wind\+Speed\+Thread}]{,  }\item[{ev}]{,  }\item[{data}]{ }\end{DoxyParamCaption})}
+
+
+
+Thread to read out the wind speed sensor. 
+
+\mbox{\Hypertarget{base_8c_af9779c26cdee7f246e93013b8b6821d0}\label{base_8c_af9779c26cdee7f246e93013b8b6821d0}} 
+\index{base.c@{base.c}!PROCESS\_THREAD@{PROCESS\_THREAD}}
+\index{PROCESS\_THREAD@{PROCESS\_THREAD}!base.c@{base.c}}
+\subsubsection{\texorpdfstring{PROCESS\_THREAD()}{PROCESS\_THREAD()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD (\begin{DoxyParamCaption}\item[{state\+Machine\+Thread}]{,  }\item[{ev}]{,  }\item[{data}]{ }\end{DoxyParamCaption})}
+
+
+
+State machine thread of the basestation. 
+
+\begin{DoxyVerb}  The state machine enables the base station to operate in different modes.
+  1. Prepare Network Discovery: triggers all motes in the network to clear its
+     routing table through broadcasting.
+  2. Network Discovery: triggers all motes in the network to build their routing
+     tables by exchanging information with their neighbors.
+  3. Unicast Mode: base station first collects the hop history to each mote and
+     then starts polling the sensor values.
+  4. Emergency State: triggers all motes in the network to go into an emergency
+     state through broadcasting.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{base_8c_aa5a3e1f165b300335f9ca6e80ef185c5}\label{base_8c_aa5a3e1f165b300335f9ca6e80ef185c5}} 
+\index{base.c@{base.c}!PROCESS\_THREAD@{PROCESS\_THREAD}}
+\index{PROCESS\_THREAD@{PROCESS\_THREAD}!base.c@{base.c}}
+\subsubsection{\texorpdfstring{PROCESS\_THREAD()}{PROCESS\_THREAD()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD (\begin{DoxyParamCaption}\item[{rx\+U\+S\+B\+\_\+process}]{,  }\item[{ev}]{,  }\item[{data}]{ }\end{DoxyParamCaption})}
+
+
+
+Listens for data coming from the U\+SB connection (U\+A\+R\+T0) and processes it according to its type. 
+

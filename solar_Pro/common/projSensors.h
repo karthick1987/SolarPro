@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is designed for all nodes to read out several sensor values.
+ *****************************************************************************/
+
+ /**
+ * @file projSensors.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Functions to read out different sensor values
+ *
  */
 
 #ifndef PROJSENSORS_H

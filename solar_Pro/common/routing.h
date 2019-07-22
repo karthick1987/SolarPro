@@ -1,28 +1,26 @@
-/*
-   Wireless Sensor Networks Laboratory
+/******************************************************************************
+   Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
    Lehrstuhl für Kommunikationsnetze
-   http://www.lkn.ei.tum.de
+http://www.lkn.ei.tum.de
 
-   copyright (c) 2018 Chair of Communication Networks, TUM
+copyright (c) 2019 Chair of Communication Networks, TUM
 
-   contributors:
-   * Karthik Sukumar
-   * Johannes Machleid
+project: SolarPro
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, version 2.0 of the License.
+contributors:
+ * Karthik Sukumar
+ * Johannes Machleid
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ *****************************************************************************/
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ /**
+ * @file routing.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief functions to handle the routing within the network
+ *
+ */
 
 #ifndef ROUTING_H
 #define ROUTING_H
@@ -36,8 +34,13 @@
 #include "nodeID.h"
 #include "payload.h"
 
+/**
+ * \name values to fill routing table's next hop and cost column
+ * @{
+ */
 #define UNINIT      0xFFFF
 #define UNINITCOST  0xFF
+/** @} */
 
 void setUpRtable(void);
 bool isValidNextHop(node_num_t node);

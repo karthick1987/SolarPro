@@ -1,0 +1,98 @@
+\hypertarget{uart__local_8h}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+Solar\+\_\+base/uart\+\_\+local.h File Reference}
+\label{uart__local_8h}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_base/uart\_local.h@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_base/uart\_local.h}}
+
+
+Definition of U\+A\+RT connection.  
+
+
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}core/net/linkaddr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cpu/cc2538/dev/uart.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/serial-\/line.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{uart__local_8h_a6947df094141bea9c31933578d577ee5}\label{uart__local_8h_a6947df094141bea9c31933578d577ee5}} 
+\#define {\bfseries S\+T\+A\+R\+T\+\_\+\+C\+H\+AR}~1
+\item 
+\mbox{\Hypertarget{uart__local_8h_a166f882d49df1a9da00fcd2b1cd8c6a9}\label{uart__local_8h_a166f882d49df1a9da00fcd2b1cd8c6a9}} 
+\#define {\bfseries D\+E\+A\+C\+T\+I\+V\+A\+T\+I\+O\+N\+\_\+\+C\+H\+AR}~0x0d
+\item 
+\mbox{\Hypertarget{uart__local_8h_a4afffc25fca9d45ce33f449a690a7d9b}\label{uart__local_8h_a4afffc25fca9d45ce33f449a690a7d9b}} 
+\#define {\bfseries E\+N\+D\+\_\+\+C\+H\+AR}~0x0a
+\item 
+\mbox{\Hypertarget{uart__local_8h_abf1fa7521e5b57c080a2fd517872786d}\label{uart__local_8h_abf1fa7521e5b57c080a2fd517872786d}} 
+\#define {\bfseries S\+E\+R\+I\+A\+L\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+N\+E\+M\+O\+M\+E\+T\+ER}~1
+\item 
+\mbox{\Hypertarget{uart__local_8h_ac99d1c457595b42414b8722286cba289}\label{uart__local_8h_ac99d1c457595b42414b8722286cba289}} 
+\#define {\bfseries S\+E\+R\+I\+A\+L\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+D\+E\+\_\+\+S\+E\+N\+S\+O\+RS}~2
+\item 
+\mbox{\Hypertarget{uart__local_8h_a8a790be73d2ba0d653d7087d320bcec5}\label{uart__local_8h_a8a790be73d2ba0d653d7087d320bcec5}} 
+\#define {\bfseries S\+E\+R\+I\+A\+L\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+E\+T\+W\+O\+R\+K\+\_\+\+D\+I\+S\+C\+O\+V\+E\+RY}~3
+\item 
+\mbox{\Hypertarget{uart__local_8h_a637476a17b61caeff9273983bb045cd1}\label{uart__local_8h_a637476a17b61caeff9273983bb045cd1}} 
+\#define {\bfseries S\+E\+R\+I\+A\+L\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+E\+M\+E\+R\+G\+E\+N\+CY}~4
+\item 
+\mbox{\Hypertarget{uart__local_8h_a33d1ca314362d8cf201554982f160830}\label{uart__local_8h_a33d1ca314362d8cf201554982f160830}} 
+\#define {\bfseries S\+E\+R\+I\+A\+L\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+S\+E\+R\+V\+O\+\_\+\+M\+A\+N\+U\+AL}~5
+\item 
+\mbox{\Hypertarget{uart__local_8h_a41f6df0ea9fc31660420a1ccb5ba83dc}\label{uart__local_8h_a41f6df0ea9fc31660420a1ccb5ba83dc}} 
+\#define {\bfseries S\+E\+R\+I\+A\+L\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+S\+E\+T\+\_\+\+W\+I\+N\+D\+\_\+\+S\+P\+E\+E\+D\+\_\+\+T\+H\+RS}~6
+\item 
+\mbox{\Hypertarget{uart__local_8h_a5b4b5f279360e508b992d9eeb78b9d12}\label{uart__local_8h_a5b4b5f279360e508b992d9eeb78b9d12}} 
+\#define {\bfseries M\+A\+X\+\_\+\+U\+S\+B\+\_\+\+P\+A\+Y\+L\+O\+A\+D\+\_\+\+S\+I\+ZE}~5
+\item 
+\mbox{\Hypertarget{uart__local_8h_a0d57378e32bf8278011460740bc29f7f}\label{uart__local_8h_a0d57378e32bf8278011460740bc29f7f}} 
+\#define {\bfseries U\+A\+R\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}~100
+\item 
+\mbox{\Hypertarget{uart__local_8h_a12f6997646f7f487058070056e37c204}\label{uart__local_8h_a12f6997646f7f487058070056e37c204}} 
+\#define {\bfseries S\+E\+N\+S\+O\+R\+C\+O\+P\+Y\+B\+Y\+T\+ES}~15
+\item 
+\mbox{\Hypertarget{uart__local_8h_a7ac174ac6fec9b9e52d74dfb72d4767a}\label{uart__local_8h_a7ac174ac6fec9b9e52d74dfb72d4767a}} 
+\#define {\bfseries H\+O\+P\+H\+I\+S\+T\+O\+R\+Y\+B\+Y\+T\+ES}~10
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{uart__local_8h_a86d952fadaf61a101fd0bc3129e2c249}\label{uart__local_8h_a86d952fadaf61a101fd0bc3129e2c249}} 
+typedef uint8\+\_\+t {\bfseries uart\+Buf\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{uart__local_8h_a94385db034f34b836a80dcde7b51637e}{send\+U\+A\+RT}} (char uart\+Buffer\mbox{[}$\,$\mbox{]}, int buffersize)
+\begin{DoxyCompactList}\small\item\em Function to write payload on U\+A\+RT. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{uart__local_8h_a36da9b2669d56ab067ab87ee43530bf3}\label{uart__local_8h_a36da9b2669d56ab067ab87ee43530bf3}} 
+void \mbox{\hyperlink{uart__local_8h_a36da9b2669d56ab067ab87ee43530bf3}{clear\+Hop\+Hist\+Clear}} (void)
+\begin{DoxyCompactList}\small\item\em Function sends a clearing package to G\+UI during network discovery. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{uart__local_8h_acf02427c0556a1072dcd7792e2c6caae}\label{uart__local_8h_acf02427c0556a1072dcd7792e2c6caae}} 
+uart\+Buf\+\_\+t $\ast$ \mbox{\hyperlink{uart__local_8h_acf02427c0556a1072dcd7792e2c6caae}{get\+Buf}} (void)
+\begin{DoxyCompactList}\small\item\em Function to return the U\+A\+RT Buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Definition of U\+A\+RT connection. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{uart__local_8h_a94385db034f34b836a80dcde7b51637e}\label{uart__local_8h_a94385db034f34b836a80dcde7b51637e}} 
+\index{uart\_local.h@{uart\_local.h}!sendUART@{sendUART}}
+\index{sendUART@{sendUART}!uart\_local.h@{uart\_local.h}}
+\subsubsection{\texorpdfstring{sendUART()}{sendUART()}}
+{\footnotesize\ttfamily void send\+U\+A\+RT (\begin{DoxyParamCaption}\item[{char}]{uart\+Buffer\mbox{[}$\,$\mbox{]},  }\item[{int}]{buffersize }\end{DoxyParamCaption})}
+
+
+
+Function to write payload on U\+A\+RT. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uart\+Buffer\mbox{[}$\,$\mbox{]}} & is an array of bytes to send over serial \\
+\hline
+{\em buffersize} & defines the amount of bytes to be sent \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,72 @@
+\hypertarget{servo_control_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/servo\+Control.c File Reference}
+\label{servo_control_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/servoControl.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/servoControl.c}}
+
+
+functions to operate the digital servo motor  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}servo\+Control.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/gpio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/servo.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{servo_control_8c_aae99990dd632be263ba93f416bd7b3c2}{init\+Servo}} (void)
+\begin{DoxyCompactList}\small\item\em Function to initialize the G\+P\+IO port to control the servo. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{servo_control_8c_a1cc87f07c91b55652b0553030a5db8d3}{set\+Servo\+Position}} (int angle)
+\begin{DoxyCompactList}\small\item\em Function to set the servo position. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{servo_control_8c_ae0b5edf44bb0d6da56f030d6dea1a83e}{get\+Servo\+Position}} (void)
+\begin{DoxyCompactList}\small\item\em Function to get the servo position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+functions to operate the digital servo motor 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{servo_control_8c_ae0b5edf44bb0d6da56f030d6dea1a83e}\label{servo_control_8c_ae0b5edf44bb0d6da56f030d6dea1a83e}} 
+\index{servoControl.c@{servoControl.c}!getServoPosition@{getServoPosition}}
+\index{getServoPosition@{getServoPosition}!servoControl.c@{servoControl.c}}
+\subsubsection{\texorpdfstring{getServoPosition()}{getServoPosition()}}
+{\footnotesize\ttfamily int get\+Servo\+Position (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to get the servo position. 
+
+\begin{DoxyReturn}{Returns}
+pos is the position (angle) in degrees 
+\end{DoxyReturn}
+\mbox{\Hypertarget{servo_control_8c_aae99990dd632be263ba93f416bd7b3c2}\label{servo_control_8c_aae99990dd632be263ba93f416bd7b3c2}} 
+\index{servoControl.c@{servoControl.c}!initServo@{initServo}}
+\index{initServo@{initServo}!servoControl.c@{servoControl.c}}
+\subsubsection{\texorpdfstring{initServo()}{initServo()}}
+{\footnotesize\ttfamily int init\+Servo (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to initialize the G\+P\+IO port to control the servo. 
+
+\mbox{\Hypertarget{servo_control_8c_a1cc87f07c91b55652b0553030a5db8d3}\label{servo_control_8c_a1cc87f07c91b55652b0553030a5db8d3}} 
+\index{servoControl.c@{servoControl.c}!setServoPosition@{setServoPosition}}
+\index{setServoPosition@{setServoPosition}!servoControl.c@{servoControl.c}}
+\subsubsection{\texorpdfstring{setServoPosition()}{setServoPosition()}}
+{\footnotesize\ttfamily int set\+Servo\+Position (\begin{DoxyParamCaption}\item[{int}]{angle }\end{DoxyParamCaption})}
+
+
+
+Function to set the servo position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em angle} & is an integer, which defines the servo angle from 0 to 180 degrees \begin{DoxyVerb}  If the passed angle is greater than 180 (out of reach) we assume, that this is
+  and emergency call and set the angle to the specified emergency angle
+\end{DoxyVerb}
+ \\
+\hline
+\end{DoxyParams}

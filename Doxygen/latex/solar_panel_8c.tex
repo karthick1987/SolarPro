@@ -1,0 +1,64 @@
+\hypertarget{solar_panel_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+Solar\+\_\+panel/solar\+Panel.c File Reference}
+\label{solar_panel_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_panel/solarPanel.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/Solar\_panel/solarPanel.c}}
+
+
+Setting up the solar panel motes with RF connection and running a state machine thread for the solar panel.  
+
+
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cpu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sys/etimer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}net/rime/rime.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}net/netstack.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lib/random.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/leds.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}core/net/linkaddr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/button-\/sensor.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/adc-\/zoul.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/zoul-\/sensors.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/sys-\/ctrl.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}project-\/conf.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{solar_panel_8c_ab171a4cecaed72cfeef05dcc359c41ff}\label{solar_panel_8c_ab171a4cecaed72cfeef05dcc359c41ff}} 
+{\bfseries P\+R\+O\+C\+E\+S\+S\+\_\+\+N\+A\+ME} (broadcast\+Send\+Process)
+\item 
+\mbox{\Hypertarget{solar_panel_8c_a017306563a6be425c34aff6ab5356000}\label{solar_panel_8c_a017306563a6be425c34aff6ab5356000}} 
+{\bfseries P\+R\+O\+C\+E\+SS} (state\+Machine\+Thread, \char`\"{}Main Thread\char`\"{})
+\item 
+\mbox{\hyperlink{solar_panel_8c_af9779c26cdee7f246e93013b8b6821d0}{P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD}} (state\+Machine\+Thread, ev, data)
+\begin{DoxyCompactList}\small\item\em Thread runs the state machine of the solar panel. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{solar_panel_8c_a601134b760170506003a059d1c53a2e3}\label{solar_panel_8c_a601134b760170506003a059d1c53a2e3}} 
+A\+U\+T\+O\+S\+T\+A\+R\+T\+\_\+\+P\+R\+O\+C\+E\+S\+S\+ES \& {\bfseries state\+Machine\+Thread}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Setting up the solar panel motes with RF connection and running a state machine thread for the solar panel. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{solar_panel_8c_af9779c26cdee7f246e93013b8b6821d0}\label{solar_panel_8c_af9779c26cdee7f246e93013b8b6821d0}} 
+\index{solarPanel.c@{solarPanel.c}!PROCESS\_THREAD@{PROCESS\_THREAD}}
+\index{PROCESS\_THREAD@{PROCESS\_THREAD}!solarPanel.c@{solarPanel.c}}
+\subsubsection{\texorpdfstring{PROCESS\_THREAD()}{PROCESS\_THREAD()}}
+{\footnotesize\ttfamily P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD (\begin{DoxyParamCaption}\item[{state\+Machine\+Thread}]{,  }\item[{ev}]{,  }\item[{data}]{ }\end{DoxyParamCaption})}
+
+
+
+Thread runs the state machine of the solar panel. 
+
+\begin{DoxyVerb}  The solar panel mote waits in idle until it receives messages or a
+  network discovery is initiated by pressing the USER Button on the mote.
+\end{DoxyVerb}
+ 

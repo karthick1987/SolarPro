@@ -1,0 +1,82 @@
+\hypertarget{unicast__common_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/unicast\+\_\+common.c File Reference}
+\label{unicast__common_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/unicast\_common.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/unicast\_common.c}}
+
+
+functions to handle unicast communication  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}node\+I\+D.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}routing.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}base.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}unicast\+\_\+common.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{unicast__common_8c_a5a649cf2d12703a6041b8780aec94fbb}{print\+Packet}} (\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Function to print the received payload (D\+E\+B\+UG) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{unicast__common_8c_af805513739995e9ceccc871ffcb089d4}{zero\+Out}} (\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$p, pkttype\+\_\+t type)
+\begin{DoxyCompactList}\small\item\em Function to set the payload to default values. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{unicast__common_8c_a043ad54bf89a499d5fee08925428a7bb}{add\+Self\+To\+Hist}} (\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$payload)
+\begin{DoxyCompactList}\small\item\em Function to add own R\+I\+ME ID to hop history. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+functions to handle unicast communication 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{unicast__common_8c_a043ad54bf89a499d5fee08925428a7bb}\label{unicast__common_8c_a043ad54bf89a499d5fee08925428a7bb}} 
+\index{unicast\_common.c@{unicast\_common.c}!addSelfToHist@{addSelfToHist}}
+\index{addSelfToHist@{addSelfToHist}!unicast\_common.c@{unicast\_common.c}}
+\subsubsection{\texorpdfstring{addSelfToHist()}{addSelfToHist()}}
+{\footnotesize\ttfamily void add\+Self\+To\+Hist (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$}]{payload }\end{DoxyParamCaption})}
+
+
+
+Function to add own R\+I\+ME ID to hop history. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em payload} & contains the hop history to be processed \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{unicast__common_8c_a5a649cf2d12703a6041b8780aec94fbb}\label{unicast__common_8c_a5a649cf2d12703a6041b8780aec94fbb}} 
+\index{unicast\_common.c@{unicast\_common.c}!printPacket@{printPacket}}
+\index{printPacket@{printPacket}!unicast\_common.c@{unicast\_common.c}}
+\subsubsection{\texorpdfstring{printPacket()}{printPacket()}}
+{\footnotesize\ttfamily void print\+Packet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$}]{p }\end{DoxyParamCaption})}
+
+
+
+Function to print the received payload (D\+E\+B\+UG) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & is a pointer to the payload to be printed \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{unicast__common_8c_af805513739995e9ceccc871ffcb089d4}\label{unicast__common_8c_af805513739995e9ceccc871ffcb089d4}} 
+\index{unicast\_common.c@{unicast\_common.c}!zeroOut@{zeroOut}}
+\index{zeroOut@{zeroOut}!unicast\_common.c@{unicast\_common.c}}
+\subsubsection{\texorpdfstring{zeroOut()}{zeroOut()}}
+{\footnotesize\ttfamily void zero\+Out (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$}]{p,  }\item[{pkttype\+\_\+t}]{type }\end{DoxyParamCaption})}
+
+
+
+Function to set the payload to default values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & is a pointer to the payload \\
+\hline
+{\em type} & is the packet type to be processed \\
+\hline
+\end{DoxyParams}

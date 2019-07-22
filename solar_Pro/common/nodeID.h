@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This header file is designed for all nodes to define specific Node IDs depending on the RIME ID.
+ *****************************************************************************/
+
+ /**
+ * @file nodeID.h
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Functions to calculate the node and RIME ID of each node.
+ *
  */
 
 #ifndef NODEID_H
@@ -51,7 +57,7 @@ void print_node_IDs( void );
  * @brief       Gets the current Node's Network node ID
  *
  * @return      The Node's Network ID
- *              This function prints the Nodes network ID. 
+ *              This function prints the Nodes network ID.
  *              Its basically a translation table
  *
  *
@@ -63,7 +69,7 @@ node_num_t getMyNodeID( void );
  * @brief       Gets the current Node's RIME ID
  *
  * @return      The Node's Network ID
- *              This function prints the Nodes network ID. 
+ *              This function prints the Nodes network ID.
  *              Its basically a translation table
  *
  *

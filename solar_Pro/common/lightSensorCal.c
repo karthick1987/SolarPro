@@ -9,11 +9,13 @@ copyright (c) 2019 Chair of Communication Networks, TUM
 
 project: SolarPro
 
-contributors:
- * Karthik Sukumar
- * Johannes Machleid
-
- This c-file is designed for all nodes to set specific light sensor calibration values.
+ /**
+ * @file lightSensorCal.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Contains the calibration values for light sensors.
+ *
+ *      The calibration values of each individual sensor are needed to calculate
+ *      the the lux value. This file is not used in this project.
  */
 
 // Std file includes
@@ -22,7 +24,11 @@ contributors:
 // Private includes
 #include "lightSensorCal.h"
 
-static const lightSensorCal_t lsc[] = 
+/**
+* @brief struct alightSensorCal includes the calibration values needed to
+* calculate the lux value of the light sensors.
+*/
+static const lightSensorCal_t lsc[] =
 {
     {1.55503, 37.08},
     {1.6683, 41.415},
@@ -30,4 +36,3 @@ static const lightSensorCal_t lsc[] =
     {1.4761, 39.416},
     {1.464, 39.984},
 };
-

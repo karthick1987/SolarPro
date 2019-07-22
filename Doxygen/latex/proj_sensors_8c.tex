@@ -1,0 +1,74 @@
+\hypertarget{proj_sensors_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/proj\+Sensors.c File Reference}
+\label{proj_sensors_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/projSensors.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/projSensors.c}}
+
+
+Functions to read out different sensor values.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}dev/adc-\/zoul.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/zoul-\/sensors.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dev/sys-\/ctrl.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}proj\+Sensors.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{proj_sensors_8c_a910569b0c049714aa44fd5c763867455}{get\+Light\+Sensor\+Value}} (void)
+\begin{DoxyCompactList}\small\item\em Gets the light sensor value in 12 bit format. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{proj_sensors_8c_a5f16657a3b4e57eba7819b0170062320}\label{proj_sensors_8c_a5f16657a3b4e57eba7819b0170062320}} 
+int {\bfseries get\+Joystick\+Position} (void)
+\item 
+int \mbox{\hyperlink{proj_sensors_8c_a0e3708731a0b5f0b897e2f6d5dbde231}{get\+Internal\+Temperature}} (void)
+\begin{DoxyCompactList}\small\item\em Gets the internal Temperatute from the Board. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{proj_sensors_8c_af061f9227da53b913518a7719997c0e9}{get\+Battery\+Voltage}} (void)
+\begin{DoxyCompactList}\small\item\em Gets the Battery voltage in mV. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions to read out different sensor values. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{proj_sensors_8c_af061f9227da53b913518a7719997c0e9}\label{proj_sensors_8c_af061f9227da53b913518a7719997c0e9}} 
+\index{projSensors.c@{projSensors.c}!getBatteryVoltage@{getBatteryVoltage}}
+\index{getBatteryVoltage@{getBatteryVoltage}!projSensors.c@{projSensors.c}}
+\subsubsection{\texorpdfstring{getBatteryVoltage()}{getBatteryVoltage()}}
+{\footnotesize\ttfamily uint16\+\_\+t get\+Battery\+Voltage (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Gets the Battery voltage in mV. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily Returns} the battery voltage in mV 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proj_sensors_8c_a0e3708731a0b5f0b897e2f6d5dbde231}\label{proj_sensors_8c_a0e3708731a0b5f0b897e2f6d5dbde231}} 
+\index{projSensors.c@{projSensors.c}!getInternalTemperature@{getInternalTemperature}}
+\index{getInternalTemperature@{getInternalTemperature}!projSensors.c@{projSensors.c}}
+\subsubsection{\texorpdfstring{getInternalTemperature()}{getInternalTemperature()}}
+{\footnotesize\ttfamily int get\+Internal\+Temperature (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Gets the internal Temperatute from the Board. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily Returns} the temperature from the board in mC 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proj_sensors_8c_a910569b0c049714aa44fd5c763867455}\label{proj_sensors_8c_a910569b0c049714aa44fd5c763867455}} 
+\index{projSensors.c@{projSensors.c}!getLightSensorValue@{getLightSensorValue}}
+\index{getLightSensorValue@{getLightSensorValue}!projSensors.c@{projSensors.c}}
+\subsubsection{\texorpdfstring{getLightSensorValue()}{getLightSensorValue()}}
+{\footnotesize\ttfamily uint16\+\_\+t get\+Light\+Sensor\+Value (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Gets the light sensor value in 12 bit format. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily 12-\/bit} Light sensor value as an unsigned integer 
+\end{DoxyReturn}

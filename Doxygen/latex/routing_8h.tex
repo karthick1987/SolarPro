@@ -1,0 +1,226 @@
+\hypertarget{routing_8h}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/routing.h File Reference}
+\label{routing_8h}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/routing.h@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/routing.h}}
+
+
+functions to handle the routing within the network  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}core/net/linkaddr.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sys/process.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}node\+I\+D.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}payload.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{Indent}\textbf{ values to fill routing table\textquotesingle{}s next hop and cost column}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{routing_8h_a7668dedbc74a47bde384b2b911379073}\label{routing_8h_a7668dedbc74a47bde384b2b911379073}} 
+\#define {\bfseries U\+N\+I\+N\+IT}~0x\+F\+F\+FF
+\item 
+\mbox{\Hypertarget{routing_8h_aa9a71243ffb4a076042bb50031e41c3e}\label{routing_8h_aa9a71243ffb4a076042bb50031e41c3e}} 
+\#define {\bfseries U\+N\+I\+N\+I\+T\+C\+O\+ST}~0x\+FF
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{routing_8h_a9622d75e9055a9ac642dd11d1b4718ec}{set\+Up\+Rtable}} (void)
+\begin{DoxyCompactList}\small\item\em Function to setup the routing table. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{routing_8h_a777de1d38d850ca8e3f5ff748058892c}{is\+Valid\+Next\+Hop}} (node\+\_\+num\+\_\+t node)
+\begin{DoxyCompactList}\small\item\em Function to check if the next hop is valid. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a05628dabc376cf16bb6271959d451be5}{init\+Network\+Disc}} (void)
+\begin{DoxyCompactList}\small\item\em Function to set parameters prior to network discovery mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a130d9cb6a5635533c913a37b29154589}{prep\+Network\+Disc}} (void)
+\begin{DoxyCompactList}\small\item\em Function to set parameters prior to preparing network discovery. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_aa2c1d34bebfd9fefcab2b15972b745f4}{init\+Emergency}} (void)
+\begin{DoxyCompactList}\small\item\em Function to set parameters prior Emergency Mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a3039b5c497e87db97cdd8ff3f740bfc7}{open\+Broadcast}} (void)
+\begin{DoxyCompactList}\small\item\em Function to open the broadcast connection of necessary. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a1eea6d2be40f98a676ae7c42bed747ff}{open\+Unicast}} (void)
+\begin{DoxyCompactList}\small\item\em Function to open the unicast connection of necessary. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a440b1d8b180042e18746e2cc1588a728}{do\+Broad\+Cast}} (void)
+\begin{DoxyCompactList}\small\item\em Function to prepare sending the broadcast message. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a053addfb0c9b8daee2d3146910009305}{bdct\+\_\+recv}} (struct broadcast\+\_\+conn $\ast$c, const linkaddr\+\_\+t $\ast$from)
+\begin{DoxyCompactList}\small\item\em Callback function called when receiving a broadcast message. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a6b8b14f3897f20b5b36c854fe62f7c2b}{bdct\+\_\+send}} (struct broadcast\+\_\+conn $\ast$c, const linkaddr\+\_\+t $\ast$to)
+\begin{DoxyCompactList}\small\item\em Function to actually send the broadcast message over RF. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a4d1b5014ea0a0caa626c2c4c91faa3c5}{unict\+\_\+recv}} (struct unicast\+\_\+conn $\ast$c, const linkaddr\+\_\+t $\ast$from)
+\begin{DoxyCompactList}\small\item\em Callback function called when unicast message is received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{routing_8h_a0a587618d6bf854f47b458b841c09403}{unict\+\_\+send}} (\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$tx\+\_\+packet)
+\begin{DoxyCompactList}\small\item\em Function to send the unicast message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+functions to handle the routing within the network 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{routing_8h_a053addfb0c9b8daee2d3146910009305}\label{routing_8h_a053addfb0c9b8daee2d3146910009305}} 
+\index{routing.h@{routing.h}!bdct\_recv@{bdct\_recv}}
+\index{bdct\_recv@{bdct\_recv}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{bdct\_recv()}{bdct\_recv()}}
+{\footnotesize\ttfamily void bdct\+\_\+recv (\begin{DoxyParamCaption}\item[{struct broadcast\+\_\+conn $\ast$}]{c,  }\item[{const linkaddr\+\_\+t $\ast$}]{from }\end{DoxyParamCaption})}
+
+
+
+Callback function called when receiving a broadcast message. 
+
+\begin{DoxyVerb}  The callback function is called, whenever a broadcast message is received.
+  The payload is copied to a buffer to prevent its loss. The message is then
+  processed according to its type.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a6b8b14f3897f20b5b36c854fe62f7c2b}\label{routing_8h_a6b8b14f3897f20b5b36c854fe62f7c2b}} 
+\index{routing.h@{routing.h}!bdct\_send@{bdct\_send}}
+\index{bdct\_send@{bdct\_send}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{bdct\_send()}{bdct\_send()}}
+{\footnotesize\ttfamily void bdct\+\_\+send (\begin{DoxyParamCaption}\item[{struct broadcast\+\_\+conn $\ast$}]{c,  }\item[{const linkaddr\+\_\+t $\ast$}]{from }\end{DoxyParamCaption})}
+
+
+
+Function to actually send the broadcast message over RF. 
+
+\begin{DoxyVerb}  The message buffer is filled with payload and then forwarded to other nodes
+  which leads to a network flooding
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a440b1d8b180042e18746e2cc1588a728}\label{routing_8h_a440b1d8b180042e18746e2cc1588a728}} 
+\index{routing.h@{routing.h}!doBroadCast@{doBroadCast}}
+\index{doBroadCast@{doBroadCast}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{doBroadCast()}{doBroadCast()}}
+{\footnotesize\ttfamily void do\+Broad\+Cast (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to prepare sending the broadcast message. 
+
+\mbox{\Hypertarget{routing_8h_aa2c1d34bebfd9fefcab2b15972b745f4}\label{routing_8h_aa2c1d34bebfd9fefcab2b15972b745f4}} 
+\index{routing.h@{routing.h}!initEmergency@{initEmergency}}
+\index{initEmergency@{initEmergency}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{initEmergency()}{initEmergency()}}
+{\footnotesize\ttfamily void init\+Emergency (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to set parameters prior Emergency Mode. 
+
+\begin{DoxyVerb}  The payload for an emergency broadcast has to be setup and the broadcast
+  counter is reset to 0, to ensure the proper amount of rebroadcasts.
+  The broadcast sending process is then called with the respective data pointer.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a05628dabc376cf16bb6271959d451be5}\label{routing_8h_a05628dabc376cf16bb6271959d451be5}} 
+\index{routing.h@{routing.h}!initNetworkDisc@{initNetworkDisc}}
+\index{initNetworkDisc@{initNetworkDisc}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{initNetworkDisc()}{initNetworkDisc()}}
+{\footnotesize\ttfamily void init\+Network\+Disc (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to set parameters prior to network discovery mode. 
+
+\begin{DoxyVerb}  Prior to the network discovery, the routing table and broadcast counter has
+  to be reset. The payload to transmit is set to type DISCOVERY and the routing
+  table of the node is loaded into the payload. Then the sending process for
+  broadcasting is called with the DISCOVERY data pointer.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a777de1d38d850ca8e3f5ff748058892c}\label{routing_8h_a777de1d38d850ca8e3f5ff748058892c}} 
+\index{routing.h@{routing.h}!isValidNextHop@{isValidNextHop}}
+\index{isValidNextHop@{isValidNextHop}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{isValidNextHop()}{isValidNextHop()}}
+{\footnotesize\ttfamily bool is\+Valid\+Next\+Hop (\begin{DoxyParamCaption}\item[{node\+\_\+num\+\_\+t}]{node }\end{DoxyParamCaption})}
+
+
+
+Function to check if the next hop is valid. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & Node\+ID to check if it is valid for next hop \begin{DoxyVerb}  When unicasting through the network, the base station needs to know, which
+  nodes are not connected (indicated by UNINIT = 0xFFFF) jump to the next node.
+\end{DoxyVerb}
+ \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{routing_8h_a3039b5c497e87db97cdd8ff3f740bfc7}\label{routing_8h_a3039b5c497e87db97cdd8ff3f740bfc7}} 
+\index{routing.h@{routing.h}!openBroadcast@{openBroadcast}}
+\index{openBroadcast@{openBroadcast}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{openBroadcast()}{openBroadcast()}}
+{\footnotesize\ttfamily void open\+Broadcast (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to open the broadcast connection of necessary. 
+
+\mbox{\Hypertarget{routing_8h_a1eea6d2be40f98a676ae7c42bed747ff}\label{routing_8h_a1eea6d2be40f98a676ae7c42bed747ff}} 
+\index{routing.h@{routing.h}!openUnicast@{openUnicast}}
+\index{openUnicast@{openUnicast}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{openUnicast()}{openUnicast()}}
+{\footnotesize\ttfamily void open\+Unicast (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to open the unicast connection of necessary. 
+
+\mbox{\Hypertarget{routing_8h_a130d9cb6a5635533c913a37b29154589}\label{routing_8h_a130d9cb6a5635533c913a37b29154589}} 
+\index{routing.h@{routing.h}!prepNetworkDisc@{prepNetworkDisc}}
+\index{prepNetworkDisc@{prepNetworkDisc}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{prepNetworkDisc()}{prepNetworkDisc()}}
+{\footnotesize\ttfamily void prep\+Network\+Disc (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to set parameters prior to preparing network discovery. 
+
+\begin{DoxyVerb}  If the network was already running and resumes from emergency mode, the
+  respective callback timer has to be stopped. Then the routing table and the
+  flag, that indicates an ongoing preparation mode have to be reset.
+  The payload type is setup and we shift to the broadcast sending process.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a9622d75e9055a9ac642dd11d1b4718ec}\label{routing_8h_a9622d75e9055a9ac642dd11d1b4718ec}} 
+\index{routing.h@{routing.h}!setUpRtable@{setUpRtable}}
+\index{setUpRtable@{setUpRtable}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{setUpRtable()}{setUpRtable()}}
+{\footnotesize\ttfamily void set\+Up\+Rtable (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to setup the routing table. 
+
+\begin{DoxyVerb}  In order to properly fill the routing table, it has to be cleared in advance.
+  The Destinations are a list of the configured nodes in nodeID.c
+  Next hop and cost fields are filled with 0xFFFF and 0xFF respectively.
+  The hopcost towards our own node is always 0.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a4d1b5014ea0a0caa626c2c4c91faa3c5}\label{routing_8h_a4d1b5014ea0a0caa626c2c4c91faa3c5}} 
+\index{routing.h@{routing.h}!unict\_recv@{unict\_recv}}
+\index{unict\_recv@{unict\_recv}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{unict\_recv()}{unict\_recv()}}
+{\footnotesize\ttfamily void unict\+\_\+recv (\begin{DoxyParamCaption}\item[{struct unicast\+\_\+conn $\ast$}]{c,  }\item[{const linkaddr\+\_\+t $\ast$}]{from }\end{DoxyParamCaption})}
+
+
+
+Callback function called when unicast message is received. 
+
+\begin{DoxyVerb}  This function handles and processes incoming unicast messages according
+  to their type.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{routing_8h_a0a587618d6bf854f47b458b841c09403}\label{routing_8h_a0a587618d6bf854f47b458b841c09403}} 
+\index{routing.h@{routing.h}!unict\_send@{unict\_send}}
+\index{unict\_send@{unict\_send}!routing.h@{routing.h}}
+\subsubsection{\texorpdfstring{unict\_send()}{unict\_send()}}
+{\footnotesize\ttfamily void unict\+\_\+send (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{unionpayload__t}{payload\+\_\+t}} $\ast$}]{tx\+\_\+packet }\end{DoxyParamCaption})}
+
+
+
+Function to send the unicast message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tx\+\_\+packet} & is the pointer to the packet to be transmitted \begin{DoxyVerb}  This function first clears the packet buffer and then loads the packet to
+  be transmitted into the buffer. Finally the unicast message is sent via RF.
+\end{DoxyVerb}
+ \\
+\hline
+\end{DoxyParams}

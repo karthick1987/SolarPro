@@ -1,5 +1,4 @@
-
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -14,7 +13,13 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is designed for all nodes to set specific Node IDs depending on the RIME ID.
+ *****************************************************************************/
+
+ /**
+ * @file servoControl.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief functions to operate the digital servo motor
+ *
  */
 
 // Std file includes
@@ -27,6 +32,10 @@ contributors:
 
 static int pos;
 
+/**
+* @brief Function to initialize the GPIO port to control the servo
+*
+*/
 int initServo(void)
 {
     GPIO_SOFTWARE_CONTROL(SERVOPORT,SERVOPIN);
@@ -34,6 +43,13 @@ int initServo(void)
     return PWM_SUCCESS;
 }
 
+/**
+* @brief Function to set the servo position
+* @param angle is an integer, which defines the servo angle from 0 to 180 degrees
+*
+*       If the passed angle is greater than 180 (out of reach) we assume, that this is
+*       and emergency call and set the angle to the specified emergency angle
+*/
 int setServoPosition(int angle)
 {
     if(angle>180)
@@ -48,6 +64,11 @@ int setServoPosition(int angle)
     return PWM_SUCCESS;
 }
 
+/**
+* @brief Function to get the servo position
+* @return pos is the position (angle) in degrees
+*
+*/
 int getServoPosition(void)
 {
     return pos;

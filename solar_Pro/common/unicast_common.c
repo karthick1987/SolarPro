@@ -1,4 +1,26 @@
+/******************************************************************************
+   Wireless Sensor Networks Laboratory 2019 -- Group 1
 
+   Technische Universität München
+   Lehrstuhl für Kommunikationsnetze
+http://www.lkn.ei.tum.de
+
+copyright (c) 2019 Chair of Communication Networks, TUM
+
+project: SolarPro
+
+contributors:
+ * Karthik Sukumar
+ * Johannes Machleid
+
+ *****************************************************************************/
+
+ /**
+ * @file unicast_common.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief functions to handle unicast communication
+ *
+ */
 // Standard C includes:
 #include <stdio.h>
 #include <stdint.h>
@@ -10,6 +32,11 @@
 #include "base.h"
 #include "unicast_common.h"
 
+/**
+* @brief Function to print the received payload (DEBUG)
+* @param p is a pointer to the payload to be printed
+*
+*/
 void printPacket(payload_t *p)
 {
     return;
@@ -64,6 +91,12 @@ void printPacket(payload_t *p)
     }
 }
 
+/**
+* @brief Function to set the payload to default values
+* @param p is a pointer to the payload
+* @param type is the packet type to be processed
+*
+*/
 void zeroOut(payload_t *p, pkttype_t type)
 {
     int i = 0;
@@ -86,6 +119,10 @@ void zeroOut(payload_t *p, pkttype_t type)
     }
 }
 
+/**
+* @brief Function to add own RIME ID to hop history
+* @param payload contains the hop history to be processed
+*/
 void addSelfToHist(payload_t *payload)
 {
     int i = 0;
@@ -104,5 +141,3 @@ void addSelfToHist(payload_t *payload)
         payload->a.hopHist[i].u16 = getMyRIMEID()->u16;
     return;
 }
-
-

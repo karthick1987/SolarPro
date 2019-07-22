@@ -1,4 +1,4 @@
-/*
+/******************************************************************************
    Wireless Sensor Networks Laboratory 2019 -- Group 1
 
    Technische Universität München
@@ -13,7 +13,15 @@ contributors:
  * Karthik Sukumar
  * Johannes Machleid
 
- This c-file is specifically designed for the base node.
+ *****************************************************************************/
+
+ /**
+ * @file base.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief Main functions of the basestation with a state machine thread
+ *
+ *      This file contains the main functionalities of the base station including a
+ *      state machine and the anemometer sensor reading.
  */
 
 // Contiki-specific includes:
@@ -90,8 +98,11 @@ PROCESS(rxUSB_process, "Receives data from UART/serial (USB).");
 AUTOSTART_PROCESSES (&unicastSendProcess, &broadcastSendProcess, &stateMachineThread ,&rxUSB_process, &windSpeedThread);
 
 /*---------------------------------------------------------------------------*/
-    static void
-wind_speed_callback(uint16_t value)
+/**
+* @brief Callback function called, when the windspeed passes a defined threshold
+*
+*/
+static void wind_speed_callback(uint16_t value)
 {
     /* This checks for instant wind speed values (over a second), the minimum
      * value is 1.2 Km/h (one tick), as the reference is 2.4KM/h per rotation, and
@@ -105,6 +116,10 @@ wind_speed_callback(uint16_t value)
 }
 
 /*** Wind Speed Sensor THREAD ***/
+/**
+* @brief Thread to read out the wind speed sensor
+*
+*/
 PROCESS_THREAD (windSpeedThread, ev, data)
 {
 
@@ -157,6 +172,19 @@ PROCESS_THREAD (windSpeedThread, ev, data)
     PROCESS_END ();
 }
 
+/**
+* @brief State machine thread of the basestation
+*
+*       The state machine enables the base station to operate in different modes.
+*       1. Prepare Network Discovery: triggers all motes in the network to clear its
+*          routing table through broadcasting.
+*       2. Network Discovery: triggers all motes in the network to build their routing
+*          tables by exchanging information with their neighbors.
+*       3. Unicast Mode: base station first collects the hop history to each mote and
+*          then starts polling the sensor values.
+*       4. Emergency State: triggers all motes in the network to go into an emergency
+*          state through broadcasting.
+*/
 PROCESS_THREAD (stateMachineThread, ev, data)
 {
     PROCESS_BEGIN();
@@ -215,7 +243,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     uartTxBuffer[2] = 0xFF;
                     uartTxBuffer[3] = 0xFF;
                     sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
-                    // kill unicast process 
+                    // kill unicast process
                     process_exit(&unicastSendProcess);
                     if(!startedEmergency)
                         prepNetworkDisc();
@@ -258,17 +286,19 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     PROCESS_END();
 }
 
-// Listens for data coming from the USB connection (UART0)
-// and prints it.
+/**
+* @brief Listens for data coming from the USB connection (UART0) and
+*     processes it according to its type
+*
+*/
 PROCESS_THREAD(rxUSB_process, ev, data) {
     PROCESS_BEGIN();
 
     uint8_t *uartRxBuffer;
 
 
-    /* In this example, whenever data is received from UART0, the
+    /* whenever data is received from UART0, the
      * default handler (i.e. serial_line_input_byte) is called.
-     * But how does it work?
      *
      * The handler runs in a process that puts all incoming data
      * in a buffer until it gets a newline or END character

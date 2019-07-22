@@ -1,4 +1,26 @@
+/******************************************************************************
+   Wireless Sensor Networks Laboratory 2019 -- Group 1
 
+   Technische Universität München
+   Lehrstuhl für Kommunikationsnetze
+http://www.lkn.ei.tum.de
+
+copyright (c) 2019 Chair of Communication Networks, TUM
+
+project: SolarPro
+
+contributors:
+ * Karthik Sukumar
+ * Johannes Machleid
+
+ *****************************************************************************/
+
+ /**
+ * @file routing.c
+ * @author Karthik Sukumar & Johannes Machleid
+ * @brief functions to handle the routing within the network
+ *
+ */
 #include "contiki.h"
 #include "sys/etimer.h"
 #include "sys/ctimer.h"
@@ -55,9 +77,13 @@ static payload_t unicast_rx_packet;
 // Callback Timer to toggle red LEDs
 static struct ctimer ct_emergency;
 
-
+// function to print an arbitrary routing table
 static void printRTable2(r_table_t r, const char *text);
+
+// function to print own routing table
 static void printRTable(const char *);
+
+// function to print routing table out of payload
 static void printFromRTable(payload_t , const char *);
 
 static bool inPrepMode = false;
@@ -67,13 +93,26 @@ extern const nodeID_t nodes[];
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(stateMachineThread);
 
-
+/**
+* @brief Callback function by timer to blink red LEDs when in Emergency mode
+*
+*/
 static void callbackEmergency(void *ptr)
 {
     ctimer_reset(&ct_emergency);
     leds_toggle(LEDS_RED);
 }
 
+
+/**
+* @brief Function to setup the routing table
+*
+*       In order to properly fill the routing table, it has to be cleared in advance.
+*       The Destinations are a list of the configured nodes in nodeID.c
+*       Next hop and cost fields are filled with 0xFFFF and 0xFF respectively.
+*       The hopcost towards our own node is always 0.
+*
+*/
 void setUpRtable(void)
 {
     int i;
@@ -95,12 +134,15 @@ void setUpRtable(void)
     return;
 }
 
+/**
+* @brief Function to check if the next hop is valid
+* @param node NodeID to check if it is valid for next hop
+*
+*       When unicasting through the network, the base station needs to know, which
+*       nodes are not connected (indicated by UNINIT = 0xFFFF) jump to the next node.
+*/
 bool isValidNextHop(node_num_t node)
 {
-    // Precondition node should not be greater than TOTAL_NODES
-    // if ( node > TOTAL_NODES)
-    //     return false;
-
     // If no entry for next hop then send false
     if(myrTable.next_hop[node-1].u16 == UNINIT)
     {
@@ -111,6 +153,14 @@ bool isValidNextHop(node_num_t node)
         return true;
 }
 
+/**
+* @brief Function to set parameters prior to network discovery mode
+*
+*       Prior to the network discovery, the routing table and broadcast counter has
+*       to be reset. The payload to transmit is set to type DISCOVERY and the routing
+*       table of the node is loaded into the payload. Then the sending process for
+*       broadcasting is called with the DISCOVERY data pointer.
+*/
 void initNetworkDisc(void)
 {
     printf("Network Discovery Initiated\n");
@@ -132,6 +182,14 @@ void initNetworkDisc(void)
     return;
 }
 
+/**
+* @brief Function to set parameters prior to preparing network discovery
+*
+*       If the network was already running and resumes from emergency mode, the
+*       respective callback timer has to be stopped. Then the routing table and the
+*       flag, that indicates an ongoing preparation mode have to be reset.
+*       The payload type is setup and we shift to the broadcast sending process.
+*/
 void prepNetworkDisc(void)
 {
     ctimer_stop(&ct_emergency);
@@ -153,6 +211,13 @@ void prepNetworkDisc(void)
     return;
 }
 
+/**
+* @brief Function to set parameters prior Emergency Mode
+*
+*       The payload for an emergency broadcast has to be setup and the broadcast
+*       counter is reset to 0, to ensure the proper amount of rebroadcasts.
+*       The broadcast sending process is then called with the respective data pointer.
+*/
 void initEmergency(void)
 {
     printf("Emergency initiated\n");
@@ -167,24 +232,38 @@ void initEmergency(void)
     process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
 }
 
+/**
+* @brief Function to open the broadcast connection of necessary
+*
+*/
 void openBroadcast(void)
 {
     //open the connection, if necessary
     broadcast_open(&broadcast, BROADCASTCHANNEL, &broadcast_call);
 }
 
+/**
+* @brief Function to open the unicast connection of necessary
+*
+*/
 void openUnicast(void)
 {
     // open the connection, if necessary
     unicast_open(&unicast, UNICASTCHANNEL, &unicast_call);
 }
 
+/**
+* @brief Function to close the unicast connection
+*
+*/
 void closeUnicast(void)
 {
     // close unicast connection
     unicast_close(&unicast);
 }
+
 /**
+ * @brief Function to forward an incoming message without altering the message
  * @param message - message to be broadcasted
  */
 static void forward_msg(const char * message)
@@ -200,6 +279,15 @@ static void forward_msg(const char * message)
     broadcastCount++;
 }
 
+/**
+* @brief Function to compare the received routing table with its own
+* @param p the payload (routing table) to be compared
+* @param from the linkaddress of the node, who sent the payload
+*
+*       During network discovery the routing tables of neighbours are exchanged,
+*       to fill possible gaps. The incoming routing table is checked for updates
+*       through comparing them with the own routing table.
+*/
 static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
 {
     bool result = false;
@@ -220,6 +308,14 @@ static bool compareAndUpdateTable(payload_t p, const linkaddr_t *from)
     return result;
 }
 
+/**
+* @brief Callback function called when receiving a broadcast message
+*
+*       The callback function is called, whenever a broadcast message is received.
+*       The payload is copied to a buffer to prevent its loss. The message is then
+*       processed according to its type.
+*
+*/
 void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 {
     packetbuf_copyto(&payload_receive);
@@ -316,6 +412,10 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     leds_off(LEDS_GREEN);
 }
 
+/**
+* @brief Function to prepare sending the broadcast message
+*
+*/
 void doBroadCast(void)
 {
     // Whats my RIME ID
@@ -325,6 +425,12 @@ void doBroadCast(void)
     bdct_send(&broadcast, t);
 }
 
+/**
+* @brief Function to actually send the broadcast message over RF
+*
+*       The message buffer is filled with payload and then forwarded to other nodes
+*       which leads to a network flooding
+*/
 void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
 {
     leds_on(LEDS_BLUE);
@@ -338,7 +444,13 @@ void bdct_send(struct broadcast_conn *c, const linkaddr_t *from)
     leds_off(LEDS_BLUE);
 }
 
-// Defines the behavior of a connection upon receiving data.
+/**
+* @brief Callback function called when unicast message is received
+*
+*       This function handles and processes incoming unicast messages according
+*       to their type.
+*
+*/
 void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
 {
     leds_on(LEDS_YELLOW);
@@ -355,6 +467,14 @@ void unict_recv(struct unicast_conn *c, const linkaddr_t *from)
     leds_off(LEDS_YELLOW);
 }
 
+/**
+* @brief Function returns RIMED ID for next hop
+* @param tx_packet is the payload to be transmitted
+*
+*       This function returns the RIMED ID for the next hop, based on the routing
+*       table and according to the packet type to be transmitted.
+*
+*/
 static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
 {
     node_num_t destination;
@@ -392,6 +512,13 @@ static linkaddr_t * getNextHopRIMEID(payload_t tx_packet)
     return &(myrTable.next_hop[destination]);
 }
 
+/**
+* @brief Function to send the unicast message
+* @param tx_packet is the pointer to the packet to be transmitted
+*
+*       This function first clears the packet buffer and then loads the packet to
+*       be transmitted into the buffer. Finally the unicast message is sent via RF.
+*/
 void unict_send(payload_t *tx_packet)
 {
     packetbuf_clear();
@@ -402,6 +529,10 @@ void unict_send(payload_t *tx_packet)
 
 // ---------------------------- DEBUG PRINTS ---------------------------
 
+/**
+* @brief Function to print own routing table (DEBUG)
+* @param text string to be printed
+*/
 static void printRTable(const char *text)
 {
     int j;
@@ -414,6 +545,11 @@ static void printRTable(const char *text)
     printf("=========================================\n");
 }
 
+/**
+* @brief Function to print routing table out of payload (DEBUG)
+* @param p payload which contains the routing table
+* @param text string to be printed
+*/
 static void printFromRTable(payload_t p, const char *text)
 {
     r_table_t table = p.b.rTable;
@@ -427,6 +563,11 @@ static void printFromRTable(payload_t p, const char *text)
     printf("=========================================\n");
 }
 
+/**
+* @brief Function to print arbitrary routing table (DEBUG)
+* @param r routing table to be printed
+* @param text string to be printed
+*/
 static void printRTable2(r_table_t r, const char *text)
 {
     int j;

@@ -1,0 +1,69 @@
+\hypertarget{broadcast__common_8c}{}\section{/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/common/broadcast\+\_\+common.c File Reference}
+\label{broadcast__common_8c}\index{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/broadcast\_common.c@{/System/Volumes/Data/Users/hannesmachleid/group1/solar\_Pro/common/broadcast\_common.c}}
+
+
+Functions and Thread to handle the broadcast communication for solar panel and base station.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}contiki.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sys/etimer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}broadcast\+\_\+common.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}routing.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}base.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}payload.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{Indent}\textbf{ retransmit attempts for network discovery and prepare network discovery}\par
+{\em retransmits }\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{broadcast__common_8c_ae1c8d0140b8f717c9973b4691db18bf8}\label{broadcast__common_8c_ae1c8d0140b8f717c9973b4691db18bf8}} 
+\#define {\bfseries D\+I\+S\+C\+O\+V\+E\+R\+Y\+R\+E\+T\+R\+A\+N\+S\+M\+I\+TS}~3
+\item 
+\mbox{\Hypertarget{broadcast__common_8c_a58a401230338a7299593c580753e4c1f}\label{broadcast__common_8c_a58a401230338a7299593c580753e4c1f}} 
+\#define {\bfseries P\+R\+E\+P\+D\+I\+S\+C\+R\+E\+T\+R\+A\+N\+S\+M\+I\+TS}~5
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{broadcast__common_8c_a527f7c1d0075ecca1b3296fa8999fd30}\label{broadcast__common_8c_a527f7c1d0075ecca1b3296fa8999fd30}} 
+{\bfseries P\+R\+O\+C\+E\+S\+S\+\_\+\+N\+A\+ME} (state\+Machine\+Thread)
+\item 
+\mbox{\Hypertarget{broadcast__common_8c_a2b8faa5605c9f3dc04907dfbf738a29f}\label{broadcast__common_8c_a2b8faa5605c9f3dc04907dfbf738a29f}} 
+{\bfseries P\+R\+O\+C\+E\+SS} (broadcast\+Send\+Process, \char`\"{}Broadcast msg Send Thread\char`\"{})
+\item 
+\mbox{\Hypertarget{broadcast__common_8c_adfc4d03affcef98ebd2cf7872a2d4a15}\label{broadcast__common_8c_adfc4d03affcef98ebd2cf7872a2d4a15}} 
+\mbox{\hyperlink{broadcast__common_8c_adfc4d03affcef98ebd2cf7872a2d4a15}{P\+R\+O\+C\+E\+S\+S\+\_\+\+T\+H\+R\+E\+AD}} (broadcast\+Send\+Process, ev, data)
+\begin{DoxyCompactList}\small\item\em Thread to send broadcast messages. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{broadcast__common_8c_a41a49f73dbd7a45c4e9e9abcb3a230f4}{stop\+All\+Broad\+Cast\+Timer}} (void)
+\begin{DoxyCompactList}\small\item\em Function to stop all broadcast timers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions and Thread to handle the broadcast communication for solar panel and base station. 
+
+\begin{DoxyAuthor}{Author}
+Karthik Sukumar \& Johannes Machleid \begin{DoxyVerb} The broadcastSendProcess Thread handles the outgoing broadcast communication
+ of the solar panel and the base station.
+\end{DoxyVerb}
+ 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{broadcast__common_8c_a41a49f73dbd7a45c4e9e9abcb3a230f4}\label{broadcast__common_8c_a41a49f73dbd7a45c4e9e9abcb3a230f4}} 
+\index{broadcast\_common.c@{broadcast\_common.c}!stopAllBroadCastTimer@{stopAllBroadCastTimer}}
+\index{stopAllBroadCastTimer@{stopAllBroadCastTimer}!broadcast\_common.c@{broadcast\_common.c}}
+\subsubsection{\texorpdfstring{stopAllBroadCastTimer()}{stopAllBroadCastTimer()}}
+{\footnotesize\ttfamily void stop\+All\+Broad\+Cast\+Timer (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Function to stop all broadcast timers. 
+
+\begin{DoxyVerb}  Function call is necessary to ensure proper functionality when transitioning
+  to other modes, such as unicasting
+\end{DoxyVerb}
+ 

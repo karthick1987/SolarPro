@@ -1,0 +1,66 @@
+\hypertarget{class_node}{}\section{Node Class Reference}
+\label{class_node}\index{Node@{Node}}
+Inheritance diagram for Node\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_node}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_node_adf764cbdea00d65edcd07bb9953ad2b7}\label{class_node_adf764cbdea00d65edcd07bb9953ad2b7}} 
+enum \{ {\bfseries Type} = User\+Type + 1
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_node_a862e0a2de118d7781f8e87fa001a9da7}\label{class_node_a862e0a2de118d7781f8e87fa001a9da7}} 
+{\bfseries Node} (\mbox{\hyperlink{class_graph_widget}{Graph\+Widget}} $\ast$graphwidget, char ID)
+\item 
+\mbox{\Hypertarget{class_node_a8c84718580556c80c447cb1818a4fd7d}\label{class_node_a8c84718580556c80c447cb1818a4fd7d}} 
+void {\bfseries add\+Edge} (\mbox{\hyperlink{class_edge}{Edge}} $\ast$edge)
+\item 
+\mbox{\Hypertarget{class_node_acd604f77e24d9291c4fd46344cca078b}\label{class_node_acd604f77e24d9291c4fd46344cca078b}} 
+void {\bfseries add\+ID} (const char Node\+ID)
+\item 
+\mbox{\Hypertarget{class_node_a5ea2bb6d306e83e98c53fd1325694efd}\label{class_node_a5ea2bb6d306e83e98c53fd1325694efd}} 
+Q\+List$<$ \mbox{\hyperlink{class_edge}{Edge}} $\ast$ $>$ {\bfseries edges} () const
+\item 
+\mbox{\Hypertarget{class_node_a3fdff8834447e56a9f3f6e9fe5cc8b97}\label{class_node_a3fdff8834447e56a9f3f6e9fe5cc8b97}} 
+int {\bfseries type} () const override
+\item 
+\mbox{\Hypertarget{class_node_a8265f3b5934e1984f33d3cde9899a507}\label{class_node_a8265f3b5934e1984f33d3cde9899a507}} 
+void {\bfseries calculate\+Forces} ()
+\item 
+\mbox{\Hypertarget{class_node_a6e6b33f1aa6066832792d0d1b794513f}\label{class_node_a6e6b33f1aa6066832792d0d1b794513f}} 
+bool {\bfseries advance\+Position} ()
+\item 
+\mbox{\Hypertarget{class_node_ac0666823dd663ff7f82d69a7801599e9}\label{class_node_ac0666823dd663ff7f82d69a7801599e9}} 
+Q\+RectF {\bfseries bounding\+Rect} () const override
+\item 
+\mbox{\Hypertarget{class_node_a06e21b6ed43a91cb141ce81fbce5c472}\label{class_node_a06e21b6ed43a91cb141ce81fbce5c472}} 
+Q\+Painter\+Path {\bfseries shape} () const override
+\item 
+\mbox{\Hypertarget{class_node_ad06d8c9648b5b008406cea84474ddfb8}\label{class_node_ad06d8c9648b5b008406cea84474ddfb8}} 
+void {\bfseries paint} (Q\+Painter $\ast$painter, const Q\+Style\+Option\+Graphics\+Item $\ast$option, Q\+Widget $\ast$widget) override
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_node_acf1947b9d09af9870247acc786361ab9}\label{class_node_acf1947b9d09af9870247acc786361ab9}} 
+Q\+Variant {\bfseries item\+Change} (Graphics\+Item\+Change change, const Q\+Variant \&value) override
+\item 
+\mbox{\Hypertarget{class_node_abdcd9e8130c8147862ca4dc5a26ce93e}\label{class_node_abdcd9e8130c8147862ca4dc5a26ce93e}} 
+void {\bfseries mouse\+Press\+Event} (Q\+Graphics\+Scene\+Mouse\+Event $\ast$event) override
+\item 
+\mbox{\Hypertarget{class_node_aa74b1786b7eb1b500749c5d9712717fd}\label{class_node_aa74b1786b7eb1b500749c5d9712717fd}} 
+void {\bfseries mouse\+Release\+Event} (Q\+Graphics\+Scene\+Mouse\+Event $\ast$event) override
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/\+Solar\+\_\+\+\_\+\+Pro\+\_\+\+G\+U\+I/node.\+h\item 
+/\+System/\+Volumes/\+Data/\+Users/hannesmachleid/group1/solar\+\_\+\+Pro/\+G\+U\+I/\+Solar\+\_\+\+\_\+\+Pro\+\_\+\+G\+U\+I/node.\+cpp\end{DoxyCompactItemize}
