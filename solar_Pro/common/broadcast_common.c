@@ -43,6 +43,11 @@ PROCESS_THREAD (broadcastSendProcess, ev, data)
             }
             else if (pkt_type == EMERGENCY)
             {
+              i = 0;
+              etimer_set(&bcinterval,BROADCASTINTERVAL);
+              bcinterval_flag = true;
+              printf("Setting timer for EMERGENCY\n");
+
             }
             else if(pkt_type == PREPDISC)
             {

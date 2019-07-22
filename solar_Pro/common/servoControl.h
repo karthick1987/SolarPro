@@ -23,6 +23,8 @@ contributors:
 #define SERVOPORT   GPIO_A_NUM
 #define SERVOPIN    2
 
+#define EMERGENCY_ANGLE 90
+
 int initServo(void);
 int setServoPosition(int angle);
 int getServoPosition(void);

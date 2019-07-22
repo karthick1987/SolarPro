@@ -43,6 +43,7 @@ void setUpRtable(void);
 bool isValidNextHop(node_num_t node);
 void initNetworkDisc(void);
 void prepNetworkDisc(void);
+void initEmergency(void);
 void openBroadcast(void);
 void openUnicast(void);
 void doBroadCast(void);

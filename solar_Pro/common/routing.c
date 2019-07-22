@@ -1,6 +1,7 @@
 
 #include "contiki.h"
 #include "sys/etimer.h"
+#include "sys/ctimer.h"
 #include "sys/clock.h"
 #include "net/rime/rime.h"     // Establish connections.
 #include "net/netstack.h"      // Wireless-stack definitions
@@ -48,6 +49,9 @@ static payload_t payload_receive, payload_transmit;
 // Unicast Receive Packet
 static payload_t unicast_rx_packet;
 
+// Callback Timer to toggle red LEDs
+static struct ctimer ct_emergency;
+
 
 static void printRTable2(r_table_t r, const char *text);
 static void printRTable(const char *);
@@ -58,6 +62,13 @@ static bool inPrepMode = false;
 extern const nodeID_t nodes[];
 PROCESS_NAME(broadcastSendProcess);
 PROCESS_NAME(stateMachineThread);
+
+
+static void callbackEmergency(void *ptr)
+ {
+   ctimer_reset(&timer);
+   leds_toggle(LEDS_RED);
+ }
 
 void setUpRtable(void)
 {
@@ -132,6 +143,17 @@ void prepNetworkDisc(void)
     process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)PREPDISC);
 
     return;
+}
+
+void initEmergency(void)
+{
+  printf("Emergency initiated\n");
+
+  broadcastCount = 0;
+
+  // initiate controlled flooding
+  process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
+
 }
 
 void openBroadcast(void)
@@ -212,8 +234,10 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
     switch(payload_receive.b.bpkt)
     {
         case EMERGENCY:
-            // TODO trigger emergency
-            // rebroadcast it
+            // set servo angle out of reach for emergency angle defined in common/routing.h
+            setServoPosition(255);
+            // set callback timer to toggle red leds
+            ctimer_set(&ct_emergency, CLOCK_SECOND, callbackEmergency, NULL);
             process_post(&broadcastSendProcess, PROCESS_EVENT_MSG, (void *)EMERGENCY);
             break;
 
@@ -247,6 +271,8 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
         case PREPDISC:
             // Clear own routing table
+            ctimer_stop(&ct_emergency);
+            leds_off(LEDS_RED);
             setUpRtable();
             printRTable("=======My Table After PREPDISC=======");
             // Set up Prepare Network DISCOVERY

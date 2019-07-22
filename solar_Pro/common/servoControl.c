@@ -36,7 +36,14 @@ int initServo(void)
 
 int setServoPosition(int angle)
 {
-    servo_position(SERVO_CHANNEL_2, SERVOPORT, SERVOPIN, angle);
+    if(angle>180)
+    {
+      servo_position(SERVO_CHANNEL_2, SERVOPORT, SERVOPIN, EMERGENCY_ANGLE);
+    }
+    else
+    {
+      servo_position(SERVO_CHANNEL_2, SERVOPORT, SERVOPIN, angle);
+    }
     pos = angle;
     return PWM_SUCCESS;
 }
@@ -45,4 +52,3 @@ int getServoPosition(void)
 {
     return pos;
 }
-

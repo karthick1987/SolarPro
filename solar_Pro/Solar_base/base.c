@@ -91,7 +91,8 @@ wind_speed_callback(uint16_t value)
      * multiples of this, so if you want to check for 16Km/h, then it would be 13
      * ticks
      */
-    printf("*** Wind speed over threshold (%u ticks)\n", value);
+    printf("*** Wind speed over threshold of %d km/h (%u ticks)\n", threshold, value);
+    process_post(&stateMachineThread, PROCESS_EVENT_MSG, (void *)EMERGENCY);
 }
 
 /*** Wind Speed Sensor THREAD ***/
@@ -218,6 +219,8 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     process_post(&unicastSendProcess, PROCESS_EVENT_MSG, (void *)UNICAST);
                     break;
                 case EMERGENCYSTATE:
+                    process_exit(&unicastSendProcess);
+                    initEmergency();
                     break;
                 default:
                     printf("[Base.c]: In Default???\n");
@@ -229,7 +232,7 @@ PROCESS_THREAD (stateMachineThread, ev, data)
     PROCESS_END();
 }
 
-PROCESS_THREAD(txUSB_process, ev, data) 
+PROCESS_THREAD(txUSB_process, ev, data)
 {
     PROCESS_BEGIN();
     static struct etimer secTimer;
@@ -302,7 +305,7 @@ PROCESS_THREAD(rxUSB_process, ev, data) {
               case SERIAL_PACKET_TYPE_SET_WIND_SPEED_THRS:
                 threshold = uartRxBuffer[1];
                 threshold_tick = threshold/1.2;
-                printf("Set Windspeed Thrshold to %d km/h",uartRxBuffer[1]);
+                printf("Set Windspeed Threshold to %d km/h",uartRxBuffer[1]);
                 break;
 
               case SERIAL_PACKET_TYPE_ANEMOMETER:
