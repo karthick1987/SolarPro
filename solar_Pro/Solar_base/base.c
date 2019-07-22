@@ -199,7 +199,10 @@ PROCESS_THREAD (stateMachineThread, ev, data)
                     break;
 
                 case PREPNETDISC:
-                    // kill unicast process
+                    // transmit serial message to GUI
+                    uartTxBuffer[0] = SERIAL_PACKET_TYPE_NETWORK_DISCOVERY;
+                    sendUART(uartTxBuffer, MAX_USB_PAYLOAD_SIZE);
+                    // kill unicast process 
                     process_exit(&unicastSendProcess);
                     prepNetworkDisc();
                     break;
