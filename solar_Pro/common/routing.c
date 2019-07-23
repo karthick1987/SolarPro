@@ -350,6 +350,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
             payload_transmit.b.bpkt = EMERGENCY;
             strncpy(payload_transmit.b.msg, "EMERGY",BROADCASTMSGSIZE_BYTES);
             setServoPosition(255);
+            stopServoCallback();
             // set callback timer to toggle red leds
             ctimer_set(&ct_emergency, CLOCK_SECOND, callbackEmergency, NULL);
             if (!inEmergencyMode)
@@ -363,7 +364,7 @@ void bdct_recv(struct broadcast_conn *c, const linkaddr_t *from)
 
         case DISCOVERY:
             strncpy(payload_receive.b.msg, "Disc",BROADCASTMSGSIZE_BYTES);
-
+            resetServoCallback();
             printRTable2(payload_receive.b.rTable,"======= Received Payload is =======");
             printRTable("=======My Table before the Update=======");
 
