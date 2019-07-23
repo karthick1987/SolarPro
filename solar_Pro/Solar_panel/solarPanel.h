@@ -22,6 +22,7 @@ contributors:
 #define SOLARPANEL_H
 
 void setAngle(int ang);
+void stopServoCallback(void);
+void resetServoCallback(void);
 
 #endif
-

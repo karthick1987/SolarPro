@@ -53,6 +53,8 @@ contributors:
 #include "solarPanel.h"
 /*---------------------------------------------------------------------------*/
 
+#define SERVO_REFRESH 2*CLOCK_SECOND
+
 static uint16_t myNodeID;
 
 static struct ctimer ctServo;
@@ -62,8 +64,6 @@ void setAngle(int ang)
 {
     angle = ang;
 }
-
-#define SERVO_REFRESH 2*CLOCK_SECOND
 
 static void callback_Servo(void *ptr)
 {
@@ -77,6 +77,16 @@ static void callback_Servo(void *ptr)
 }
 
 void setAngle(int angle);
+
+void stopServoCallback(void)
+{
+  ctimer_stop(&ctServo);
+}
+
+void resetServoCallback(void)
+{
+  ctimer_reset(&ctServo);
+}
 
 /*---------------------------------------------------------------------------*/
 /*  MAIN PROCESS DEFINITION  												 */
