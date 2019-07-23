@@ -39,7 +39,7 @@ contributors:
 
 // Private local includes
 #include "unicast_local.h"
-#include "solarPanel.h"
+//#include "solarPanel.h"
 
 // Standard C includes:
 #include <stdio.h>
@@ -169,7 +169,7 @@ void initNetworkDisc(void)
     inPrepMode = false;
     inEmergencyMode = false;
     setUpRtable();
-    setAngle(RESTINGANGLE);
+    //setAngle(RESTINGANGLE);
 
     // Copy information to payload
     strncpy(payload_transmit.b.msg,"Init",BROADCASTMSGSIZE_BYTES);

@@ -199,7 +199,6 @@ void MainWindow::packet_received(QByteArray str) {
             ui->lcdNumber_Angle->display(sensorvalues[indexStaticRolling].servoPos_degs);
         }
         break;
-
     }
 }
 
